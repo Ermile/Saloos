@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<package packagerversion="1.9.4" version="2.0" xmlns="http://pear.php.net/dtd/package-2.0" xmlns:tasks="http://pear.php.net/dtd/tasks-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://pear.php.net/dtd/tasks-1.0 http://pear.php.net/dtd/tasks-1.0.xsd http://pear.php.net/dtd/package-2.0 http://pear.php.net/dtd/package-2.0.xsd">
+ <name>Twig</name>
+ <channel>pear.twig-project.org</channel>
+ <summary>Twig is a PHP template engine.</summary>
+ <description>Twig is a template language for PHP, released under the new BSD license
+        (code and documentation).
+
+        Twig uses a syntax similar to the Django and Jinja template languages which
+        inspired the Twig runtime environment.</description>
+ <lead>
+  <name>Fabien Potencier</name>
+  <user>fabpot</user>
+  <email>fabien.potencier@symfony-project.org</email>
+  <active>yes</active>
+ </lead>
+ <lead>
+  <name>Armin Ronacher</name>
+  <user>armin</user>
+  <email>armin.ronacher@active-4.com</email>
+  <active>no</active>
+ </lead>
+ <date>2014-10-17</date>
+ <time>12:58:11</time>
+ <version>
+  <release>1.16.2</release>
+  <api>1.16.2</api>
+ </version>
+ <stability>
+  <release>stable</release>
+  <api>stable</api>
+ </stability>
+ <license uri="http://www.opensource.org/licenses/bsd-license.php">BSD Style</license>
+ <notes>
+-
+ </notes>
+ <contents>
+  <dir name="/">
+   <file install-as="Twig/Autoloader.php" md5sum="f9f208db6dccea1c3a7c94cdde41df28" name="lib/Twig/Autoloader.php" role="php" />
+   <file install-as="Twig/Compiler.php" md5sum="061e4485d8e15ede92301bdbeb71948f" name="lib/Twig/Compiler.php" role="php" />
+   <file install-as="Twig/CompilerInterface.php" md5sum="3cda46652dfae43db0ba6edad95d0d86" name="lib/Twig/CompilerInterface.php" role="php" />
+   <file install-as="Twig/Environment.php" md5sum="efe701766880e1afb5b1d5dddd2d4509" name="lib/Twig/Environment.php" role="php" />
+   <file install-as="Twig/Error/Loader.php" md5sum="0297a085a7341500baa1706db2917a59" name="lib/Twig/Error/Loader.php" role="php" />
+   <file install-as="Twig/Error/Runtime.php" md5sum="3a4c02d5a2b37fb343b6e9fb7056e3e7" name="lib/Twig/Error/Runtime.php" role="php" />
+   <file install-as="Twig/Error/Syntax.php" md5sum="41d4a9282175957c316b0ffb313d03e0" name="lib/Twig/Error/Syntax.php" role="php" />
+   <file install-as="Twig/Error.php" md5sum="c5913ccf326b36676c2e0a892a0bdafa" name="lib/Twig/Error.php" role="php" />
+   <file install-as="Twig/ExistsLoaderInterface.php" md5sum="d3d862dfd946a550bf41d23b82e42127" name="lib/Twig/ExistsLoaderInterface.php" role="php" />
+   <file install-as="Twig/ExpressionParser.php" md5sum="8987310217491d1ca482fbbb2e1637de" name="lib/Twig/ExpressionParser.php" role="php" />
+   <file install-as="Twig/Extension/Core.php" md5sum="fecb10b6e73b4cb45e745aaedaece563" name="lib/Twig/Extension/Core.php" role="php" />
+   <file install-as="Twig/Extension/Debug.php" md5sum="01bfdc7bef74ae207b06874d839acb43" name="lib/Twig/Extension/Debug.php" role="php" />
+   <file install-as="Twig/Extension/Escaper.php" md5sum="1f2be1edc3e5c9fba1aa58976638d8ff" name="lib/Twig/Extension/Escaper.php" role="php" />
+   <file install-as="Twig/Extension/Optimizer.php" md5sum="90d559bc3f34fd2952905ddd72f906b3" name="lib/Twig/Extension/Optimizer.php" role="php" />
+   <file install-as="Twig/Extension/Sandbox.php" md5sum="b38f500692a527dc78ae8293c50e14d8" name="lib/Twig/Extension/Sandbox.php" role="php" />
+   <file install-as="Twig/Extension/Staging.php" md5sum="6fc289bff03eacfd4a2136ba9a503633" name="lib/Twig/Extension/Staging.php" role="php" />
+   <file install-as="Twig/Extension/StringLoader.php" md5sum="15f299f6e4c3ce7acf21f0fda6d63e37" name="lib/Twig/Extension/StringLoader.php" role="php" />
+   <file install-as="Twig/Extension.php" md5sum="4a3d6c03eb002ca4e15bb4bd87f33679" name="lib/Twig/Extension.php" role="php" />
+   <file install-as="Twig/ExtensionInterface.php" md5sum="8bed99e211ba66f478342efc9faa4013" name="lib/Twig/ExtensionInterface.php" role="php" />
+   <file install-as="Twig/Filter/Function.php" md5sum="260ca9d38bdc329f4a82405dc11bb1a4" name="lib/Twig/Filter/Function.php" role="php" />
+   <file install-as="Twig/Filter/Method.php" md5sum="98d91cb41f5a5a9a4d67f7e967698141" name="lib/Twig/Filter/Method.php" role="php" />
+   <file install-as="Twig/Filter/Node.php" md5sum="6e30432a47d6bff1ddea8e428c2b3276" name="lib/Twig/Filter/Node.php" role="php" />
+   <file install-as="Twig/Filter.php" md5sum="ffcbc10fbc3456d605d3f8510c60210d" name="lib/Twig/Filter.php" role="php" />
+   <file install-as="Twig/FilterCallableInterface.php" md5sum="557ea6fcaa5b7b2c503a497a3b931267" name="lib/Twig/FilterCallableInterface.php" role="php" />
+   <file install-as="Twig/FilterInterface.php" md5sum="6e43136a50b94a80951dd34da661ccc8" name="lib/Twig/FilterInterface.php" role="php" />
+   <file install-as="Twig/Function/Function.php" md5sum="3aff76b4acc885f1f0f34f915c718daf" name="lib/Twig/Function/Function.php" role="php" />
+   <file install-as="Twig/Function/Method.php" md5sum="9f5db96bdcddf2cdecf4ac03cffe5072" name="lib/Twig/Function/Method.php" role="php" />
+   <file install-as="Twig/Function/Node.php" md5sum="e429ee124350f3a9b95f9d6d461d1ca3" name="lib/Twig/Function/Node.php" role="php" />
+   <file install-as="Twig/Function.php" md5sum="cdf7c64b75e20ebe85739da5b308addc" name="lib/Twig/Function.php" role="php" />
+   <file install-as="Twig/FunctionCallableInterface.php" md5sum="2f8d67c0e76b701a5e4c76f8bf685797" name="lib/Twig/FunctionCallableInterface.php" role="php" />
+   <file install-as="Twig/FunctionInterface.php" md5sum="1a989db9f04110dff68441ab95849661" name="lib/Twig/FunctionInterface.php" role="php" />
+   <file install-as="Twig/Lexer.php" md5sum="f3ebd10d22c844d1ba4f73326b5b77ba" name="lib/Twig/Lexer.php" role="php" />
+   <file install-as="Twig/LexerInterface.php" md5sum="23c121f90dd026acd6681a8b55ba14c2" name="lib/Twig/LexerInterface.php" role="php" />
+   <file install-as="Twig/Loader/Array.php" md5sum="ac3e27e0a15510f9d636eee8603bca2b" name="lib/Twig/Loader/Array.php" role="php" />
+   <file install-as="Twig/Loader/Chain.php" md5sum="82fc84ebb25255ca44b0451ea00a8e03" name="lib/Twig/Loader/Chain.php" role="php" />
+   <file install-as="Twig/Loader/Filesystem.php" md5sum="462d65a6fed82dc728573e6af2f5c7a8" name="lib/Twig/Loader/Filesystem.php" role="php" />
+   <file install-as="Twig/Loader/String.php" md5sum="666b5e6690e9d15e9c9b0784209d5d47" name="lib/Twig/Loader/String.php" role="php" />
+   <file install-as="Twig/LoaderInterface.php" md5sum="ee47cd63f0d90fbbff2016f833152165" name="lib/Twig/LoaderInterface.php" role="php" />
+   <file install-as="Twig/Markup.php" md5sum="7ebff11af28eeedb1fdfe31d92132d20" name="lib/Twig/Markup.php" role="php" />
+   <file install-as="Twig/Node/AutoEscape.php" md5sum="c12a2f1a4b99560b89b9e9fdc5c3cda7" name="lib/Twig/Node/AutoEscape.php" role="php" />
+   <file install-as="Twig/Node/Block.php" md5sum="3f09071711cbe03a25b0473633372f5b" name="lib/Twig/Node/Block.php" role="php" />
+   <file install-as="Twig/Node/BlockReference.php" md5sum="66d4e1224ffbc78e7e4c730f21457d4e" name="lib/Twig/Node/BlockReference.php" role="php" />
+   <file install-as="Twig/Node/Body.php" md5sum="3768ca70d202fd3b29e02f0049ae5432" name="lib/Twig/Node/Body.php" role="php" />
+   <file install-as="Twig/Node/Do.php" md5sum="f8f840206cf6baf3296ab3aaff5fc7a1" name="lib/Twig/Node/Do.php" role="php" />
+   <file install-as="Twig/Node/Embed.php" md5sum="b155f10a68234505e1b9da02e2521116" name="lib/Twig/Node/Embed.php" role="php" />
+   <file install-as="Twig/Node/Expression/Array.php" md5sum="4171ae568bdaba3311a26af08d1a53f1" name="lib/Twig/Node/Expression/Array.php" role="php" />
+   <file install-as="Twig/Node/Expression/AssignName.php" md5sum="a90452f1d9bbfd90e668c5629fb284d7" name="lib/Twig/Node/Expression/AssignName.php" role="php" />
+   <file install-as="Twig/Node/Expression/Binary/Add.php" md5sum="5d16cd53c83be9b5d332f2e6a80d124f" name="lib/Twig/Node/Expression/Binary/Add.php" role="php" />
+   <file install-as="Twig/Node/Expression/Binary/And.php" md5sum="308e349bc7dae1d6e8ffe563a0e059fc" name="lib/Twig/Node/Expression/Binary/And.php" role="php" />
+   <file install-as="Twig/Node/Expression/Binary/BitwiseAnd.php" md5sum="621c82ab6fafa611309b08ce5f060f0c" name="lib/Twig/Node/Expression/Binary/BitwiseAnd.php" role="php" />
+   <file install-as="Twig/Node/Expression/Binary/BitwiseOr.php" md5sum="b68c97739cb7bc6ff64242e0a3411fab" name="lib/Twig/Node/Expression/Binary/BitwiseOr.php" role="php" />
+   <file install-as="Twig/Node/Expression/Binary/BitwiseXor.php" md5sum="ff650ff1dcad63ac4dbc9dd57df5eef2" name="lib/Twig/Node/Expression/Binary/BitwiseXor.php" role="php" />
+   <file install-as="Twig/Node/Expression/Binary/Concat.php" md5sum="702c3a6603b0138b5a6b3d82e80e2a05" name="lib/Twig/Node/Expression/Binary/Concat.php" role="php" />
+   <file install-as="Twig/Node/Expression/Binary/Div.php" md5sum="5b28cc3d88ddfae12b04f22a4f2860c2" name="lib/Twig/Node/Expression/Binary/Div.php" role="php" />
+   <file install-as="Twig/Node/Expression/Binary/EndsWith.php" md5sum="656c53f7693e079734394b3745044b2d" name="lib/Twig/Node/Expression/Binary/EndsWith.php" role="php" />
+   <file install-as="Twig/Node/Expression/Binary/Equal.php" md5sum="3d26fb48b35b0f5ad315d296299a4c20" name="lib/Twig/Node/Expression/Binary/Equal.php" role="php" />
+   <file install-as="Twig/Node/Expression/Binary/FloorDiv.php" md5sum="df9f4cfa7582ee392095a5235e0f4928" name="lib/Twig/Node/Expression/Binary/FloorDiv.php" role="php" />
+   <file install-as="Twig/Node/Expression/Binary/Greater.php" md5sum="6209c99dc1bce32340da0bebb5895bf3" name="lib/Twig/Node/Expression/Binary/Greater.php" role="php" />
+   <file install-as="Twig/Node/Expression/Binary/GreaterEqual.php" md5sum="eecadb39bce3c07af85c8a03e735a326" name="lib/Twig/Node/Expression/Binary/GreaterEqual.php" role="php" />
+   <file install-as="Twig/Node/Expression/Binary/In.php" md5sum="c7510af3489b87ec2154f25041eedd5e" name="lib/Twig/Node/Expression/Binary/In.php" role="php" />
+   <file install-as="Twig/Node/Expression/Binary/Less.php" md5sum="d2df3932fc9d04720399302098258a18" name="lib/Twig/Node/Expression/Binary/Less.php" role="php" />
+   <file install-as="Twig/Node/Expression/Binary/LessEqual.php" md5sum="e4fd68cfbded83d91cfafafc81e80311" name="lib/Twig/Node/Expression/Binary/LessEqual.php" role="php" />
+   <file install-as="Twig/Node/Expression/Binary/Matches.php" md5sum="ab9d3177aa110a6de020e466a6db65b3" name="lib/Twig/Node/Expression/Binary/Matches.php" role="php" />
+   <file install-as="Twig/Node/Expression/Binary/Mod.php" md5sum="4e61aee836424a723f1c0314f32b3ec3" name="lib/Twig/Node/Expression/Binary/Mod.php" role="php" />
+   <file install-as="Twig/Node/Expression/Binary/Mul.php" md5sum="a8d6077b84b988aef093159e4521969f" name="lib/Twig/Node/Expression/Binary/Mul.php" role="php" />
+   <file install-as="Twig/Node/Expression/Binary/NotEqual.php" md5sum="e5cf8bb39c1bce092fb84cbe5dbcf1f6" name="lib/Twig/Node/Expression/Binary/NotEqual.php" role="php" />
+   <file install-as="Twig/Node/Expression/Binary/NotIn.php" md5sum="162e482008c8f13c44b39a361982455e" name="lib/Twig/Node/Expression/Binary/NotIn.php" role="php" />
+   <file install-as="Twig/Node/Expression/Binary/Or.php" md5sum="835aa4edcbe9290749ca3e6f56c1fcd7" name="lib/Twig/Node/Expression/Binary/Or.php" role="php" />
+   <file install-as="Twig/Node/Expression/Binary/Power.php" md5sum="e8b1beacdce801928fcf5a3f41770db2" name="lib/Twig/Node/Expression/Binary/Power.php" role="php" />
+   <file install-as="Twig/Node/Expression/Binary/Range.php" md5sum="a89823fdc86c5d92240961148ba5d4a0" name="lib/Twig/Node/Expression/Binary/Range.php" role="php" />
+   <file install-as="Twig/Node/Expression/Binary/StartsWith.php" md5sum="d415d9719a3f33f9bcbb3cbd71d1ca3a" name="lib/Twig/Node/Expression/Binary/StartsWith.php" role="php" />
+   <file install-as="Twig/Node/Expression/Binary/Sub.php" md5sum="47650251c8b7e7c2b82df3a699d10cd6" name="lib/Twig/Node/Expression/Binary/Sub.php" role="php" />
+   <file install-as="Twig/Node/Expression/Binary.php" md5sum="e94cfe28739090c3a4d0c02d62b11fa4" name="lib/Twig/Node/Expression/Binary.php" role="php" />
+   <file install-as="Twig/Node/Expression/BlockReference.php" md5sum="8ed14c9aedb35219e46ed92c75648578" name="lib/Twig/Node/Expression/BlockReference.php" role="php" />
+   <file install-as="Twig/Node/Expression/Call.php" md5sum="280e8eaa8f72919eb65d46bcad705af4" name="lib/Twig/Node/Expression/Call.php" role="php" />
+   <file install-as="Twig/Node/Expression/Conditional.php" md5sum="94611e1b6bbc76388011855f0348fc2e" name="lib/Twig/Node/Expression/Conditional.php" role="php" />
+   <file install-as="Twig/Node/Expression/Constant.php" md5sum="b3703810a66fd8d2fe792ed95e9949ea" name="lib/Twig/Node/Expression/Constant.php" role="php" />
+   <file install-as="Twig/Node/Expression/ExtensionReference.php" md5sum="629b4b904799751bf0f9b860fff3c2cf" name="lib/Twig/Node/Expression/ExtensionReference.php" role="php" />
+   <file install-as="Twig/Node/Expression/Filter/Default.php" md5sum="81eb255cf59793aa37f7ab73df5b8f47" name="lib/Twig/Node/Expression/Filter/Default.php" role="php" />
+   <file install-as="Twig/Node/Expression/Filter.php" md5sum="859a893a66e17778142c059668f5ffd2" name="lib/Twig/Node/Expression/Filter.php" role="php" />
+   <file install-as="Twig/Node/Expression/Function.php" md5sum="f5dce5675c390ae1d35497c7f76cf22a" name="lib/Twig/Node/Expression/Function.php" role="php" />
+   <file install-as="Twig/Node/Expression/GetAttr.php" md5sum="652744703da073f2139df43702efefb4" name="lib/Twig/Node/Expression/GetAttr.php" role="php" />
+   <file install-as="Twig/Node/Expression/MethodCall.php" md5sum="ec007ddb0878bb9bc7017a12c6e4c080" name="lib/Twig/Node/Expression/MethodCall.php" role="php" />
+   <file install-as="Twig/Node/Expression/Name.php" md5sum="09b1ba6d503efb4d48a166fcf5c74a6f" name="lib/Twig/Node/Expression/Name.php" role="php" />
+   <file install-as="Twig/Node/Expression/Parent.php" md5sum="a3f23898e3ec13a08994d8028add3096" name="lib/Twig/Node/Expression/Parent.php" role="php" />
+   <file install-as="Twig/Node/Expression/TempName.php" md5sum="312be4fbbf9f33caec6b64733e8f7c35" name="lib/Twig/Node/Expression/TempName.php" role="php" />
+   <file install-as="Twig/Node/Expression/Test/Constant.php" md5sum="cea24b966c64017afa46413e189956b7" name="lib/Twig/Node/Expression/Test/Constant.php" role="php" />
+   <file install-as="Twig/Node/Expression/Test/Defined.php" md5sum="28345503b665a4d6edbbd7b06428718a" name="lib/Twig/Node/Expression/Test/Defined.php" role="php" />
+   <file install-as="Twig/Node/Expression/Test/Divisibleby.php" md5sum="0d047f7788b0e83479551206536c3662" name="lib/Twig/Node/Expression/Test/Divisibleby.php" role="php" />
+   <file install-as="Twig/Node/Expression/Test/Even.php" md5sum="b67fd353edb6c3804d8ab2d41c6f8cbb" name="lib/Twig/Node/Expression/Test/Even.php" role="php" />
+   <file install-as="Twig/Node/Expression/Test/Null.php" md5sum="d0fe20539e14edd2085ec6b0e139b415" name="lib/Twig/Node/Expression/Test/Null.php" role="php" />
+   <file install-as="Twig/Node/Expression/Test/Odd.php" md5sum="5bb79634c28ab1e54b7ca7ded7ee9f28" name="lib/Twig/Node/Expression/Test/Odd.php" role="php" />
+   <file install-as="Twig/Node/Expression/Test/Sameas.php" md5sum="0126ce6f962cf906f8f2370133c3ddff" name="lib/Twig/Node/Expression/Test/Sameas.php" role="php" />
+   <file install-as="Twig/Node/Expression/Test.php" md5sum="a0b2bd4d99f906c4857f057c7bb4864e" name="lib/Twig/Node/Expression/Test.php" role="php" />
+   <file install-as="Twig/Node/Expression/Unary/Neg.php" md5sum="08e8112e6fabf7eba63b3a19672706c9" name="lib/Twig/Node/Expression/Unary/Neg.php" role="php" />
+   <file install-as="Twig/Node/Expression/Unary/Not.php" md5sum="0d3a4717baffc2ec33b373bb265a6413" name="lib/Twig/Node/Expression/Unary/Not.php" role="php" />
+   <file install-as="Twig/Node/Expression/Unary/Pos.php" md5sum="e35ab856982e8b07351a893609751c26" name="lib/Twig/Node/Expression/Unary/Pos.php" role="php" />
+   <file install-as="Twig/Node/Expression/Unary.php" md5sum="b712815036f4e0cbca846e3088cb3fc6" name="lib/Twig/Node/Expression/Unary.php" role="php" />
+   <file install-as="Twig/Node/Expression.php" md5sum="d2fcc744c0d3ece6f32c398ae50e2cb5" name="lib/Twig/Node/Expression.php" role="php" />
+   <file install-as="Twig/Node/Flush.php" md5sum="03eb18a04ac1322f21ac8091feb85dcb" name="lib/Twig/Node/Flush.php" role="php" />
+   <file install-as="Twig/Node/For.php" md5sum="20de04049a7c53d174fc98114d47fe49" name="lib/Twig/Node/For.php" role="php" />
+   <file install-as="Twig/Node/ForLoop.php" md5sum="8b5c430f031903f112c44e0546b4c592" name="lib/Twig/Node/ForLoop.php" role="php" />
+   <file install-as="Twig/Node/If.php" md5sum="6c6c35fed966d0cb49462c33143fb9e4" name="lib/Twig/Node/If.php" role="php" />
+   <file install-as="Twig/Node/Import.php" md5sum="ad77aaa454e58fbce7512407af3ddd1d" name="lib/Twig/Node/Import.php" role="php" />
+   <file install-as="Twig/Node/Include.php" md5sum="df96abbd30ecbac4509c7cbaea1f98e9" name="lib/Twig/Node/Include.php" role="php" />
+   <file install-as="Twig/Node/Macro.php" md5sum="157e76331a4f2da2d2733603878df679" name="lib/Twig/Node/Macro.php" role="php" />
+   <file install-as="Twig/Node/Module.php" md5sum="60e6afa6a3ef315f15d0e01071357fbf" name="lib/Twig/Node/Module.php" role="php" />
+   <file install-as="Twig/Node/Print.php" md5sum="304c80e1a81f270fba5200c30b919f1c" name="lib/Twig/Node/Print.php" role="php" />
+   <file install-as="Twig/Node/Sandbox.php" md5sum="129cb6cd4c57c500622b15233009a925" name="lib/Twig/Node/Sandbox.php" role="php" />
+   <file install-as="Twig/Node/SandboxedModule.php" md5sum="74ce07bf0a6a95865576687cfd8702ec" name="lib/Twig/Node/SandboxedModule.php" role="php" />
+   <file install-as="Twig/Node/SandboxedPrint.php" md5sum="b8f9f4fdd515380afce2b83f6768fbe0" name="lib/Twig/Node/SandboxedPrint.php" role="php" />
+   <file install-as="Twig/Node/Set.php" md5sum="a8fdcf7f0924d16b20cf337c7b0a8a4b" name="lib/Twig/Node/Set.php" role="php" />
+   <file install-as="Twig/Node/SetTemp.php" md5sum="5c93ae290cfe346e9a2d155494f28626" name="lib/Twig/Node/SetTemp.php" role="php" />
+   <file install-as="Twig/Node/Spaceless.php" md5sum="0b2160f8c47033d0a6756333636d5bca" name="lib/Twig/Node/Spaceless.php" role="php" />
+   <file install-as="Twig/Node/Text.php" md5sum="3bd0ee146116e0aa21e1822a02242cb0" name="lib/Twig/Node/Text.php" role="php" />
+   <file install-as="Twig/Node.php" md5sum="408bc2ebf5581f3a2234ae128ff9e264" name="lib/Twig/Node.php" role="php" />
+   <file install-as="Twig/NodeInterface.php" md5sum="18e4ff5e65c12efabb1b04cbe1a158e1" name="lib/Twig/NodeInterface.php" role="php" />
+   <file install-as="Twig/NodeOutputInterface.php" md5sum="2125948f894bcba40e4dd4bc906d47e2" name="lib/Twig/NodeOutputInterface.php" role="php" />
+   <file install-as="Twig/NodeTraverser.php" md5sum="842d2e80a515745340eff5976f287c38" name="lib/Twig/NodeTraverser.php" role="php" />
+   <file install-as="Twig/NodeVisitor/Escaper.php" md5sum="9fe8e3ad07965534c4724211c33daafc" name="lib/Twig/NodeVisitor/Escaper.php" role="php" />
+   <file install-as="Twig/NodeVisitor/Optimizer.php" md5sum="c39119536e46146ea70ebd92ee7413d5" name="lib/Twig/NodeVisitor/Optimizer.php" role="php" />
+   <file install-as="Twig/NodeVisitor/SafeAnalysis.php" md5sum="cba1963c52ef6763d47fff8cd7ee6d05" name="lib/Twig/NodeVisitor/SafeAnalysis.php" role="php" />
+   <file install-as="Twig/NodeVisitor/Sandbox.php" md5sum="02cf5346ed6e0cc07f79ccb0d659fcd8" name="lib/Twig/NodeVisitor/Sandbox.php" role="php" />
+   <file install-as="Twig/NodeVisitorInterface.php" md5sum="3b19787dfbe6e8a1a5c3660d66ea222b" name="lib/Twig/NodeVisitorInterface.php" role="php" />
+   <file install-as="Twig/Parser.php" md5sum="b0d037510f563ebbef2fd4e87eb470ec" name="lib/Twig/Parser.php" role="php" />
+   <file install-as="Twig/ParserInterface.php" md5sum="7b01b047dc4e9e7c63bdf2cad6cca089" name="lib/Twig/ParserInterface.php" role="php" />
+   <file install-as="Twig/Sandbox/SecurityError.php" md5sum="2038673c16bf93db76dd4e8085bb1199" name="lib/Twig/Sandbox/SecurityError.php" role="php" />
+   <file install-as="Twig/Sandbox/SecurityNotAllowedFilterError.php" md5sum="a1dc41649daba29cd350f17f19584db7" name="lib/Twig/Sandbox/SecurityNotAllowedFilterError.php" role="php" />
+   <file install-as="Twig/Sandbox/SecurityNotAllowedFunctionError.php" md5sum="836916750b2284010b903ca967b0b411" name="lib/Twig/Sandbox/SecurityNotAllowedFunctionError.php" role="php" />
+   <file install-as="Twig/Sandbox/SecurityNotAllowedTagError.php" md5sum="c7b865fb29c6e585a4b5442eed42db23" name="lib/Twig/Sandbox/SecurityNotAllowedTagError.php" role="php" />
+   <file install-as="Twig/Sandbox/SecurityPolicy.php" md5sum="8777cac171b4e8f1c182e9d3fbdee403" name="lib/Twig/Sandbox/SecurityPolicy.php" role="php" />
+   <file install-as="Twig/Sandbox/SecurityPolicyInterface.php" md5sum="d556afa8416c83b79752040a10ece3d4" name="lib/Twig/Sandbox/SecurityPolicyInterface.php" role="php" />
+   <file install-as="Twig/SimpleFilter.php" md5sum="f539a1cf697d6df8dbe0a1ab20fa60c4" name="lib/Twig/SimpleFilter.php" role="php" />
+   <file install-as="Twig/SimpleFunction.php" md5sum="3288da22d048babb201c4c8b21383672" name="lib/Twig/SimpleFunction.php" role="php" />
+   <file install-as="Twig/SimpleTest.php" md5sum="67c237535f937d19f9acbabe4bee2b7c" name="lib/Twig/SimpleTest.php" role="php" />
+   <file install-as="Twig/Template.php" md5sum="b359e471fdb596313eb69547efa43417" name="lib/Twig/Template.php" role="php" />
+   <file install-as="Twig/TemplateInterface.php" md5sum="e234183460e66f0d8f6ed5cb0d7c34bc" name="lib/Twig/TemplateInterface.php" role="php" />
+   <file install-as="Twig/Test/Function.php" md5sum="c5256cfda774aad3796e83c5ccc76df1" name="lib/Twig/Test/Function.php" role="php" />
+   <file install-as="Twig/Test/IntegrationTestCase.php" md5sum="4e4581eabad75b9cbeb41c4f716e62eb" name="lib/Twig/Test/IntegrationTestCase.php" role="php" />
+   <file install-as="Twig/Test/Method.php" md5sum="b05886b7c3bb0d5a4b4fd871a0de612e" name="lib/Twig/Test/Method.php" role="php" />
+   <file install-as="Twig/Test/Node.php" md5sum="41a3b3e4657168e15d1b1613e5ae689a" name="lib/Twig/Test/Node.php" role="php" />
+   <file install-as="Twig/Test/NodeTestCase.php" md5sum="fcf420a35fd3b0a9117bff01ec7df9d2" name="lib/Twig/Test/NodeTestCase.php" role="php" />
+   <file install-as="Twig/Test.php" md5sum="907df6428c547e9a5af3a07ea99c31a1" name="lib/Twig/Test.php" role="php" />
+   <file install-as="Twig/TestCallableInterface.php" md5sum="680324d83f36b80a71cc3e18ce6da3bf" name="lib/Twig/TestCallableInterface.php" role="php" />
+   <file install-as="Twig/TestInterface.php" md5sum="c64d3221a3e0ac3a1a27f629529ca22f" name="lib/Twig/TestInterface.php" role="php" />
+   <file install-as="Twig/Token.php" md5sum="3181c0022490aaba012f9322687eb975" name="lib/Twig/Token.php" role="php" />
+   <file install-as="Twig/TokenParser/AutoEscape.php" md5sum="999df38e7f5a2dc1a0d255515e35f6d5" name="lib/Twig/TokenParser/AutoEscape.php" role="php" />
+   <file install-as="Twig/TokenParser/Block.php" md5sum="91f80e924e22f40739703995e18d6bcb" name="lib/Twig/TokenParser/Block.php" role="php" />
+   <file install-as="Twig/TokenParser/Do.php" md5sum="87cfd1e3e9c357fa6707126c4708f5e0" name="lib/Twig/TokenParser/Do.php" role="php" />
+   <file install-as="Twig/TokenParser/Embed.php" md5sum="f59d933b6e44590ed33aa6dff014fcc1" name="lib/Twig/TokenParser/Embed.php" role="php" />
+   <file install-as="Twig/TokenParser/Extends.php" md5sum="83f589057c3b2ed4b0ee6fcd9c7140ce" name="lib/Twig/TokenParser/Extends.php" role="php" />
+   <file install-as="Twig/TokenParser/Filter.php" md5sum="947049e09760ed46c9195e435fe4bc52" name="lib/Twig/TokenParser/Filter.php" role="php" />
+   <file install-as="Twig/TokenParser/Flush.php" md5sum="b6f0a3ec7581d0414899fc50bdaad814" name="lib/Twig/TokenParser/Flush.php" role="php" />
+   <file install-as="Twig/TokenParser/For.php" md5sum="c4ae472d2b3821f8ae56f86464cc295e" name="lib/Twig/TokenParser/For.php" role="php" />
+   <file install-as="Twig/TokenParser/From.php" md5sum="e180cccf0c62b7cad73c63edb4005baa" name="lib/Twig/TokenParser/From.php" role="php" />
+   <file install-as="Twig/TokenParser/If.php" md5sum="35fdb85b56353849c394a9e4da7fe715" name="lib/Twig/TokenParser/If.php" role="php" />
+   <file install-as="Twig/TokenParser/Import.php" md5sum="3e7397da9c81999b32a1b637871db37c" name="lib/Twig/TokenParser/Import.php" role="php" />
+   <file install-as="Twig/TokenParser/Include.php" md5sum="aafd1e3b2b6e6b4223ddc3c0eff599a0" name="lib/Twig/TokenParser/Include.php" role="php" />
+   <file install-as="Twig/TokenParser/Macro.php" md5sum="5f0a590691c64a79a1031a7ebe1da557" name="lib/Twig/TokenParser/Macro.php" role="php" />
+   <file install-as="Twig/TokenParser/Sandbox.php" md5sum="4e7a32b6b2436967b85ac5bee63f99da" name="lib/Twig/TokenParser/Sandbox.php" role="php" />
+   <file install-as="Twig/TokenParser/Set.php" md5sum="9bb035bb1ad955d96257a8a5e0e6b496" name="lib/Twig/TokenParser/Set.php" role="php" />
+   <file install-as="Twig/TokenParser/Spaceless.php" md5sum="ab7d1d53dd9b4e7628837e7af93b3db3" name="lib/Twig/TokenParser/Spaceless.php" role="php" />
+   <file install-as="Twig/TokenParser/Use.php" md5sum="7bd09009867e76e0b006586fa3fc6275" name="lib/Twig/TokenParser/Use.php" role="php" />
+   <file install-as="Twig/TokenParser.php" md5sum="83224f13e3f3e14ed5e7c0d1c567a9c6" name="lib/Twig/TokenParser.php" role="php" />
+   <file install-as="Twig/TokenParserBroker.php" md5sum="29a8948f912da59f4bcab2a5d718bb59" name="lib/Twig/TokenParserBroker.php" role="php" />
+   <file install-as="Twig/TokenParserBrokerInterface.php" md5sum="0a586d723c9c4a0eee1fbb8e39bad88e" name="lib/Twig/TokenParserBrokerInterface.php" role="php" />
+   <file install-as="Twig/TokenParserInterface.php" md5sum="62c183068343c7dbcad42a1cc4b27581" name="lib/Twig/TokenParserInterface.php" role="php" />
+   <file install-as="Twig/TokenStream.php" md5sum="422f364a84098143c5e0dcafbb0a78c6" name="lib/Twig/TokenStream.php" role="php" />
+   <file md5sum="16503b147b5eda9cd133b23700a2b9c7" name="CHANGELOG" role="doc" />
+   <file md5sum="1886505263500ef827db124cf26c2408" name="LICENSE" role="doc" />
+   <file md5sum="32d5a3ca77dace5b9255842b15c55699" name="README.rst" role="doc" />
+  </dir>
+ </contents>
+ <dependencies>
+  <required>
+   <php>
+    <min>5.2.4</min>
+   </php>
+   <pearinstaller>
+    <min>1.4.0</min>
+   </pearinstaller>
+  </required>
+ </dependencies>
+ <phprelease />
+</package>

@@ -1,0 +1,7 @@
+*.DS_Store
+*sitemap.xml
+*Thumbs.db
+/public_html/files
+/public_html/data
+/public_html/sitemap
+/saloos-addons*
