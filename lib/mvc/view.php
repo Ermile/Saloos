@@ -72,7 +72,8 @@ class view extends \lib\view
 
 		// define default value for include
 		$this->include->newline      = PHP_EOL;
-		$this->include->css_main     = true;
+		$this->include->css_main     = false;
+		$this->include->css_ermile   = true;
 		$this->include->js_main      = true;
 		$this->include->css          = true;
 		$this->include->js           = true;
