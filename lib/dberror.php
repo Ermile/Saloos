@@ -1,6 +1,5 @@
 <?php
 /**
-* @author Reza Mohiti <rm.biqarar@gmail.com>
 */
 namespace lib;
 class dberror {

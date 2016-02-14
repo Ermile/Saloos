@@ -2,8 +2,6 @@
 namespace lib;
 /**
  * checking and routing http request and server model. change your mind change your mvc
- * @author baravak <itb.baravak@gmail.com>
- * @version 0.1
  */
 class api
 {

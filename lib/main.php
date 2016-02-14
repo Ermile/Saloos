@@ -85,12 +85,6 @@ class main
 		$controller = new $controller_name;
 		self::$controller = $controller;
 
-		// running template base module for homepage
-		if(\lib\router::get_storage('CMS') && $myrep == 'content' && method_exists($controller, 's_template_finder'))
-		{
-			$controller->s_template_finder();
-		}
-
 		if(method_exists($controller, '_route'))
 		{
 			$controller->_route();

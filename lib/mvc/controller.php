@@ -3,6 +3,18 @@ namespace lib\mvc;
 use \lib\router;
 class controller extends \lib\controller
 {
+	public function __construct()
+	{
+		parent::__construct();
+		$myrep = router::get_repository_name();
+
+		// running template base module for homepage
+		if(\lib\router::get_storage('CMS') && $myrep === 'content' && method_exists($this, 's_template_finder') && get_class($this) === 'content\home\controller')
+		{
+			$this->s_template_finder();
+		}
+	}
+
 	// Return login status without parameter
 	// If you pass the name as all return all of user session
 	// If you pass specefic user data field name return it
@@ -308,6 +320,7 @@ class controller extends \lib\controller
 			return;
 		}
 
+		$myurl = null;
 		if(!empty(db_name))
 		{
 			$myurl = $this->model()->s_template_finder();

@@ -2,8 +2,6 @@
 namespace lib;
 /**
  * saloos router controller and configuration
- * @author Baravaak <itb.baravak@gmail.com>
- * @version 0.0.1
  */
 class router
 {
@@ -40,19 +38,6 @@ class router
 			\lib\error::page("home");
 		}
 
-
-		/**
-		 * set default language to storage for next use
-		 */
-		if(defined('DefaultLanguage'))
-		{
-			router::set_storage('defaultLanguage', DefaultLanguage );
-		}
-		else
-		{
-			router::set_storage('defaultLanguage', 'en_US' );
-		}
-
 		/**
 		 * user want control panel or CMS
 		 */
@@ -80,9 +65,10 @@ class router
 			$mysub = router::get_sub_domain();
 			if(!$mysub)
 			{
-				$mysub   = router::get_url(0);
+				$mysub = router::get_url(0);
 				router::$sub_is_fake = true;
-      			router::set_storage('language', router::get_storage('defaultLanguage') );
+				// router::$sub_is_fake = $mysub? true: false;
+      			// router::set_storage('language', router::get_storage('defaultLanguage') );
 			}
 
 			if($mysub)
@@ -136,28 +122,6 @@ class router
 
 					// call function and pass param value to it
 					router::set_repository(...$myparam);
-				}
-
-				// if subdomain is set, change current lang to it, except for default language
-				if(defined('LangList') && constant('LangList'))
-				{
-					// check langlist with subdomain and if is equal set current language
-					foreach (unserialize(LangList) as $key => $value)
-					{
-						if($mysub === substr($key, 0, 2))
-						{
-							if(router::get_storage('defaultLanguage') !== $key)
-							{
-								router::set_storage('language', $key);
-							}
-							else
-							{
-								// redirect to homepage
-								$myredirect = new \lib\redirector();
-								$myredirect->set_domain()->set_url()->redirect();
-							}
-						}
-					}
 				}
 			}
 		}
@@ -248,14 +212,15 @@ class router
 		if(!defined('MyAccount'))
 			define('MyAccount', $myAccount);
 
-
-
 		router::$base = Protocol.'://';
 		if(router::$sub_is_fake)
+		{
 			router::$base .= Service.'/'.(SubDomain? SubDomain.'/': null);
+		}
 		else
+		{
 			router::$base .= SubDomain.'.'.Service.'/';
-
+		}
 
 		if(count(explode('.', SubDomain)) > 1)
 			die("<p>Saloos only support one subdomain!</p>" );
