@@ -38,16 +38,7 @@ class view extends \lib\view
 		else
 			$this->data->site['langlist'] = ['fa_IR' => 'فارسی', 'en_US' => 'English'];
 
-		$current_lang_cookie = \lib\utility\Cookie::read('lang');
-		$current_lang_get    = \lib\utility::get('lang');
-		if(SubDomain && SubDomain !== 'cp' && SubDomain!== 'account' && SubDomain!== 'files')
-			$this->data->site['currentlang']  = SubDomain;
-		elseif(isset($current_lang_get) )
-			$this->data->site['currentlang']  = substr($current_lang_get, 0, 2);
-		elseif(isset($current_lang_cookie) )
-			$this->data->site['currentlang']  = substr($current_lang_cookie, 0, 2);
-		else
-			$this->data->site['currentlang']  = substr( \lib\router::get_storage('defaultLanguage'), 0, 2);
+		$this->data->site['currentlang'] = substr(\lib\router::get_storage('language'), 0, 2);
 
 		$this->data->page['title']   = null;
 		$this->data->page['desc']    = null;
