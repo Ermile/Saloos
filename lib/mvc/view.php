@@ -39,6 +39,7 @@ class view extends \lib\view
 			$this->data->site['langlist'] = ['fa_IR' => 'فارسی', 'en_US' => 'English'];
 
 		$this->data->site['currentlang'] = substr(\lib\router::get_storage('language'), 0, 2);
+		$this->data->site['defaultLang'] = substr(\lib\router::get_storage('defaultLanguage'), 0, 2);
 
 		$this->data->page['title']   = null;
 		$this->data->page['desc']    = null;
