@@ -47,7 +47,7 @@ class controller extends \lib\controller
 		$su       = null;
 		// if user is superviser then set su to true
 		// permission id 1 is supervisior of system
-		if($_SESSION['user']['permission'] === "1")
+		if(isset($_SESSION['user']['permission']) && $_SESSION['user']['permission'] === "1")
 		{
 			$su       = true;
 			$suStatus = new \content_cp\permissions\controller;
