@@ -14,7 +14,7 @@ require_once ("define.php");
 class autoload
 {
 	static $require     = array();
-	static $core_prefix = array('lib', 'cls', 'database', 'mvc', 'addons');
+	static $core_prefix = array('lib', 'ilib', 'cls', 'database', 'mvc', 'addons');
 	static $autoload    = false;
 
 	/**
@@ -56,11 +56,7 @@ class autoload
 		$prefix_file = null;
 		if (preg_grep("/^$prefix$/", self::$core_prefix))
 		{
-			$file_addr = self::check_ifile($prefix, $sub_path, $exec_file);
-			if($file_addr === false)
-			{
-				$file_addr = self::check_file($prefix, $sub_path, $exec_file);
-			}
+			$file_addr = self::check_file($prefix, $sub_path, $exec_file);
 		}
 		else
 		{
@@ -78,29 +74,6 @@ class autoload
 		}
 
 		return $file_addr;
-	}
-
-	/**
-	 * [check_ifile description]
-	 * @param  [type] $prefix    [description]
-	 * @param  [type] $sub_path  [description]
-	 * @param  [type] $exec_file [description]
-	 * @return [type]            [description]
-	 */
-	static function check_ifile($prefix, $sub_path, $exec_file)
-	{
-		if(!defined("i$prefix"))
-		{
-			return false;
-		}
-		$prefix_file = constant("i$prefix");
-		$file_addr   = $prefix_file .$sub_path .$exec_file;
-		if(file_exists($file_addr))
-		{
-			return $file_addr;
-		}
-
-		return false;
 	}
 
 	/**
@@ -123,7 +96,6 @@ class autoload
 		{
 			return $file_addr;
 		}
-
 		return false;
 	}
 

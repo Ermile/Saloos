@@ -3,7 +3,7 @@ namespace lib\api;
 
 class config
 {
-	private $api, $api_method, $model_api_name, $view_api_name;
+	public $api, $api_method, $model_api_name, $view_api_name;
 	public $REST, $SERVER;
 
 	public function __construct($api, $api_method, $model_api_name, $view_api_name)
@@ -65,7 +65,7 @@ class config
 	}
 
 
-	private function check($route)
+	public function check($route)
 	{
 		if ($this->api->controller->method) return;
 		$route_callback = call_user_func_array(array($this->api->controller, 'route'), func_get_args());

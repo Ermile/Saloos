@@ -29,7 +29,7 @@ class api
 	}
 
 	private function add_api($name, $model_api_name, $view_api_name){
-		$api_config = new api\config($this, $name, $model_api_name, $view_api_name);
+		$api_config = saloos::lib('api')->config($this, $name, $model_api_name, $view_api_name);
 		return $api_config;
 	}
 }
