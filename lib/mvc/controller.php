@@ -44,11 +44,31 @@ class controller extends \lib\controller
 	public function access($_content = null, $_loc = null, $_type = null, $_block = null)
 	{
 		$myStatus = null;
+		$su       = null;
+		// if user is superviser then set su to true
+		// permission id 1 is supervisior of system
+		if($_SESSION['user']['permission'] === "1")
+		{
+			$su       = true;
+			$suStatus = new \content_cp\permissions\controller;
+			$suStatus = $suStatus->permList("su");
+		}
+
 		// if programmer not set content, give it automatically from address
 		if($_content === 'all')
 		{
 			$myStatus = [];
-			if(isset($_SESSION['permission']))
+			if($su)
+			{
+				foreach ($suStatus as $key => $value)
+				{
+					if(isset($value['enable']))
+					{
+						$myStatus[$key] = $value['enable'];
+					}
+				}
+			}
+			elseif(isset($_SESSION['permission']))
 			{
 				foreach ($_SESSION['permission'] as $key => $value)
 				{
@@ -63,13 +83,24 @@ class controller extends \lib\controller
 		elseif(!$_content)
 		{
 			$_content = router::get_repository_name();
-			$_content = substr($_content, strpos($_content, '_') + 1);
+			if($_content !== "content")
+			{
+				$_content = substr($_content, strpos($_content, '_') + 1);
+			}
+		}
+		if($su && !isset($suStatus[$_content]))
+		{
+			$su = false;
 		}
 
 		// if user want specefic location
 		if($_loc == 'all')
 		{
-			if(isset($_SESSION['permission'][$_content]['modules']))
+			if($su)
+			{
+				$myStatus = $suStatus[$_content]['modules'];
+			}
+			elseif(isset($_SESSION['permission'][$_content]['modules']))
 			{
 				$myStatus = $_SESSION['permission'][$_content]['modules'];
 			}
@@ -78,14 +109,22 @@ class controller extends \lib\controller
 		{
 			if($_type)
 			{
-				if(isset($_SESSION['permission'][$_content]['modules'][$_loc][$_type]))
+				if($su)
+				{
+					$myStatus = $suStatus[$_content]['modules'][$_loc][$_type];
+				}
+				elseif(isset($_SESSION['permission'][$_content]['modules'][$_loc][$_type]))
 				{
 					$myStatus = $_SESSION['permission'][$_content]['modules'][$_loc][$_type];
 				}
 			}
 			else
 			{
-				if(isset($_SESSION['permission'][$_content]['modules'][$_loc]))
+				if($su)
+				{
+					$myStatus = $suStatus[$_content]['modules'][$_loc];
+				}
+				elseif(isset($_SESSION['permission'][$_content]['modules'][$_loc]))
 				{
 					$myStatus = $_SESSION['permission'][$_content]['modules'][$_loc];
 				}
@@ -94,7 +133,11 @@ class controller extends \lib\controller
 		// else if not set location and only want enable status
 		else
 		{
-			if(isset($_SESSION['permission'][$_content]['enable']))
+			if($su)
+			{
+				$myStatus = $suStatus[$_content]['enable'];
+			}
+			elseif(isset($_SESSION['permission'][$_content]['enable']))
 			{
 				$myStatus = $_SESSION['permission'][$_content]['enable'];
 			}
@@ -135,7 +178,7 @@ class controller extends \lib\controller
 			}
 			elseif($_block)
 			{
-				\lib\error::access(T_("you can't access to this page!"));
+				// \lib\error::access(T_("you can't access to this page!"));
 			}
 		}
 
