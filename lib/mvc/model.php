@@ -157,6 +157,14 @@ class model extends \lib\model
 					$qry = $qry->setPost_type('page');
 					$qry_module = 'posts';
 					break;
+
+				case 'users':
+					$incomplete_fields = null;
+					if($_type == 'insert')
+					{
+						$qry = $qry->set('user_createdate', date('Y-m-d H:i:s'));
+					}
+					break;
 			}
 		}
 
@@ -168,8 +176,8 @@ class model extends \lib\model
 
 		if($_type == 'update' && $not_change)
 		{
-			debug::error(T_("some fields must be change for update!"));
-			// return false;
+			debug::warn(T_("some fields must be change for update!"));
+			return false;
 		}
 		// var_dump($qry);exit();
 		return $qry;

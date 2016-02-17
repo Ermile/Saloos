@@ -158,6 +158,9 @@ class maker
 	function attr($_name, $_value = '')
 	{
 		$this->attr[$_name] = $_value;
+		if(!$_value)
+			unset($this->attr[$_name]);
+
 		return $this;
 	}
 
@@ -205,6 +208,7 @@ class maker
 		$this->elname = $_elname;
 		return $this;
 	}
+
 
 
 	/**

@@ -6,6 +6,13 @@ trait optimize
 	public $form;
 	public $forms;
 
+
+	/**
+	 * [createform description]
+	 * @param  [type] $_name [description]
+	 * @param  [type] $_type [description]
+	 * @return [type]        [description]
+	 */
 	function createform($_name, $_type = null)
 	{
 		$this->data->extendForm = true;
@@ -39,14 +46,21 @@ trait optimize
 
 		// if type of form is edit then fill it with related data
 		if($_type == 'edit')
+		{
 			$this->form_fill($form, $sName[2]);
+		}
 
 
 		return $form;
 	}
 
 
-	// This function fill forms for edit and work automatically
+	/**
+	 * This function fill forms for edit and work automatically
+	 * @param  [type] $_form  [description]
+	 * @param  [type] $_table [description]
+	 * @return [type]         [description]
+	 */
 	public function form_fill($_form, $_table = null)
 	{
 		$_table   = $_table? $_table: $this->data->module;
@@ -65,14 +79,25 @@ trait optimize
 						if($v->attr["value"] == $_datarow[$key])
 						{
 							if ($oForm->attr['type'] == "select")
+							{
 								$_form->$key->child($k)->selected("selected");
+							}
 							else
+							{
 								$v->checked("checked");
+							}
+						}
+						else
+						{
+							$v->attr('checked', null);
+							$v->attr('selected', null);
 						}
 					}
 				}
 				else
+				{
 					$oForm->value($_datarow[$key]);
+				}
 			}
 		}
 	}
