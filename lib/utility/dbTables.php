@@ -98,7 +98,6 @@ class dbTables
         $field_style    = self::field_userFriendly($myfield, 'type');
         $txt_fn         = "\n\tpublic function $myfield()";
         $txt_child      = null;
-
         // declare properties of field that show on above of sql files
         $varProp            = array();
         $varProp['null']    = $crow->Null;
@@ -151,7 +150,9 @@ class dbTables
 
           // set require if not allow null value in mysql
           if($crow->Null === 'NO')
+          {
             $html_prop['required'] = null;
+          }
 
           // if type is foreign force select type
           // if($varProp['foreign'])
@@ -196,7 +197,6 @@ class dbTables
         }
         $variable = "\t". rtrim(substr($variable, 0, -1)) . "];\n";
         $content .=  $variable ;
-
 
         // set property in array and text character for create final result
         if(is_array($html_prop))
@@ -287,7 +287,7 @@ class dbTables
    */
   public static function setproperty($_arg, $_name, $_style)
   {
-    if($_name === 'id' || $_name === 'modified' || $_name === 'pass' || $_name === 'password' || $_name === 'meta' )
+    if($_name === 'id' || $_name === 'modified' || $_name === 'pass' || $_name === 'password' || $_name === 'meta' || $_name === 'createdate')
       return false;
 
 

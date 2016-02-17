@@ -88,7 +88,7 @@ class controller extends \lib\controller
 				$_content = substr($_content, strpos($_content, '_') + 1);
 			}
 		}
-		if($su && !isset($suStatus[$_content]))
+		if(!isset($suStatus[$_content]) || !isset($suStatus[$_content]['modules']))
 		{
 			$su = false;
 		}
@@ -111,7 +111,10 @@ class controller extends \lib\controller
 			{
 				if($su)
 				{
-					$myStatus = $suStatus[$_content]['modules'][$_loc][$_type];
+					if(isset($suStatus[$_content]['modules'][$_loc][$_type]))
+					{
+						$myStatus = $suStatus[$_content]['modules'][$_loc][$_type];
+					}
 				}
 				elseif(isset($_SESSION['permission'][$_content]['modules'][$_loc][$_type]))
 				{
@@ -178,7 +181,11 @@ class controller extends \lib\controller
 			}
 			elseif($_block)
 			{
-				// \lib\error::access(T_("you can't access to this page!"));
+				\lib\error::access(T_("you can't access to this page!"));
+			}
+			else
+			{
+				// do nothing!
 			}
 		}
 
