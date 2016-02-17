@@ -84,7 +84,7 @@ class model extends \lib\model
 		// get all fields of table and filter fields name for show in datatable
 		// access from columns variable
 		// check if datatable exist then get this data
-		$incomplete_fields = array();
+		$incomplete_fields = [];
 		$fields            = \lib\sql\getTable::get($qry_module);
 		// var_dump(utility::post());
 		// var_dump($qry_module);
@@ -96,6 +96,10 @@ class model extends \lib\model
 			{
 				$tmp_setfield = 'set'.ucfirst($key);
 				$tmp_value    = utility::post($value['value']);
+				if($value['value'] === 'pass')
+				{
+					$tmp_value = utility::post('pass', 'hash');
+				}
 				$tmp_value    = trim($tmp_value);
 
 				// if user fill box and post data for this field add to query string
@@ -159,10 +163,18 @@ class model extends \lib\model
 					break;
 
 				case 'users':
-					$incomplete_fields = null;
 					if($_type == 'insert')
 					{
+						// remove createdate from incomplete and fill it with current datetime
+						if(($key = array_search('createdate', $incomplete_fields)) !== false)
+						{
+							unset($incomplete_fields[$key]);
+						}
 						$qry = $qry->set('user_createdate', date('Y-m-d H:i:s'));
+					}
+					else
+					{
+						$incomplete_fields = null;
 					}
 					break;
 			}

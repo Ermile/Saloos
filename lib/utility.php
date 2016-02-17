@@ -2,7 +2,13 @@
 namespace lib;
 class utility
 {
-	// filter post and safe it
+	/**
+	 * filter post and safe it
+	 * @param  [type] $_name [description]
+	 * @param  [type] $_type [description]
+	 * @param  [type] $_arg  [description]
+	 * @return [type]        [description]
+	 */
 	public static function post($_name = null, $_type = null, $_arg = null)
 	{
 		if(!$_name)
@@ -23,14 +29,34 @@ class utility
 			}
 			// for password user hasher parameter for hash post value
 			elseif($_type === 'hash')
-				$myvalue = self::hasher($myvalue);
+			{
+				if($_arg)
+				{
+					$myvalue = self::hasher($myvalue);
+				}
+				elseif(strlen($myvalue) > 4 && strlen(strlen($myvalue) < 50))
+				{
+					$myvalue = self::hasher($myvalue);
+				}
+				else
+				{
+					$myvalue = null;
+				}
+			}
 
 			return $myvalue;
 		}
+
 		return null;
 	}
 
-	// filter get and safe it
+
+	/**
+	 * filter get and safe it
+	 * @param  [type] $_name [description]
+	 * @param  [type] $_arg  [description]
+	 * @return [type]        [description]
+	 */
 	public static function get($_name = null, $_arg = null)
 	{
 		$myget = array();
@@ -65,8 +91,15 @@ class utility
 		return null;
 	}
 
-	// Call this funtion for encode or decode your password.
-	// If you pass hashed password func verify that, else create a new pass to save in db
+
+	/**
+	 * Call this funtion for encode or decode your password.
+	 * If you pass hashed password func verify that,
+	 * else create a new pass to save in db
+	 * @param  [type] $_plainPassword  [description]
+	 * @param  [type] $_hashedPassword [description]
+	 * @return [type]                  [description]
+	 */
 	public static function hasher($_plainPassword, $_hashedPassword = null)
 	{
 		// custom text to add in start and end of password
@@ -89,7 +122,13 @@ class utility
 		return $myresult;
 	}
 
-	// create a random code for use in verification
+
+	/**
+	 * create a random code for use in verification
+	 * @param  integer $_length [description]
+	 * @param  boolean $type    [description]
+	 * @return [type]           [description]
+	 */
 	public static function randomCode($_length = 4, $type = true)
 	{
 		$mystring	= '';
@@ -108,7 +147,15 @@ class utility
 		return $mystring;
 	}
 
-	// convert datetime to human timing for better reading
+
+	/**
+	 * convert datetime to human timing for better reading
+	 * @param  [type] $_time   [description]
+	 * @param  string $_max    [description]
+	 * @param  string $_format [description]
+	 * @param  string $_lang   [description]
+	 * @return [type]          [description]
+	 */
 	public static function humanTiming($_time, $_max = 'ultimate', $_format = "Y/m/d", $_lang = 'en')
 	{
 		// auto convert with strtotime function
