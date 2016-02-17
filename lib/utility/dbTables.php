@@ -47,7 +47,7 @@ class dbTables
     {
       $TableName   = $row->{'Tables_in_'.db_name};
       $TablePrefix = substr($TableName, 0, -1);
-      $content     = "<?php\n". "namespace database\\".db_name.";\n" . "class $TableName \n{\n";
+      $content     = "<?php\n". "namespace database\\".db_name.";\n" . "class $TableName\n{\n";
       $fn          = "\n";
 
       // echo table name and it to translation list
