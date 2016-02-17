@@ -3,8 +3,8 @@ namespace lib\utility;
 
 /**
  * db Tables Creator class
- * Version 2.1
- * 04 May 2015
+ * Version 2.4
+ * 17 Feb 2016
  */
 class dbTables
 {
@@ -151,7 +151,14 @@ class dbTables
           // set require if not allow null value in mysql
           if($crow->Null === 'NO')
           {
-            $html_prop['required'] = null;
+            if($field_name == 'pass')
+            {
+              unset($html_prop['required']);
+            }
+            else
+            {
+              $html_prop['required'] = null;
+            }
           }
 
           // if type is foreign force select type
@@ -287,7 +294,7 @@ class dbTables
    */
   public static function setproperty($_arg, $_name, $_style)
   {
-    if($_name === 'id' || $_name === 'modified' || $_name === 'pass' || $_name === 'password' || $_name === 'meta' || $_name === 'createdate')
+    if($_name === 'id' || $_name === 'modified' || $_name === 'password' || $_name === 'meta' || $_name === 'createdate')
       return false;
 
 
