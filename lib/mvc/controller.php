@@ -159,29 +159,29 @@ class controller extends \lib\controller
 						break;
 
 					case 'add':
-						$msg = T_("you can't add new") .' '. T_($_loc);
+						$msg = T_("You can't add new") .' '. T_($_loc);
 						break;
 
 					case 'edit':
-						$msg = T_("you can't edit") .' '. T_($_loc);
+						$msg = T_("You can't edit") .' '. T_($_loc);
 						break;
 
 					case 'delete':
-						$msg = T_("you can't delete") .' '. T_($_loc);
+						$msg = T_("You can't delete") .' '. T_($_loc);
 						break;
 
 					default:
-						$msg = "you can't access to this part of system";
+						$msg = "You can't access to this part of system";
 						break;
 				}
-				$msg = $msg. "<br/>". T_(" Because of your permission");
+				$msg = $msg. "<br/> ". T_("Because of your permission");
 
 				\lib\debug::error(T_($msg));
 				$this->model()->_processor(object(array("force_json" => true, "force_stop" => true)));
 			}
 			elseif($_block)
 			{
-				\lib\error::access(T_("you can't access to this page!"));
+				\lib\error::access(T_("You can't access to this page!"));
 			}
 			else
 			{
