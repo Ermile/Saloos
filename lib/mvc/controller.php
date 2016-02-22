@@ -51,7 +51,7 @@ class controller extends \lib\controller
 		{
 			$su       = true;
 			$suStatus = new \content_cp\permissions\controller;
-			$suStatus = $suStatus->permList("su");
+			$suStatus = $suStatus->permListFill("su");
 		}
 
 		// if programmer not set content, give it automatically from address
