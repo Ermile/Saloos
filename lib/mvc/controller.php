@@ -193,6 +193,16 @@ class controller extends \lib\controller
 	}
 
 
+	/**
+	 * call model func and return needed option in all condition
+	 * @return [type] return string or array contain option value
+	 */
+	public function option()
+	{
+		return $this->model()->sp_get_options(...func_get_args());
+	}
+
+
 	// return module name for use in view or other place
 	public function module($_type = null, $_fix = true)
 	{
