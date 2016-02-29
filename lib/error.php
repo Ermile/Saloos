@@ -88,7 +88,7 @@ class error
 	{
 		$HTTP_ERROR = self::string($STATUS);
 		header("HTTP/1.1 $STATUS ".$HTTP_ERROR);
-		require_once(error_file);
+		require_once(lib."error_page.php");
 		exit();
 	}
 

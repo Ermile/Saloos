@@ -2,6 +2,7 @@
 /**
  * default of all define
  */
+
 // Define Global variables ***************************************************************************************
 // Core name
 define('core_name'	,'saloos');
@@ -9,6 +10,7 @@ define('core_name'	,'saloos');
 // Define main service
 if(!defined('MainService'))
 	define('MainService', 'ermile');
+
 
 // Define Saloos variables ***************************************************************************************
 if(!defined("core"))
@@ -18,8 +20,10 @@ if(!defined("core"))
 if(!defined("lib"))
 	define("lib", "lib/");
 
- 	set_include_path(get_include_path() . PATH_SEPARATOR . core.'saloos-addons/');
-	set_include_path(get_include_path() . PATH_SEPARATOR . core);
+// set include path for lib
+set_include_path(get_include_path() . PATH_SEPARATOR . core.'saloos-addons/');
+set_include_path(get_include_path() . PATH_SEPARATOR . core);
+
 // Saloos plugin
 if(!defined("addons"))
 	define("addons", core."saloos-addons/");
@@ -27,10 +31,6 @@ if(!defined("addons"))
 // Saloos helper
 if(!defined("helper"))
 	define("helper", core."helper/");
-
-// Saloos error page
-if(!defined("error_file"))
-	define("error_file", core."page/page_error.php");
 
 
 // Define Project variables **************************************************************************************
