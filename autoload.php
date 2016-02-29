@@ -4,6 +4,9 @@
  */
 require_once ("define.php");
 
+if(stream_resolve_include_path('idefine.php')){
+	require_once ("idefine.php");
+}
 
 /*
 **	In object-oriented applications one of the biggest annoyances is having to write a long list of needed includes
@@ -89,10 +92,9 @@ class autoload
 		{
 			return false;
 		}
-
 		$prefix_file = constant($prefix);
 		$file_addr   = $prefix_file .$sub_path .$exec_file;
-		if(file_exists($file_addr))
+		if(stream_resolve_include_path($file_addr))
 		{
 			return $file_addr;
 		}
@@ -128,7 +130,6 @@ class saloos extends \lib\saloos
 {
 
 }
-
 // create a new instance from saloos
 new saloos;
 ?>

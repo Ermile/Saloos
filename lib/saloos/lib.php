@@ -10,12 +10,11 @@ class lib
 		$this->prefix = $args ? "\\". trim($args[0], "\\"). "\\" : "\\";
 	}
 	public function __call($name, $args){
-		$path = array("ilib", "addons\\lib", "lib");
+		$path = array("ilib", "lib");
 		foreach ($path as $key => $value) {
 			$class_name = "{$value}{$this->prefix}{$name}";
 			if(class_exists($class_name)){
-				$class_name_valid = $class_name;
-				return new $class_name_valid(...$args);
+				return new $class_name(...$args);
 			}
 		}
 		\lib\error::core("lib\\{$name}");

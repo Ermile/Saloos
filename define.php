@@ -16,8 +16,10 @@ if(!defined("core"))
 
 // Saloos library
 if(!defined("lib"))
-	define("lib", core."lib/");
+	define("lib", "lib/");
 
+ 	set_include_path(get_include_path() . PATH_SEPARATOR . core.'saloos-addons/');
+	set_include_path(get_include_path() . PATH_SEPARATOR . core);
 // Saloos plugin
 if(!defined("addons"))
 	define("addons", core."saloos-addons/");
@@ -41,7 +43,7 @@ if(!defined("dir_includes"))
 
 // Project library
 if(!defined("ilib"))
-	define("ilib", dir_includes."lib/");
+	define("ilib", "ilib/");
 
 // Project helper
 if(!defined("ihelper"))
