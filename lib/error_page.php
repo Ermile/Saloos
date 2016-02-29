@@ -12,7 +12,9 @@
  <b class='slash'><?php echo $STRING; ?></b>
 <?php if(DEBUG && Tld === 'dev') {?>
  <ol>
-<?php foreach ($obj as $key => $value):?>
+<?php
+$obj = array_reverse($obj);
+foreach ($obj as $key => $value):?>
 <?php
   $fileaddr = isset($obj[$key]['file'])? $obj[$key]['file']: null;
   if($fileaddr)
