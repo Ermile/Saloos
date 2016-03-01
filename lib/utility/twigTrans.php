@@ -15,12 +15,12 @@ class twigTrans
 		switch ($_path)
 		{
 			case 'addons':
-				$mypath = realpath(addons).'\\';
+				$mypath = realpath(addons).DIRECTORY_SEPARATOR;
 				$export_file_name = 'addons';
 				break;
 
 			default:
-				$mypath = is_dir($_path)? $_path: realpath(root).'\\';
+				$mypath = is_dir($_path)? $_path: realpath(root).DIRECTORY_SEPARATOR;
 				break;
 		}
 

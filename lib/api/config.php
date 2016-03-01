@@ -55,7 +55,19 @@ class config
 	{
 		if($route === null)
 		{
-			$route = array(\lib\router::get_url());
+			$this_url =  '';
+
+			if(\lib\router::get_class() != 'home')
+			{
+				$this_url =  \lib\router::get_class();
+			}
+
+			if(\lib\router::get_method() != 'home')
+			{
+				$this_url .= '/'. \lib\router::get_method();
+			}
+
+			$route = array($this_url);
 		}else{
 			$route = func_get_args();
 		}
