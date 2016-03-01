@@ -4,35 +4,58 @@ class validator
 {
 	public $group, $status = true, $select, $error, $value, $type = 'error', $_functions = array(), $name, $validate, $onError;
 	public static $save = array();
-	
+
+	/**
+	 * [__construct description]
+	 * @param [type] $value     [description]
+	 * @param [type] $validator [description]
+	 * @param string $group     [description]
+	 */
 	public function __construct($value, $validator, $group = 'public')
 	{
-		if(!isset(self::$save[$group]) || !is_array(self::$save[$group])){
+		if(!isset(self::$save[$group]) || !is_array(self::$save[$group]))
+		{
 			self::$save[$group] = array();
 		}
-		if(is_array($value)){
+		if(is_array($value))
+		{
 			$this->name = $value[0];
 			$this->value = $value[1];
-		}else{
+		}
+		else
+		{
 			$this->name = count(self::$save[$group]);
 			$this->value = $value;
 		}
+
 		self::$save[$group][$this->name] = $this;
 		$this->group		= $group;
 		$this->validate	= $validator;
 		$this->config();
 	}
 
-	final function config(){
-		if(method_exists($this->validate, 'getFunctions') && $this->validate->getFunctions()){
-			foreach ($this->validate->getFunctions() as $key => $args) {
-				if(empty($args)){
+
+	/**
+	 * [config description]
+	 * @return [type] [description]
+	 */
+	final function config()
+	{
+		if(method_exists($this->validate, 'getFunctions') && $this->validate->getFunctions())
+		{
+			foreach ($this->validate->getFunctions() as $key => $args)
+			{
+				if(empty($args))
+				{
 					$args = array();
-				}elseif(!is_array($args)){
+				}
+				elseif(!is_array($args))
+				{
 					$args = array($args);
 				}
-				
-				if(!is_object($args[0])){
+
+				if(!is_object($args[0]))
+				{
 					error::page("validate inline extends $key not found");
 				}
 
@@ -40,7 +63,8 @@ class validator
 
 				$onf = $this->status;
 				$ret = call_user_func_array($closure, $args);
-				if($ret == false || ($onf === true && $this->status == false)){
+				if($ret == false || ($onf === true && $this->status == false))
+				{
 					$this->setError($key);
 				}
 			}
@@ -48,7 +72,11 @@ class validator
 
 	}
 
-	// set error message to show for user, this is only notify message
+
+	/**
+	 * set error message to show for user, this is only notify message
+	 * @param [type] $key [description]
+	 */
 	final function setError($key)
 	{
 		if($this->status || $this->error === null)
@@ -56,7 +84,9 @@ class validator
 			$this->status = false;
 
 			if(isset($this->validate->form->$key))
+			{
 				$this->error = $this->validate->form->$key;
+			}
 			else
 			{
 				$mylabel = $this->field_userFriendly($key, 'label');
@@ -65,6 +95,11 @@ class validator
 		}
 	}
 
+
+	/**
+	 * [compile description]
+	 * @return [type] [description]
+	 */
 	final function compile()
 	{
 		if($this->status)
@@ -77,27 +112,65 @@ class validator
 		}
 	}
 
-	final function type($type){
+
+	/**
+	 * [type description]
+	 * @param  [type] $type [description]
+	 * @return [type]       [description]
+	 */
+	final function type($type)
+	{
 		$this->type = ($type = 'warn')? 'warn' : 'error';
 	}
 
-	final function onError($onError){
+
+	/**
+	 * [onError description]
+	 * @param  [type] $onError [description]
+	 * @return [type]          [description]
+	 */
+	final function onError($onError)
+	{
 		$this->onError = $onError;
 	}
 
-	public static function get_validate($group = null){
+
+	/**
+	 * [get_validate description]
+	 * @param  [type] $group [description]
+	 * @return [type]        [description]
+	 */
+	public static function get_validate($group = null)
+	{
 		return $group == null ? self::$save : self::$save[$group];
 	}
 
-	public static function __callStatic($name, $args){
-		if($name == 'all'){
+
+	/**
+	 * [__callStatic description]
+	 * @param  [type] $name [description]
+	 * @param  [type] $args [description]
+	 * @return [type]       [description]
+	 */
+	public static function __callStatic($name, $args)
+	{
+		if($name == 'all')
+		{
 			return self::$save;
-		}else{
+		}
+		else
+		{
 			return count($args) > 0 ? self::$save[$name][$args] : self::$save[$name];
 		}
 	}
 
-	// change field name with condition and return new user friendly name
+
+	/**
+	 * change field name with condition and return new user friendly name
+	 * @param  [type] $_fieldname [description]
+	 * @param  string $_export    [description]
+	 * @return [type]             [description]
+	 */
 	public static function field_userFriendly($_fieldname, $_export = 'name')
 	{
 		$_fieldname = strtolower($_fieldname);
@@ -145,7 +218,7 @@ class validator
 		}
 
 		$result = array('name' => $myname, 'label' => $mylabel, 'type' => $mytype );
-		
+
 		return $result[$_export];
 	}
 }
