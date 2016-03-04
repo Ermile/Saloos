@@ -35,14 +35,14 @@ class main
 			self::$prv_method = router::get_method();
 			router::set_method('home');
 			$controller_name = '\\'.self::$myrep.'\\'.router::get_class().'\\'.router::get_method().'\\controller';
-			
+
 			return $this->check_controller($controller_name);
 		});
 
 		$this->add_track('class', function(){
 			router::set_class(self::$prv_class);
 			$controller_name = '\\'.self::$myrep.'\\'.router::get_class().'\\controller';
-			
+
 			return $this->check_controller($controller_name);
 		});
 
@@ -53,14 +53,14 @@ class main
 			}
 			router::set_class('home');
 			$controller_name = '\\'.self::$myrep.'\\'.router::get_class().'\\'.router::get_method().'\\controller';
-			
+
 			return $this->check_controller($controller_name);
 		});
 
 		$this->add_track('home', function(){
 			router::set_class('home');
 			$controller_name = '\\'.self::$myrep.'\\'.router::get_class().'\\controller';
-		
+
 			return $this->check_controller($controller_name);
 		});
 	}
@@ -68,11 +68,13 @@ class main
 	public function controller_finder(){
 		self::$url_property = router::get_url_property(-1);
 		self::$myrep        = router::get_repository_name();
-		
+
 		$this->add_controller_tracks();
 
-		foreach (self::$tracks as $key => $value) {
-			$controller_name = self::$tracks[$key][1]();
+		foreach (self::$tracks as $key => $value)
+		{
+			$track = self::$tracks[$key][1];
+			$controller_name = $track();
 			if($controller_name) break;
 		}
 		$this->loadController($controller_name);
@@ -80,7 +82,7 @@ class main
 
 	public function __construct()
 	{
-		
+
 		$this->controller_finder();
 
 	}
