@@ -4,9 +4,6 @@
  */
 require_once ("define.php");
 
-if(stream_resolve_include_path('idefine.php')){
-	require_once ("idefine.php");
-}
 
 /*
 **	In object-oriented applications one of the biggest annoyances is having to write a long list of needed includes
@@ -35,11 +32,11 @@ class autoload
 		$split_name = preg_split("[\\\]", $name);
 		if(count($split_name) > 1)
 		{
-			$file_addr = self::get_file_name($split_name);
+			$file_addr = self::iget_file_name($split_name);
 			if($file_addr !== false)
 			{
 				self::$require[$name] = 1;
-				include($file_addr);
+				include_once($file_addr);
 			}
 			else
 			{
@@ -55,27 +52,21 @@ class autoload
 	 */
 	static function get_file_name($split_name)
 	{
-		list($prefix, $sub_path, $exec_file) = self::file_splice($split_name);
+		list($prefix, $sub_path, $exec_file) = self::ifile_splice($split_name);
 		$prefix_file = null;
 		if (preg_grep("/^$prefix$/", self::$core_prefix))
 		{
-			$file_addr = self::check_file($prefix, $sub_path, $exec_file);
-		}
-		else
-		{
-			$prefix_file = \lib\router::get_repository();
-			$prefix_file = preg_replace("#\/[^\/]+\/?$#", '', $prefix_file);
-			$file_addr   = $prefix_file. '/'. $prefix.'/'. $sub_path. $exec_file;
-			if(!file_exists($file_addr))
-			{
-				$file_addr = false;
-			}
-			if(!$file_addr && file_exists(addons. $prefix. '/' .$sub_path. $exec_file))
-			{
-				$file_addr = addons. $prefix. '/' .$sub_path. $exec_file;
-			}
+			$file_addr = self::icheck_file($prefix, $sub_path, $exec_file);
+			return $file_addr;
 		}
 
+		$prefix_file = \lib\router::get_repository();
+		$prefix_file = preg_replace("#\/[^\/]+\/?$#", '', $prefix_file);
+		$file_addr   = $prefix_file. '/'. $prefix.'/'. $sub_path. $exec_file;
+		if(!file_exists($file_addr))
+		{
+			$file_addr = false;
+		}
 		return $file_addr;
 	}
 
@@ -118,10 +109,27 @@ class autoload
 
 		return array($prefix, $sub_path, $exec_file .".php");
 	}
+
+	static function __callStatic($_name, $_args){
+		$name = preg_replace("/^i/", "", $_name);
+		if(method_exists("iautoload", $name))
+		{
+			return iautoload::{$name}(...$_args);
+		}
+		else
+			return autoload::{$name}(...$_args);
+	}
 }
 
+if(stream_resolve_include_path('iautoload.php')){
+	require_once ("iautoload.php");
+}
 // register autoload
-spl_autoload_register("\autoload::load");
+if(class_exists('iautoload'))
+	spl_autoload_register("\iautoload::load");
+else
+	spl_autoload_register("\autoload::load");
+
 
 /**
  * define new saloos class

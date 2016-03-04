@@ -165,6 +165,10 @@ class controller
 					// do nothing!
 				}
 			}
+			if(!class_exists($MyClassName))
+			{
+				$MyClassName = preg_replace("/\\\[^\\\]*\\\controller$/", '\home\\'.$_className, get_called_class());
+			}
 		}
 
 		if(!class_exists($MyClassName))
