@@ -409,6 +409,10 @@ function T_($msgid)
       if (_check_locale_and_function()) return _($msgid);
       return __($msgid);
     }
+    elseif(is_array($msgid))
+    {
+      return $msgid;
+    }
     else
     {
       return null;
