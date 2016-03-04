@@ -5,6 +5,12 @@ class form
 	public static $formExtends;
 	private $Element_Sortable_MCLS = array();
 
+	/**
+	 * [make description]
+	 * @param  boolean $name [description]
+	 * @param  boolean $args [description]
+	 * @return [type]        [description]
+	 */
 	function make($name = false, $args = false)
 	{
 		if(is_object($name))
@@ -57,7 +63,8 @@ class form
 			if($table)
 			{
 				$form = new $this;
-				foreach ($table as $key => $value) {
+				foreach ($table as $key => $value)
+				{
 					if(isset($value->closure) && isset($value->closure->form))
 					{
 						$form->make($value->closure->form, $key);
@@ -87,10 +94,18 @@ class form
 		}
 	}
 
-	private function sortable(){
-		if(count($this->Element_Sortable_MCLS) == 0){
+
+	/**
+	 * [sortable description]
+	 * @return [type] [description]
+	 */
+	private function sortable()
+	{
+		if(count($this->Element_Sortable_MCLS) == 0)
+		{
 			$array = array();
-			foreach ($this as $key => $value) {
+			foreach ($this as $key => $value)
+			{
 				if($key == 'Element_Sortable_MCLS') continue;
 				array_push($array, $key);
 			}
@@ -99,19 +114,63 @@ class form
 		ksort($this->Element_Sortable_MCLS);
 	}
 
-	function compile($autoSet = true){
+
+	/**
+	 * [compile description]
+	 * @param  boolean $autoSet [description]
+	 * @return [type]           [description]
+	 */
+	function compile($autoSet = true)
+	{
 		$this->sortable();
 		$array = array();
-		foreach ($this->Element_Sortable_MCLS as $k => $v) {
+		foreach ($this->Element_Sortable_MCLS as $k => $v)
+		{
 			$value = $this->$v;
-			if(method_exists($value, "compile")){
+
+			// if element has label set hint on label hover
+			if(isset($value->label) && strlen($value->label)>0)
+			{
+				$myLabel = $value->label;
+				$value->label = [];
+				$value->label['txt'] = $myLabel;
+				// customizing elements for hint
+				$myHintPos = 'hint--right';
+				if(isset($value->attr['pos']))
+				{
+					$myHintPos = $value->attr['pos'];
+					unset($value->attr['pos']);
+					// if user only pass right we add hint-- in start of it
+					if(strpos($myHintPos, 'hint--') !== 0)
+					{
+						$myHintPos = 'hint--' . $myHintPos;
+					}
+				}
+				if(isset($value->attr['desc']) && strlen($value->attr['desc']) >0 )
+				{
+					$value->label['hint'] = $value->attr['desc'];
+					unset($value->attr['desc']);
+					$value->label['class'] = $myHintPos;
+				}
+			}
+
+			if(method_exists($value, "compile"))
+			{
 				array_push($array, $value->compile($autoSet));
 			}
 		}
 		return $array;
 	}
 
-	function after($name, $after){
+
+	/**
+	 * [after description]
+	 * @param  [type] $name  [description]
+	 * @param  [type] $after [description]
+	 * @return [type]        [description]
+	 */
+	function after($name, $after)
+	{
 		$this->sortable();
 		$index = array_search($name, $this->Element_Sortable_MCLS);
 		if($index === false) return $this;
@@ -121,10 +180,12 @@ class form
 		if($aindex === false) return $this;
 		$array = array();
 		$aValue = null;
-		foreach ($this->Element_Sortable_MCLS as $key => $value) {
+		foreach ($this->Element_Sortable_MCLS as $key => $value)
+		{
 			if($key == $index) continue;
 			array_push($array, $value);
-			if($key == $aindex){
+			if($key == $aindex)
+			{
 				array_push($array, $peroperty);
 			}
 		}
@@ -132,7 +193,15 @@ class form
 		return $this;
 	}
 
-	function before($name, $before){
+
+	/**
+	 * [before description]
+	 * @param  [type] $name   [description]
+	 * @param  [type] $before [description]
+	 * @return [type]         [description]
+	 */
+	function before($name, $before)
+	{
 		$this->sortable();
 		$index = array_search($name, $this->Element_Sortable_MCLS);
 		if($index === false) return $this;
@@ -142,9 +211,11 @@ class form
 		if($bindex === false) return $this;
 		$array = array();
 		$aValue = null;
-		foreach ($this->Element_Sortable_MCLS as $key => $value) {
+		foreach ($this->Element_Sortable_MCLS as $key => $value)
+		{
 			if($key == $index) continue;
-			if($key == $bindex){
+			if($key == $bindex)
+			{
 				array_push($array, $peroperty);
 			}
 			array_push($array, $value);
@@ -152,23 +223,39 @@ class form
 		$this->Element_Sortable_MCLS = $array;
 		return $this;
 	}
-	function atEnd($name){
+
+
+	/**
+	 * [atEnd description]
+	 * @param  [type] $name [description]
+	 * @return [type]       [description]
+	 */
+	function atEnd($name)
+	{
 		$this->sortable();
 		$index = array_search($name, $this->Element_Sortable_MCLS);
 		if($index === false) return $this;
 		$peroperty = $this->Element_Sortable_MCLS[$index];
 		$array = array();
-		foreach ($this->Element_Sortable_MCLS as $key => $value) {
+		foreach ($this->Element_Sortable_MCLS as $key => $value)
+		{
 			if($key == $index) continue;
 			array_push($array, $value);
 		}
 		array_push($array, $peroperty);
 		$this->Element_Sortable_MCLS = $array;
-		return $this;
 
+		return $this;
 	}
 
-	function atFirst($name){
+
+	/**
+	 * [atFirst description]
+	 * @param  [type] $name [description]
+	 * @return [type]       [description]
+	 */
+	function atFirst($name)
+	{
 		$this->sortable();
 		$index = array_search($name, $this->Element_Sortable_MCLS);
 		if($index === false) return $this;
@@ -176,7 +263,8 @@ class form
 		$array = array();
 		array_push($array, $peroperty);
 
-		foreach ($this->Element_Sortable_MCLS as $key => $value) {
+		foreach ($this->Element_Sortable_MCLS as $key => $value)
+		{
 			if($key == $index) continue;
 			array_push($array, $value);
 		}
@@ -184,33 +272,53 @@ class form
 		return $this;
 	}
 
-	function add($name, $type = false, $replace = false){
+
+	/**
+	 * [add description]
+	 * @param [type]  $name    [description]
+	 * @param boolean $type    [description]
+	 * @param boolean $replace [description]
+	 */
+	function add($name, $type = false, $replace = false)
+	{
 		$this->sortable();
 		$form = new $this;
 		$frm = $type == false ? $name : $type;
-		if(!$type){
-
-			foreach ($frm as $key => $value) {
-				if(!isset($this->$key) || $replace){
+		if(!$type)
+		{
+			foreach ($frm as $key => $value)
+			{
+				if(!isset($this->$key) || $replace)
+				{
 					$this->$key = $value;
+
 					$k = array_search($key, $this->Element_Sortable_MCLS);
-					if($k == false){
+					if($k == false)
+					{
 						array_push($this->Element_Sortable_MCLS, $key);
 					}
 				}
 			}
 			return $this;
-		}else{
+		}
+		else
+		{
 			$k = array_search($name, $this->Element_Sortable_MCLS);
-			if(is_object($frm)){
+			if(is_object($frm))
+			{
 				$this->$name = $frm;
-				if($k === false){
+				if($k === false)
+				{
 					array_push($this->Element_Sortable_MCLS, $name);
 				}
-			}else{
-				if(!isset($this->$name) || $replace){
+			}
+			else
+			{
+				if(!isset($this->$name) || $replace)
+				{
 					$this->$name = $form->make($type);
-					if($k == false){
+					if($k == false)
+					{
 						array_push($this->Element_Sortable_MCLS, $name);
 
 					}
@@ -220,18 +328,31 @@ class form
 		}
 	}
 
-	function remove(){
+
+	/**
+	 * [remove description]
+	 * @return [type] [description]
+	 */
+	function remove()
+	{
 		$args = func_get_args();
 		if(is_array($args[0])){
 			$black = $args[0];
-		}elseif(count($args) > 1){
+		}
+		elseif(count($args) > 1)
+		{
 			$black = $args;
-		}else{
+		}
+		else
+		{
 			$black = preg_split("/([\.,\s\-])/", $args[0],-1, PREG_SPLIT_NO_EMPTY);
 		}
-		foreach ($black as $key => $value) {
+
+		foreach ($black as $key => $value)
+		{
 			$k = array_search($value, $this->Element_Sortable_MCLS);
-			if($k !== false){
+			if($k !== false)
+			{
 				unset($this->Element_Sortable_MCLS[$k]);
 				unset($this->$value);
 			}
@@ -241,18 +362,31 @@ class form
 
 	}
 
-	function white(){
+
+	/**
+	 * [white description]
+	 * @return [type] [description]
+	 */
+	function white()
+	{
 		$args = func_get_args();
-		if(is_array($args[0])){
+		if(is_array($args[0]))
+		{
 			$white = $args[0];
-		}elseif(count($args) > 1){
+		}
+		elseif(count($args) > 1)
+		{
 			$white = $args;
-		}else{
+		}
+		else
+		{
 			$white = preg_split("/([\.,\s\-])/", $args[0],-1, PREG_SPLIT_NO_EMPTY);
 		}
 
-		foreach ($this->Element_Sortable_MCLS as $key => $value) {
-			if(!preg_grep("/^".$value."$/", $white)){
+		foreach ($this->Element_Sortable_MCLS as $key => $value)
+		{
+			if(!preg_grep("/^".$value."$/", $white))
+			{
 				unset($this->Element_Sortable_MCLS[$key]);
 				unset($this->$value);
 			}
@@ -260,26 +394,40 @@ class form
 		// $this->sort($white);
 		return $this;
 	}
+
+
 	/**
-	** sort
-	**/
-	public function sort(){
+	 * [sort description]
+	 * @return [type] [description]
+	 */
+	public function sort()
+	{
 		$this->sortable();
 		$args = func_get_args();
-		if(is_array($args[0])){
+		if(is_array($args[0]))
+		{
 			$sort = $args[0];
-		}elseif(count($args) > 1){
+		}
+		elseif(count($args) > 1)
+		{
 			$sort = $args;
-		}else{
+		}
+		else
+		{
 			$sort = preg_split("/([\.,\s\-])/", $args[0],-1, PREG_SPLIT_NO_EMPTY);
 		}
+
 		$element = array();
-		foreach ($sort as $key => $value) {
+		foreach ($sort as $key => $value)
+		{
 			array_push($element, $value);
 		}
-		foreach ($this->Element_Sortable_MCLS as $key => $value) {
+
+		foreach ($this->Element_Sortable_MCLS as $key => $value)
+		{
 			$other_element = $this->Element_Sortable_MCLS[$key];
-			if(array_search($other_element, $element) == -1){
+			if(array_search($other_element, $element) == -1)
+			{
 				array_push($element, $value);
 			}
 		}
