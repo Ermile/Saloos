@@ -35,7 +35,7 @@ LC_ALL          6
 // LC_MESSAGES is not available if php-gettext is not loaded
 // while the other constants are already available from session extension.
 if (!defined('LC_MESSAGES')) {
-  define('LC_MESSAGES',	5);
+  define('LC_MESSAGES', 5);
 }
 
 require('streams.php');
@@ -174,14 +174,13 @@ function _get_codeset($domain=null) {
  * Convert the given string to the encoding set by bind_textdomain_codeset.
  */
 function _encode($text) {
+  $target_encoding = _get_codeset();
+  if (function_exists("mb_detect_encoding")) {
     $source_encoding = mb_detect_encoding($text);
-    $target_encoding = _get_codeset();
-    if ($source_encoding != $target_encoding) {
-        return mb_convert_encoding($text, $target_encoding, $source_encoding);
-    }
-    else {
-        return $text;
-    }
+    if ($source_encoding != $target_encoding)
+      $text = mb_convert_encoding($text, $target_encoding, $source_encoding);
+  }
+  return $text;
 }
 
 
@@ -406,7 +405,10 @@ function T_($msgid)
 {
     if(is_string($msgid) && $msgid)
     {
-      if (_check_locale_and_function()) return _($msgid);
+      if(_check_locale_and_function())
+      {
+        return _($msgid);
+      }
       return __($msgid);
     }
     elseif(is_array($msgid))
