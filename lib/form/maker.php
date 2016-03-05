@@ -127,7 +127,17 @@ class maker
 			// if user don't set pl of element give it from *->label('Hi')* and set it as placeholder
 			if(!isset($array['attr']['placeholder']) && $array['label'] && isset($array['attr']['type']) && $array['attr']['type']!='submit')
 			{
-				$array['attr']['placeholder'] = $array['label'];
+				if(is_array($array['label']))
+				{
+					if(isset($array['label']['txt']))
+					{
+						$array['attr']['placeholder'] = $array['label']['txt'];
+					}
+				}
+				else
+				{
+					$array['attr']['placeholder'] = $array['label'];
+				}
 				if(!empty($array['attr']['placeholder']))
 				{
 					$array['attr']['placeholder'] = gettext($array['attr']['placeholder']);
