@@ -13,7 +13,7 @@ trait optimize
 	 * @param  [type] $_type [description]
 	 * @return [type]        [description]
 	 */
-	function createform($_name, $_type = null)
+	function createform($_name, $_type = null, $_child = false)
 	{
 		$this->data->extendForm = true;
 		if(!$this->form)
@@ -28,11 +28,29 @@ trait optimize
 		{
 			$submit_value = T_('submit');
 
-			if($_type == 'add')          $submit_value = T_('submit');
-			elseif($_type == 'edit')     $submit_value = T_('save');
-			elseif($_type == 'login')    $submit_value = T_('sing in');
-			elseif($_type == 'register') $submit_value = T_('create an account');
-			elseif(!empty($_type))       $submit_value = $_type;
+			if($_type == 'add')
+			{
+				$submit_value = T_('submit');
+			}
+			elseif($_type == 'edit')
+			{
+				$submit_value = T_('save');
+			}
+			elseif($_type == 'login')
+			{
+				$submit_value = T_('sing in');
+			}
+			elseif($_type == 'register')
+			{
+				$submit_value = T_('create an account');
+			}
+			elseif(!empty($_type))
+			{
+				if(!$_child)
+				{
+					$submit_value = $_type;
+				}
+			}
 
 			array_push($args, $submit_value);
 		}
@@ -40,16 +58,24 @@ trait optimize
 		$form = call_user_func_array(array($this->form, 'make'), $args);
 		if(get_class($form) == 'lib\form' || preg_match("/cls\\\\form/", get_class($form)))
 		{
-			preg_match("/^(@[^\.]+)*\.(.+)$/", $_name, $sName);
-			$this->data->form->{$sName[2]} = $form;
-		}
+			// if user want to create child form use the name of child
+			if($_child)
+			{
+				$this->data->form->{$_type} = $form;
+			}
+			// else do in normal way
+			else
+			{
+				preg_match("/^(@[^\.]+)*\.(.+)$/", $_name, $sName);
+				$this->data->form->{$sName[2]} = $form;
+			}
 
-		// if type of form is edit then fill it with related data
-		if($_type == 'edit')
-		{
-			$this->form_fill($form, $sName[2]);
+			// if type of form is edit then fill it with related data
+			if($_type == 'edit')
+			{
+				$this->form_fill($form, $sName[2]);
+			}
 		}
-
 
 		return $form;
 	}
