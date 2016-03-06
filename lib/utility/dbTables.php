@@ -236,7 +236,7 @@ class dbTables
     $connect->close();
 
     // create translation file for gettext
-    $translation_output  = '<?php'."\n".'function transtext()'."\n{\n";
+    $translation_output  = '<?php'."\n".'private function transtext()'."\n{\n";
     foreach (self::$translation as $key => $value)
     {
       if(substr($key, 0, 6)=='Table ')

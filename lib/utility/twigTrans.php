@@ -95,7 +95,7 @@ class twigTrans
 
 
 		// create translation file
-		$translation_output  = '<?php'."\n".'function transtext()'."\n{\n";
+		$translation_output  = '<?php'."\n".'private function transtext()'."\n{\n";
 		foreach ($translation as $key => $value)
 		{
 			if($value=='New File')
