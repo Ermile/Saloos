@@ -479,7 +479,8 @@ class sql{
 			// for insert or update multiple row
 			if(is_array($value))
 			{
-
+				// $value = implode(',', $value);
+				// $value = json_encode($value, JSON_FORCE_OBJECT);
 			}
 			elseif(preg_match("/^#(.*)$/", $value, $v))
 			{

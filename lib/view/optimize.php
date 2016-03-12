@@ -89,40 +89,99 @@ trait optimize
 	 */
 	public function form_fill($_form, $_table = null)
 	{
-		$_table   = $_table? $_table: $this->data->module;
-		$_datarow = $this->model()->datarow($_table);
+		if(is_array($_table))
+		{
+			$_datarow = $_table;
+		}
+		else
+		{
+			$_table   = $_table? $_table: $this->data->module;
+			$_datarow = $this->model()->datarow($_table);
+		}
 
 		foreach ($_form as $key => $value)
 		{
+			$myValue = null;
+			$oForm   = $_form->$key;
+			// set value in all condition first check simple method
 			if(isset($_datarow[$key]))
 			{
-				$oForm = $_form->$key;
-				// var_dump($_form);
-				if($oForm->attr['type'] == "radio" || $oForm->attr['type'] == "select" || $oForm->attr['type'] == "checkbox")
+				$myValue = $_datarow[$key];
+			}
+			else
+			{
+				// else get key2 value
+				$key2 = substr($key, strpos($key, '_')+1);
+				// if value exist with keyname
+				if(isset($_datarow[$key2]))
 				{
-					foreach ($oForm->child as $k => $v)
+					$myValue = $_datarow[$key2];
+				}
+				// else if value exist in array value field with special name
+				elseif(isset($_datarow['value']) && ($key2 === 'name' || $key2 === 'default'))
+				{
+					$myValue = $_datarow['value'];
+				}
+				// else if set meta give meta value
+				elseif(isset($_datarow['meta']) && isset($_datarow['meta'][$key2]))
+				{
+					$myValue = $_datarow['meta'][$key2];
+				}
+			}
+
+			// for radio and select add special status for checking this element
+			if(
+				$oForm->attr['type'] === "radio" ||
+				$oForm->attr['type'] === "select"
+				// || $oForm->attr['type'] == "checkbox"
+			)
+			{
+				foreach ($oForm->child as $k => $v)
+				{
+					if($v->attr["value"] == $myValue)
 					{
-						if($v->attr["value"] == $_datarow[$key])
+						if ($oForm->attr['type'] == "select")
 						{
-							if ($oForm->attr['type'] == "select")
-							{
-								$_form->$key->child($k)->selected("selected");
-							}
-							else
-							{
-								$v->checked("checked");
-							}
+							$_form->$key->child($k)->selected("selected");
 						}
 						else
 						{
-							$v->attr('checked', null);
-							$v->attr('selected', null);
+							$v->checked("checked");
 						}
 					}
+					else
+					{
+						$v->attr('checked', null);
+						$v->attr('selected', null);
+					}
 				}
+			}
+			// for checkbox add checked status to element
+			elseif($oForm->attr['type'] === "checkbox")
+			{
+				if($myValue === 'enable' || $myValue === 'on')
+				{
+					$oForm->checked("checked");
+
+				}
+			}
+			// else for simple fields add default value
+			else
+			{
+				// if value is array
+				if(is_array($myValue))
+				{
+					// if key with name value exist set it
+					if(isset($myValue['value']))
+					{
+						$myValue = $myValue['value'];
+						$oForm->value($myValue);
+					}
+				}
+				// else if it's simple text
 				else
 				{
-					$oForm->value($_datarow[$key]);
+					$oForm->value($myValue);
 				}
 			}
 		}
