@@ -93,6 +93,10 @@ trait optimize
 		{
 			$_datarow = $_table;
 		}
+		elseif(!$_table)
+		{
+			return false;
+		}
 		else
 		{
 			$_table   = $_table? $_table: $this->data->module;
