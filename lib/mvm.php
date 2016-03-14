@@ -23,7 +23,7 @@ trait mvm
 			return call_user_func_array(array($this->controller, $name), $args);
 		}
 
-		\lib\error::internal(get_called_class()."->$name()");
+		\lib\error::internal(get_called_class()."()->$name()");
 	}
 }
 ?>
