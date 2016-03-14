@@ -234,10 +234,16 @@ class maker
 	}
 	public function joinCaller($name, $args)
 	{
-		$name = $name ? $name : $args[0];
+		if($name){
+			$name = $name;
+		}else{
+			$name = $args[0];
+			array_shift($args);
+		}
 		$sql               = new $this;
 		$this->join->$name = $sql;
 		$sql->table        = $name;
+		$sql->joinModel    = isset($args[0]) ? $args[0] : "INNER";
 		$sql->subClass     = true;
 		return $sql;
 	}

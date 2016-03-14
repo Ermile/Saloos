@@ -151,8 +151,15 @@ class sql{
 	 * function for make select query
 	 * @return [string] string of select query
 	 */
-	public function selectCaller(){
+	public function selectCaller()
+	{
 		$string = "SELECT ";
+		// if user want use replace
+		if($this->maker->syntaxArgs)
+		{
+			$string .= $this->maker->syntaxArgs. ' ';
+		}
+
 		$fields = array();
 		$tables = array();
 		$mapField = array();
@@ -309,7 +316,7 @@ class sql{
 		$string = "";
 		foreach ($this->maker->join as $key => $value)
 		{
-			$string .= " INNER JOIN ".$value->table." ON";
+			$string .= " {$value->joinModel} JOIN ".$value->table." ON";
 			$string .= $this->condition($value);
 		}
 		return $string;
