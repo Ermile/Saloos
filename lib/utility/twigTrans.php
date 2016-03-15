@@ -5,7 +5,7 @@ namespace lib\utility;
 class twigTrans
 {
 	// Create a files in language folder has contain twig trans value
-	public static function extract($_path = null)
+	public static function extract($_path = null, $_update = null)
 	{
 		ob_start();
 
@@ -114,9 +114,18 @@ class twigTrans
 		$translation_output .= "\n}\n?>";
 		file_put_contents(root. "/includes/languages/trans_".$export_file_name.".php", $translation_output);
 		if($_path ==='addons')
-			file_put_contents(addons. "includes/languages/trans_".$export_file_name.".php", $translation_output);
+		{
+			if($_update === 'saloos')
+			{
+				file_put_contents(addons. "includes/languages/trans_".$export_file_name.".php", $translation_output);
+			}
+		}
 
 		echo "</ol><br/><br/><hr/><h1>Finish..!</h1>";
+		if($_update === 'saloos')
+		{
+			echo "<strong>Translation file in saloos repository is updated</strong>";
+		}
 		echo "<p class='alert alert-success'>Extract string from twig file completed!</p></body></html>";
 	}
 }
