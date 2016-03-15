@@ -3,11 +3,13 @@ namespace lib;
 
 class redirector
 {
-	public $_php;
+	public $php;
+	public $url;
 	public function __construct($_url = null, $_php = true)
 	{
 		$this->cache = new router\cache;
-		$this->_php = $_php;
+		$this->php = $_php;
+		$this->url = $_url;
 		if($_url)
 		{
 			// do nothing
@@ -17,19 +19,26 @@ class redirector
 	}
 	public function html()
 	{
-		$this->_php = false;
+		$this->php = false;
 		return $this;
 	}
 	public function redirect($_return = false)
 	{
-		$newLocation = $this->get_protocol() . '://';
-		$newLocation .= $this->get_domain() . '/';
-		$newLocation .= $this->get_url();
+		if(isset($this->url) && $this->url)
+		{
+			$newLocation = $this->url;
+		}
+		else
+		{
+			$newLocation = $this->get_protocol() . '://';
+			$newLocation .= $this->get_domain() . '/';
+			$newLocation .= $this->get_url();
+		}
 
 		if($_return)
 			return $newLocation;
 
-		if($this->_php)
+		if($this->php)
 		{
 			header('Pragma: no-cache');
 			header("HTTP/1.1 301 Moved Permanently");
