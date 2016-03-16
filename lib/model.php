@@ -25,13 +25,6 @@ class model
 
 	public function _processor($options = false)
 	{
-		if(is_array($options)){
-			$options = (object) $options;
-		}
-		$force_json   = gettype($options) == 'object' && isset($options->force_json)   && $options->force_json   ? true : false;
-		$force_stop   = gettype($options) == 'object' && isset($options->force_stop)   && $options->force_stop   ? true : false;
-		$not_redirect = gettype($options) == 'object' && isset($options->not_redirect) && $options->not_redirect ? true : false;
-
 		if($this->transaction && debug::$status)
 		{
 			if(isset($this->sql))
@@ -46,30 +39,7 @@ class model
 			if(count($this->rollback))
 				call_user_func_array($this->rollback[0], array_slice($this->rollback, 1));
 		}
-		if($not_redirect)
-			$this->controller()->redirector = false;
-
-
-		if(\saloos::is_json_accept() || $force_json)
-		{
-			header('Content-Type: application/json');
-			if(isset($this->controller()->redirector) && $this->controller()->redirector)
-			{
-				$_SESSION['debug'][md5( strtok($this->redirector()->redirect(true), '?') )] = debug::compile();
-				debug::msg("redirect", $this->redirector()->redirect(true));
-			}
-			echo debug::compile(true);
-		}
-		elseif(!\lib\router::get_storage('api') && strtolower($_SERVER['REQUEST_METHOD']) == "post")
-		{
-			$this->redirector();
-		}
-		if(isset($this->controller()->redirector) && $this->controller()->redirector && !\saloos::is_json_accept())
-		{
-			$_SESSION['debug'][md5( strtok($this->redirector()->redirect(true), '?') )] = debug::compile();
-			$this->redirector()->redirect();
-		}
-		if($force_stop) exit();
+		$this->controller->_processor($options = false);
 	}
 
 	public final function commit(){
