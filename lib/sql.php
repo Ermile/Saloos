@@ -504,6 +504,7 @@ class sql{
 			{
 				$sTable = "get".ucfirst(dbconnection::get_db_name());
 				$cTable = sql\table::$sTable($table);
+				$atPos  = false;
 				if(isset($cTable->$field))
 				{
 					$type = $cTable->$field->type;
@@ -542,8 +543,8 @@ class sql{
 				}
 				else
 				{
-					// return false;
-					\lib\error::page("Field $field does not exist!");
+					return false;
+					// \lib\error::page("Field $field does not exist!");
 				}
 				if($atPos !== false)
 				{
