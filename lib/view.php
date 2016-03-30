@@ -146,11 +146,11 @@ class view
 		}
 		$twig->addExtension(new \Twig_Extensions_Extension_I18n());
 
-
 		$this->twig_Extentions($twig);
 		$template		= $twig->loadTemplate($tmpname);
 		if(\saloos::is_Ajax())
 		{
+			$this->data->global->debug = \lib\debug::compile();
 			$req = apache_request_headers();
 			$xhr_render                 = $template->render($this->data->_toArray());
 			// $this->data->display['mvc'] = $this->data->display['xhr'];
