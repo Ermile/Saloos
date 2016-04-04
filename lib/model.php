@@ -39,7 +39,7 @@ class model
 			if(count($this->rollback))
 				call_user_func_array($this->rollback[0], array_slice($this->rollback, 1));
 		}
-		$this->controller->_processor($options = false);
+		$this->controller->_processor($options);
 	}
 
 	public final function commit(){
