@@ -15,7 +15,7 @@ class redirector
 			// do nothing
 		}
 		$this->cache->set_cache['url_string'] = $_url ? $_url : $this->get_real_url();
-		$this->cache->set_cache['url_array'] = explode("/", $_url ? $_url : $this->get_real_url());
+		$this->cache->set_cache['url_array']  = explode("/", $_url ? $_url : $this->get_real_url());
 	}
 	public function html()
 	{

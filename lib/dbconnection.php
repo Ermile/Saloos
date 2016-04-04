@@ -66,8 +66,9 @@ class dbconnection
 			}
 			else if(self::$connection->connect_errno == 1049 )
 			{
-				echo( "<p>".T_("We can't connect to correct database!")." "
-							  .T_("Please contact administrator!")."</p>" );
+				// database does not exist, go to install page
+				// echo( "<p>".T_("We can't connect to correct database!")." " .T_("Please contact administrator!")."</p>" );
+				require_once(lib."install.php");
 				\lib\main::$controller->_processor(array('force_stop' => true));
 			}
 			else{
