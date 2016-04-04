@@ -54,26 +54,29 @@ trait optimize
 
 			array_push($args, $submit_value);
 		}
+		if(preg_match("/^\-(.*)$/", $_name, $arg_match)){
+			$form = $this->data->form->{$arg_match[1]} = new  \lib\form;
+		}else{
+			$form = call_user_func_array(array($this->form, 'make'), $args);
+			if(get_class($form) == 'lib\form' || preg_match("/cls\\\\form/", get_class($form)))
+			{
+				// if user want to create child form use the name of child
+				if($_child)
+				{
+					$this->data->form->{$_type} = $form;
+				}
+				// else do in normal way
+				else
+				{
+					preg_match("/^(@[^\.]+)*\.(.+)$/", $_name, $sName);
+					$this->data->form->{$sName[2]} = $form;
+				}
 
-		$form = call_user_func_array(array($this->form, 'make'), $args);
-		if(get_class($form) == 'lib\form' || preg_match("/cls\\\\form/", get_class($form)))
-		{
-			// if user want to create child form use the name of child
-			if($_child)
-			{
-				$this->data->form->{$_type} = $form;
-			}
-			// else do in normal way
-			else
-			{
-				preg_match("/^(@[^\.]+)*\.(.+)$/", $_name, $sName);
-				$this->data->form->{$sName[2]} = $form;
-			}
-
-			// if type of form is edit then fill it with related data
-			if($_type == 'edit')
-			{
-				$this->form_fill($form, $sName[2]);
+				// if type of form is edit then fill it with related data
+				if($_type == 'edit')
+				{
+					$this->form_fill($form, $sName[2]);
+				}
 			}
 		}
 
@@ -138,7 +141,7 @@ trait optimize
 				$oForm->attr['type'] === "radio" ||
 				$oForm->attr['type'] === "select"
 				// || $oForm->attr['type'] == "checkbox"
-			)
+				)
 			{
 				foreach ($oForm->child as $k => $v)
 				{

@@ -41,7 +41,9 @@ class config
 		if(!\lib\router::get_storage('api')) {
 			if(
 				(preg_match("/^post|put$/", $this->api_method) && $_SERVER['REQUEST_METHOD'] == "POST") ||
-				(preg_match("/^get|delete$/", $this->api_method) && $_SERVER['REQUEST_METHOD'] == "GET"))
+				(preg_match("/^get|delete$/", $this->api_method) && $_SERVER['REQUEST_METHOD'] == "GET") ||
+				($this->api_method == strtolower($_SERVER['REQUEST_METHOD']))
+			)
 			{
 				$this->check(...$this->SERVER);
 
