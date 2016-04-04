@@ -236,12 +236,6 @@ class define
 
     // start sessions
     session_start();
-
-    /**
-     * register shutdown function
-     * after ending code this function is called
-     */
-    register_shutdown_function('\lib\controller::sp_shutdown');
   }
 }
 ?>

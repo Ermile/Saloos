@@ -22,17 +22,28 @@ class controller
 	 */
 	public function __construct()
 	{
-
+		/**
+		 * register shutdown function
+		 * after ending code this function is called
+		 */
+		// register_shutdown_function('\lib\controller::sp_shutdown');
+		register_shutdown_function([$this, 'sp_shutdown']);
 	}
 
 	/**
 	 * this function is calling at the end of all codes
 	 * @return [type] [description]
 	 */
-	public static function sp_shutdown()
+	public function sp_shutdown()
 	{
 		// close writing sessions and start saving it
 		// session_write_close();
+		// $visitor = new \lib\utility\Visitors();
+		// if logvisitor on set visitors
+		if(defined('LogVisitors') && constant('LogVisitors'))
+		{
+			$this->model()->addVisitor();
+		}
 	}
 
 
