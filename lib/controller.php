@@ -17,22 +17,51 @@ class controller
 
 	public $route_check_true = false;
 
+	/**
+	 * [__construct description]
+	 */
 	public function __construct()
 	{
+
 	}
 
+	/**
+	 * this function is calling at the end of all codes
+	 * @return [type] [description]
+	 */
+	public static function sp_shutdown()
+	{
+		// close writing sessions and start saving it
+		// session_write_close();
+	}
+
+
+	/**
+	 * [loadModel description]
+	 * @return [type] [description]
+	 */
 	public function loadModel()
 	{
 		if(!isset($this->loadModel)) $this->loadModel = new \lib\load($this, "model");
 		return call_user_func_array(array($this->loadModel, 'method'), func_get_args());
 	}
 
+
+	/**
+	 * [loadView description]
+	 * @return [type] [description]
+	 */
 	public function loadView()
 	{
 		if(!isset($this->loadModel)) $this->loadModel = new \lib\load($this, "view");
 		return call_user_func_array(array($this->loadModel, 'method'), func_get_args());
 	}
 
+
+	/**
+	 * [_corridor description]
+	 * @return [type] [description]
+	 */
 	public function _corridor()
 	{
 		if(method_exists($this, 'corridor'))
@@ -84,6 +113,11 @@ class controller
 	}
 
 
+	/**
+	 * [_processor description]
+	 * @param  boolean $options [description]
+	 * @return [type]           [description]
+	 */
 	public function _processor($options = false)
 	{
 		if(is_array($options)){
@@ -118,6 +152,12 @@ class controller
 		}
 		if($force_stop) exit();
 	}
+
+
+	/**
+	 * [model description]
+	 * @return [type] [description]
+	 */
 	public function model()
 	{
 		if(!$this->model)
@@ -140,6 +180,11 @@ class controller
 		return $this->model;
 	}
 
+
+	/**
+	 * [view description]
+	 * @return [type] [description]
+	 */
 	public function view()
 	{
 		if(!$this->view)
@@ -161,6 +206,7 @@ class controller
 		}
 		return $this->view;
 	}
+
 
 	/**
 	 * this function find parent class, if class exist return the name of parent class
@@ -214,6 +260,11 @@ class controller
 		return $MyClassName;
 	}
 
+
+	/**
+	 * [route description]
+	 * @return [type] [description]
+	 */
 	public function route()
 	{
 		$route = new route(false);
@@ -224,6 +275,14 @@ class controller
 		return $route;
 	}
 
+
+	/**
+	 * [check_api description]
+	 * @param  [type]  $name           [description]
+	 * @param  [type]  $model_function [description]
+	 * @param  boolean $view_function  [description]
+	 * @return [type]                  [description]
+	 */
 	public final function check_api($name, $model_function = null, $view_function = false)
 	{
 		if(!$this->api)
@@ -233,6 +292,13 @@ class controller
 		return $this->api->$name($model_function, $view_function);
 	}
 
+
+	/**
+	 * [__call description]
+	 * @param  [type] $name [description]
+	 * @param  [type] $args [description]
+	 * @return [type]       [description]
+	 */
 	public function __call($name, $args)
 	{
 		if(preg_grep("/^$name$/", array('get', 'post', 'put', 'delete')))
@@ -247,21 +313,43 @@ class controller
 		\lib\error::page(get_called_class()."->$name()");
 	}
 
+
+	/**
+	 * [controller description]
+	 * @return [type] [description]
+	 */
 	public function controller()
 	{
 		return $this;
 	}
 
+
+	/**
+	 * [change_model description]
+	 * @param  [type] $name [description]
+	 * @return [type]       [description]
+	 */
 	public function change_model($name)
 	{
 		$this->model_name = $name;
 	}
 
+
+	/**
+	 * [change_view description]
+	 * @param  [type] $name [description]
+	 * @return [type]       [description]
+	 */
 	public function change_view($name)
 	{
 		$this->view_name = $name;
 	}
 
+
+	/**
+	 * [property description]
+	 * @return [type] [description]
+	 */
 	public function property()
 	{
 		$args = func_get_args();
@@ -277,10 +365,21 @@ class controller
 		}
 	}
 
+
+	/**
+	 * [debug description]
+	 * @return [type] [description]
+	 */
 	public function debug()
 	{
 		return $this->debug;
 	}
+
+
+	/**
+	 * [redirector description]
+	 * @return [type] [description]
+	 */
 	public function redirector()
 	{
 		if(!isset($this->redirector))	$this->redirector = new \lib\redirector(...func_get_args());
@@ -449,6 +548,5 @@ class controller
 				break;
 		}
 	}
-
 }
 ?>

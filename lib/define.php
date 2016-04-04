@@ -223,8 +223,25 @@ class define
      */
     if(is_string(Domain))
       session_name(Domain);
+    // set session cookie params
     session_set_cookie_params(0, '/', '.'.Service, false, true);
+
+    // if user enable saving sessions in db
+    // temporary disable because not work properly
+    if(false)
+    {
+      $handler = new \lib\utility\SessionHandler();
+      session_set_save_handler($handler, true);
+    }
+
+    // start sessions
     session_start();
+
+    /**
+     * register shutdown function
+     * after ending code this function is called
+     */
+    register_shutdown_function('\lib\controller::sp_shutdown');
   }
 }
 ?>
