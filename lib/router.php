@@ -46,14 +46,9 @@ class router
 			$myCP = constant('CMS') === true? 'cp': constant('CMS');
 			router::set_storage('CMS', $myCP );
 		}
-		elseif(defined('ControlPanel') && constant('ControlPanel'))
-		{
-			$myCP = constant('ControlPanel') === true? 'cp': constant('ControlPanel');
-			router::set_storage('CMS', $myCP );
-		}
 		else
 		{
-			router::set_storage('CMS', false);
+			router::set_storage('CMS', 'cp');
 		}
 
 		/**

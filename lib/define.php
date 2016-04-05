@@ -5,21 +5,45 @@ class define
   public function __construct()
   {
     // check php version to upper than 5.6
-    if (version_compare(phpversion(), '5.6', '<'))
-      die( "<p>For using Saloos you must update php version to 5.6 or higher!</p>" );
+    if(version_compare(phpversion(), '5.6', '<'))
+      die("<p>For using Saloos you must update php version to 5.6 or higher!</p>");
 
+    /**
+     * A session is a way to store information (in variables) to be used across multiple pages.
+     * Unlike a cookie, the information is not stored on the users computer.
+     * access to session with this code: $_SESSION["test"]
+     */
+    if(is_string(Domain))
+      session_name(Domain);
+    // set session cookie params
+    session_set_cookie_params(0, '/', '.'.Service, false, true);
+    // if user enable saving sessions in db
+    // temporary disable because not work properly
+    if(false)
+    {
+      $handler = new \lib\utility\SessionHandler();
+      session_set_save_handler($handler, true);
+    }
+    // start sessions
+    session_start();
 
     /**
      * in coming soon period show public_html/pages/coming/ folder
      * developer must set get parameter like site.com/dev=anyvalue
      * for disable this attribute turn off it from config.php in project root
      */
-    if(defined('CommingSoon') && CommingSoon && isset($_GET['dev'])){
-      setcookie('preview','yes',time() + 30*24*60*60,'/','.'.Service);
-    }
-    elseif(defined("CommingSoon") && CommingSoon && !isset($_COOKIE["preview"])){
-      header('Location: http://'.AccountService.MainTld.'/static/page/coming/', true, 302);
-      exit();
+    if(\lib\utility\option::get('config', 'meta', 'coming'))
+    {
+      // if user set dev in get, show the site
+      if(isset($_GET['dev']))
+      {
+        setcookie('preview','yes',time() + 30*24*60*60,'/','.'.Service);
+      }
+      elseif(!isset($_COOKIE["preview"]))
+      {
+        header('Location: http://'.AccountService.MainTld.'/static/page/coming/', true, 302);
+        exit();
+      }
     }
 
     /**
@@ -213,29 +237,6 @@ class define
     }
     // change header and remove php from it
     header("X-Powered-By: Saloos!");
-
-
-
-    /**
-     * A session is a way to store information (in variables) to be used across multiple pages.
-     * Unlike a cookie, the information is not stored on the users computer.
-     * access to session with this code: $_SESSION["test"]
-     */
-    if(is_string(Domain))
-      session_name(Domain);
-    // set session cookie params
-    session_set_cookie_params(0, '/', '.'.Service, false, true);
-
-    // if user enable saving sessions in db
-    // temporary disable because not work properly
-    if(false)
-    {
-      $handler = new \lib\utility\SessionHandler();
-      session_set_save_handler($handler, true);
-    }
-
-    // start sessions
-    session_start();
   }
 }
 ?>

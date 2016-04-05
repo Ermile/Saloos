@@ -127,7 +127,7 @@ class Option
 					}
 
 					// save current user permission as option permission value
-					if($row['option_key'] == $_SESSION['user']['permission'])
+					if(isset($_SESSION['user']['permission']) && $row['option_key'] == $_SESSION['user']['permission'])
 					{
 						$qry_result['permissions']['value'] = $row['option_key'];
 					}
