@@ -73,12 +73,21 @@ else
 
 // if personal config exist, require it
 if(file_exists(root .'config.me.php'))
+{
 	require_once(root .'config.me.php');
+}
 // elseif config exist, require it else show related error message
 elseif(file_exists(root .'config.php'))
+{
 	require_once(root .'config.php');
+}
+elseif(defined('CMS') && !constant('CMS'))
+{
+	include_once(root .'config.php');
+}
 else
-{   // A config file doesn't exist
+{
+	// A config file doesn't exist
 	exit("<p>There doesn't seem to be a <code>config.php</code> file. I need this before we can get started.</p>");
 }
 
