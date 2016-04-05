@@ -94,10 +94,10 @@ class define
      * set default language to storage for next use
      */
     // var_dump(\lib\utility\option::get('config', 'meta', 'defaultLanguage'));
-    $default_lang = \lib\utility\option::get('config', 'meta', 'defaultLanguage');
+    $default_lang = \lib\utility\option::get('config', 'meta', 'defaultLang');
     if($default_lang)
     {
-      router::set_storage('defaultLanguage', $default_lang );
+      router::set_storage('defaultLang', $default_lang );
     }
     else
     {
