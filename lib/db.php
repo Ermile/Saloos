@@ -45,6 +45,11 @@ class db
 			// connect to default db
 			self::$db_name = db_name;
 		}
+		elseif($_db_name === '[tools]')
+		{
+			// connect to core db
+			self::$db_name = core_name.'_tools';
+		}
 		elseif($_db_name)
 		{
 			// connect to db passed from user
@@ -225,7 +230,7 @@ class db
 		$result = [];
 		// find addresses
 		$project = glob(self::$path_project.'*', GLOB_ONLYDIR);
-		$addons  = glob(self::$path_addons.'*', GLOB_ONLYDIR);
+		$addons  = glob(self::$path_addons.'*',  GLOB_ONLYDIR);
 		$dbList  = array_merge($project, $addons);
 		$myList  = [];
 
@@ -268,7 +273,7 @@ class db
 
 		// find addresses
 		$project      = glob($path_project.'*', GLOB_ONLYDIR);
-		$addons       = glob($path_addons.'*', GLOB_ONLYDIR);
+		$addons       = glob($path_addons.'*',  GLOB_ONLYDIR);
 		$dbList       = array_merge($project, $addons);
 		$myList       = [];
 
