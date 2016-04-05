@@ -6,7 +6,7 @@ class db
 {
 	/**
 	 * this library doing useful db actions
-	 * v1.1
+	 * v1.2
 	 */
 
 	// save link to database
@@ -38,9 +38,20 @@ class db
 	 * if not exist create it
 	 * @return [type] [description]
 	 */
-	public static function connect($_db_name = null, $_autoCreate = true)
+	public static function connect($_db_name = null, $_autoCreate = false)
 	{
-		self::$db_name = $_db_name? $_db_name: self::$db_name;
+		if($_db_name === true)
+		{
+			// connect to default db
+			self::$db_name = db_name;
+		}
+		elseif($_db_name)
+		{
+			// connect to db passed from user
+			// else connect to last db saved
+			self::$db_name = $_db_name;
+		}
+
 
 		// fill variable if empty variable
 		self::$db_name = self::$db_name ? self::$db_name : db_name;
@@ -232,7 +243,7 @@ class db
 			// then read this table in addons folder
 			if(!in_array($myDbName, $myList))
 			{
-				$result[$myDbName]['connect'] = db::connect($myDbName);
+				$result[$myDbName]['connect'] = db::connect($myDbName, true);
 				$result[$myDbName]['exec']    = self::execFolder($myDbLoc.'/');
 			}
 
