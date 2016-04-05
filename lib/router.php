@@ -73,16 +73,12 @@ class router
 				$mysub_real  = $mysub;
 				$myloc       = null;
 				$mysub_valid = null;
-				// check for account with specefic name
-				if(defined('Account') && constant('Account'))
-				{
-					$mykey = constant('Account') === true? 'account': constant('Account');
-					$myaddons[$mykey] = 'account';
-				}
+
 				// check for account with specefic name
 				if(\lib\router::get_storage('CMS'))
 				{
 					$myaddons[\lib\router::get_storage('CMS')] = 'cp';
+					$myaddons['account'] = 'account';
 				}
 				// check this sub is exist in our data or not
 				if(array_key_exists($mysub, $myaddons))
@@ -182,30 +178,28 @@ class router
 		// like https://ermile.com
 		router::set_storage('url_site', Protocol.'://' . Domain.'.'.Tld.'/');
 
-
-		if(defined('Account') && constant('Account'))
-		{
-			// if use ermile set Mainservice for creating all account together
-			if(is_string(constant('Account')) && constant('Account') !== constant('MainService'))
-				$myAccount = constant('Account');
-			else
-				$myAccount = 'account';
-		}
-		else
-		  $myAccount = false;
-
 		// set MyAccount for use in all part of services
 		if(!defined('AccountService'))
 		{
-			if(defined('Account') && constant('Account') === constant('MainService'))
+			// if user want main account and set main account name
+			if( \lib\utility\option::get('config', 'meta', 'useMainAccount') &&
+				\lib\utility\option::get('config', 'meta', 'mainAccount') === constant('MainService')
+			)
+			{
 				define('AccountService', constant('MainService'));
+			}
 			else
+			{
 				define('AccountService', Domain);
+			}
 		}
 
-		// set MyAccount for use in all part of services
-		if(!defined('MyAccount'))
-			define('MyAccount', $myAccount);
+		// check for account with specefic name
+		if(!defined('MyAccount') && \lib\router::get_storage('CMS'))
+		{
+			// set MyAccount for use in all part of services
+			define('MyAccount', 'account');
+		}
 
 		router::$base = Protocol.'://';
 		if(router::$sub_is_fake)
