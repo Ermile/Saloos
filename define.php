@@ -3,7 +3,7 @@
  * default of all define
  */
 
-// Define Global variables ***************************************************************************************
+// Define Global variables ****************************************************
 // Core name
 define('core_name'	,'saloos');
 
@@ -12,7 +12,7 @@ if(!defined('MainService'))
 	define('MainService', 'ermile');
 
 
-// Define Saloos variables ***************************************************************************************
+// Define Saloos variables ****************************************************
 if(!defined("core"))
 	define("core", preg_replace("[\\\\]", "/", __DIR__).'/' );
 
@@ -33,7 +33,7 @@ if(!defined("helper"))
 	define("helper", core."helper/");
 
 
-// Define Project variables **************************************************************************************
+// Define Project variables ***************************************************
 if(!defined("root"))
 	define("root", dirname(dirname($_SERVER['SCRIPT_FILENAME'])).'/' );
 
@@ -71,8 +71,19 @@ if(!defined("timezone"))
 else
 	date_default_timezone_set(constant('timezone'));
 
+// if personal config exist, require it
+if(file_exists(root .'config.me.php'))
+	require_once(root .'config.me.php');
+// elseif config exist, require it else show related error message
+elseif(file_exists(root .'config.php'))
+	require_once(root .'config.php');
+else
+{   // A config file doesn't exist
+	exit("<p>There doesn't seem to be a <code>config.php</code> file. I need this before we can get started.</p>");
+}
 
-// Define Project Methods *****************************************************************************************
+
+// Define Project Methods *****************************************************
 // define object method
 function object($val = array())
 {
