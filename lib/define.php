@@ -202,7 +202,11 @@ class define
      */
     if (!defined('DEBUG'))
     {
-      if(Tld === 'dev')
+      if(\lib\utility\option::get('config', 'meta', 'debug'))
+      {
+        define('DEBUG', true);
+      }
+      elseif(Tld === 'dev')
       {
         define('DEBUG', true);
       }
