@@ -42,7 +42,7 @@ class controller
 		// if logvisitor on set visitors
 		if(defined('LogVisitors') && constant('LogVisitors'))
 		{
-			$this->model()->addVisitor();
+			\lib\utility\visitor::save();
 		}
 	}
 
