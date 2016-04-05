@@ -2,7 +2,7 @@
 namespace lib\utility;
 
 /** Option: handle options of project from db **/
-class Option
+class option
 {
 	/**
 	 * this library get options from db only one times!
@@ -106,6 +106,7 @@ class Option
 		// fetch all records
 		$result   = mysqli_fetch_all($result, MYSQLI_ASSOC);
 		$permList = [];
+		$qry_result = null;
 
 
 		foreach ($result as $key => $row)
