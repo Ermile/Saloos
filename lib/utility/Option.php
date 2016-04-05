@@ -30,7 +30,11 @@ class Option
 		$result  = [];
 
 		// check condition for show best result
-		if($_key && isset(self::$options[$_key]))
+		if($_key === true)
+		{
+			$result = self::$options;
+		}
+		elseif($_key && isset(self::$options[$_key]))
 		{
 			if($_type && !($_type === true))
 			{

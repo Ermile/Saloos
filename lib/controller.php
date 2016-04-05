@@ -40,7 +40,7 @@ class controller
 		// session_write_close();
 		// $visitor = new \lib\utility\Visitors();
 		// if logvisitor on set visitors
-		if(defined('LogVisitors') && constant('LogVisitors'))
+		if(\lib\utility\option::get('config', 'meta', 'logVisitors'))
 		{
 			\lib\utility\visitor::save();
 		}
