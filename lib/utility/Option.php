@@ -170,5 +170,53 @@ class Option
 
 		return $qry_result;
 	}
+
+
+	/**
+	 * return list of languages in current project
+	 * read form folders exist in includes/languages
+	 * @return [type] [description]
+	 */
+	public static function languages($_dir = false)
+	{
+		// detect languages exist in current project
+		$langList = glob(dir_includes.'languages/*', GLOB_ONLYDIR);
+		$myList   = ['en_US' => 'English'];
+		foreach ($langList as $myLang)
+		{
+			$myLang     = preg_replace("[\\\\]", "/", $myLang);
+			$myLang     = substr( $myLang, (strrpos($myLang, "/" )+ 1));
+			$myLangName = $myLang;
+			$myLangDir  = 'ltr';
+			switch (substr($myLang, 0, 2))
+			{
+				case 'fa':
+					$myLangName = 'Persian - فارسی';
+					$myLangDir  = 'rtl';
+					break;
+
+				case 'en':
+					$myLangName = 'English';
+					$myLangDir  = 'rtl';
+					break;
+
+				case 'fr':
+					$myLangName = 'French';
+					break;
+
+				case 'ar':
+					$myLangName = 'Arabic - العربية';
+					break;
+			}
+			$myList[$myLang] = $myLangName;
+		}
+
+		if($_dir)
+		{
+			return $myLangDir;
+
+		}
+		return $myList;
+	}
 }
 ?>

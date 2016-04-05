@@ -93,9 +93,11 @@ class define
     /**
      * set default language to storage for next use
      */
-    if(defined('DefaultLanguage'))
+    // var_dump(\lib\utility\option::get('config', 'meta', 'defaultLanguage'));
+    $default_lang = \lib\utility\option::get('config', 'meta', 'defaultLanguage');
+    if($default_lang)
     {
-      router::set_storage('defaultLanguage', DefaultLanguage );
+      router::set_storage('defaultLanguage', $default_lang );
     }
     else
     {
@@ -172,30 +174,27 @@ class define
     if(router::get_repository_name() === 'content')
     {
       // $mysub = router::get_sub_domain();
-      $mysub = router::get_url(0);
+      $mysub  = router::get_url(0);
+      $myList = \lib\utility\option::languages();
 
-      // if subdomain is set, change current lang to it, except for default language
-      if(defined('LangList') && constant('LangList'))
+      // check langlist with subdomain and if is equal set current language
+      foreach($myList as $key => $value)
       {
-        // check langlist with subdomain and if is equal set current language
-        foreach (unserialize(LangList) as $key => $value)
+        $myLang = substr($key, 0, 2);
+        if($mysub === $myLang)
         {
-          $myLang = substr($key, 0, 2);
-          if($mysub === $myLang)
+          if(router::get_storage('defaultLanguage') === $key)
           {
-            if(router::get_storage('defaultLanguage') === $key)
-            {
-              // redirect to homepage
-              $myredirect = new \lib\redirector();
-              $myredirect->set_domain()->set_url()->redirect();
-            }
-            else
-            {
-              router::set_storage('language', $key);
-              // update base url
-              router::$base .= router::get_url(0). "/";
-              router::remove_url($myLang);
-            }
+            // redirect to homepage
+            $myredirect = new \lib\redirector();
+            $myredirect->set_domain()->set_url()->redirect();
+          }
+          else
+          {
+            router::set_storage('language', $key);
+            // update base url
+            router::$base .= router::get_url(0). "/";
+            router::remove_url($myLang);
           }
         }
       }

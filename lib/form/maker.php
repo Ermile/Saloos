@@ -2,11 +2,11 @@
 namespace lib\form;
 class maker
 {
-	public $attr = array();
-	public $child = array();
-	public $label = '';
+	public $attr     = array();
+	public $child    = array();
+	public $label    = '';
 	public $validate = null;
-	public $elname = null;
+	public $elname   = null;
 
 
 	/**
