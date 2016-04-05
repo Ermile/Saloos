@@ -4,6 +4,11 @@ namespace lib;
 /** Create simple and clean connection to db **/
 class db
 {
+	/**
+	 * this library doing useful db actions
+	 * v1.1
+	 */
+
 	// save link to database
 	public static $link;
 	public static $path_project = database. 'install/';
@@ -188,8 +193,9 @@ class db
 		// for each item with this situation create
 		foreach(glob($_path) as $key => $filename)
 		{
-			$result[] = self::execFile($filename);
+			$result[$filename] = self::execFile($filename);
 		}
+
 		return $result;
 	}
 
@@ -218,18 +224,22 @@ class db
 			$myDbName = preg_replace("[\\\\]", "/", $myDbLoc);
 			$myDbName = substr( $myDbName, (strrpos($myDbName, "/" )+ 1));
 
+			// change db_name and core_name to defined value
+			$myDbName = str_replace('(db_name)', db_name, $myDbName);
+			$myDbName = str_replace('(core_name)', core_name, $myDbName);
+
 			// if this table before this is not exist in current project
 			// then read this table in addons folder
 			if(!in_array($myDbName, $myList))
 			{
-				$result[] = db::connect($myDbName);
-				$result[] = self::execFolder($myDbLoc.'/');
+				$result[$myDbName]['connect'] = db::connect($myDbName);
+				$result[$myDbName]['exec']    = self::execFolder($myDbLoc.'/');
 			}
 
 			array_push($myList, $myDbName);
 		}
 
-		$result[] = self::upgrade();
+		$result['upgrade'] = self::upgrade();
 
 		return $result;
 	}
@@ -257,12 +267,16 @@ class db
 			$myDbName = preg_replace("[\\\\]", "/", $myDbLoc);
 			$myDbName = substr( $myDbName, (strrpos($myDbName, "/" )+ 1));
 
+			// change db_name and core_name to defined value
+			$myDbName = str_replace('(db_name)', db_name, $myDbName);
+			$myDbName = str_replace('(core_name)', core_name, $myDbName);
+
 			// if this table before this is not exist in current project
 			// then read this table in addons folder
 			if(!in_array($myDbName, $myList))
 			{
-				$result[] = db::connect($myDbName, false);
-				$result[] = self::execFolder($myDbLoc.'/', 'v.');
+				$result[$myDbName]['connect'] = db::connect($myDbName, false);
+				$result[$myDbName]['exec']    = self::execFolder($myDbLoc.'/', 'v.');
 			}
 
 			array_push($myList, $myDbName);
