@@ -9,6 +9,50 @@ class define
       die("<p>For using Saloos you must update php version to 5.6 or higher!</p>");
 
     /**
+     * If DEBUG is TRUE you can see the full error description, If set to FALSE show userfriendly messages
+     * change it from project config.php
+     */
+    if (!defined('DEBUG'))
+    {
+      if(\lib\utility\option::get('config', 'meta', 'debug'))
+      {
+        define('DEBUG', true);
+      }
+      elseif(Tld === 'dev')
+      {
+        define('DEBUG', true);
+      }
+      else
+      {
+        define('DEBUG', false);
+      }
+    }
+    if (DEBUG)
+    {
+      ini_set('display_errors'        , 'On');
+      ini_set('display_startup_errors', 'On');
+      ini_set('error_reporting'       , 'E_ALL | E_STRICT');
+      ini_set('track_errors'          , 'On');
+      ini_set('display_errors'        , 1);
+      error_reporting(E_ALL);
+
+      //Setting for the PHP Error Handler
+      // set_error_handler('\lib\error::myErrorHandler');
+
+      //Setting for the PHP Exceptions Error Handler
+      // set_exception_handler('\lib\error::myErrorHandler');
+
+      //Setting for the PHP Fatal Error
+      // register_shutdown_function('\lib\error::myErrorHandler');
+    }
+    else
+    {
+      error_reporting(0);
+      ini_set('display_errors', 0);
+
+    }
+
+    /**
      * A session is a way to store information (in variables) to be used across multiple pages.
      * Unlike a cookie, the information is not stored on the users computer.
      * access to session with this code: $_SESSION["test"]
@@ -195,50 +239,6 @@ class define
         break;
     }
 
-
-    /**
-     * If DEBUG is TRUE you can see the full error description, If set to FALSE show userfriendly messages
-     * change it from project config.php
-     */
-    if (!defined('DEBUG'))
-    {
-      if(\lib\utility\option::get('config', 'meta', 'debug'))
-      {
-        define('DEBUG', true);
-      }
-      elseif(Tld === 'dev')
-      {
-        define('DEBUG', true);
-      }
-      else
-      {
-        define('DEBUG', false);
-      }
-    }
-    if (DEBUG)
-    {
-      ini_set('display_errors'        , 'On');
-      ini_set('display_startup_errors', 'On');
-      ini_set('error_reporting'       , 'E_ALL | E_STRICT');
-      ini_set('track_errors'          , 'On');
-      ini_set('display_errors'        , 1);
-      error_reporting(E_ALL);
-
-      //Setting for the PHP Error Handler
-      // set_error_handler('\lib\error::myErrorHandler');
-
-      //Setting for the PHP Exceptions Error Handler
-      // set_exception_handler('\lib\error::myErrorHandler');
-
-      //Setting for the PHP Fatal Error
-      // register_shutdown_function('\lib\error::myErrorHandler');
-    }
-    else
-    {
-      error_reporting(0);
-      ini_set('display_errors', 0);
-
-    }
     // change header and remove php from it
     header("X-Powered-By: Saloos!");
   }
