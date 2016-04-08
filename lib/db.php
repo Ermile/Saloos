@@ -66,10 +66,9 @@ class db
 		// if mysqli class does not exist or have some problem show related error
 		if(!class_exists('mysqli'))
 		{
-			echo( "<p>".T_("we can't find database service!")." "
-							.T_("please contact administrator!")."</p>" );
-			\lib\main::$controller->_processor(array('force_stop' => true));
-			return false;
+			echo( "<p>"."we can't find database service!"." "
+							."please contact administrator!")."</p>";
+			exit();
 		}
 
 		$link = @mysqli_connect(self::$db_host, self::$db_user, self::$db_pass, self::$db_name);
@@ -80,9 +79,9 @@ class db
 			switch (@mysqli_connect_errno())
 			{
 				case 1045:
-					echo( "<p>".T_("We can't connect to database service!")." "
-								  .T_("Please contact administrator!")."</p>" );
-					\lib\main::$controller->_processor(array('force_stop' => true));
+					echo "<p>"."We can't connect to database service!"." "
+								  ."Please contact administrator!"."</p>";
+					exit();
 					break;
 
 				case 1049:
