@@ -118,6 +118,11 @@ class Visitor
 			$is_bot  = self::isBot();
 			$qry     = "INSERT INTO $_table"."s ( $_table".'_'."$_table, `agent_robot` ) VALUES ( '$_value', $is_bot );";
 		}
+		elseif($_table === 'url')
+		{
+			$is_external  = self::isExternal($_value);
+			$qry     = "INSERT INTO $_table"."s ( $_table".'_'."$_table, `url_external` ) VALUES ( '$_value', $is_external );";
+		}
 		// execute query
 		$result  = @mysqli_query(self::$link, $qry);
 		// give last insert id
@@ -209,6 +214,23 @@ class Visitor
 		return $agent;
 	}
 
+
+	/**
+	 * compare two url and say hase diferrent host or not
+	 * @return boolean [description]
+	 */
+	public static function isExternal($_url)
+	{
+		$_url = urldecode($_url);
+		$external = parse_url($_url, PHP_URL_HOST);
+		if($external !== Service)
+		{
+			// return true if not same
+			return 1;
+		}
+		// return default value
+		return 0;
+	}
 
 	/**
 	 * check current user is bot or not
