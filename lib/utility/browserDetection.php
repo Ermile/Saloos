@@ -4,6 +4,7 @@ namespace lib\utility;
 /** Detect User Browser with php; full feature! **/
 class browserDetection
 {
+/**
 Script Name: Full Featured PHP Browser/OS detection
 Author: Harald Hope, Website: http://techpatterns.com/
 Script Source URI: http://techpatterns.com/downloads/php_browser_detection.php
