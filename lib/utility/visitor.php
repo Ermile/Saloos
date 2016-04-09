@@ -12,6 +12,8 @@ class visitor
 	// declare private static variable to save options
 	private static $visitor;
 	private static $link;
+	private static $result;
+
 
 
 	/**
@@ -280,8 +282,10 @@ class visitor
 			"Twitturls",
 			"Me.dium",
 			"Twiceler",
-			"inoreader"
+			"inoreader",
+			"yoozBot",
 		];
+
 		foreach($botlist as $bot)
 		{
 			if(strpos($agent, $bot) !== false)
@@ -291,6 +295,74 @@ class visitor
 		}
 		// return result
 		return $robot;
+	}
+
+
+	/**
+	 * show visitor result
+	 * @return [type] [description]
+	 */
+	public static function chart()
+	{
+		self::createLink();
+		/**
+		 add getting unique visitor in next update
+		 */
+
+		$qry =
+			"SELECT
+				date_format(visitor_createdate,'%Y-%m-%d') as date,
+				0 as bots,
+				count(*) as humans,
+				count(*) as total
+
+				FROM `visitors`
+
+				GROUP BY date
+				ORDER BY date ASC
+				LIMIT 0, 10";
+		$result  = @mysqli_query(self::$link, $qry);
+		$result  = mysqli_fetch_all($result, MYSQLI_ASSOC);
+
+		$result_total = array_column($result, 'total');
+		self::$result['chart'] = $result;
+		self::$result['total'] = array_sum($result_total);
+		self::$result['max']   = max($result_total);
+		self::$result['min']   = min($result_total);
+		// return result
+		return $result;
+	}
+
+
+	/**
+	 * return top pages visited on this site
+	 * @return [type] [description]
+	 */
+	public static function top_pages($_count = 10)
+	{
+		self::createLink();
+		$qry =
+			"SELECT
+				urls.url_url as url,
+				count(visitors.id) as total
+			FROM urls
+			INNER JOIN visitors ON urls.id = visitors.url_id
+			GROUP BY visitors.url_id
+			ORDER BY total DESC
+			LIMIT 0, $_count";
+		$result  = @mysqli_query(self::$link, $qry);
+		$result  = mysqli_fetch_all($result, MYSQLI_ASSOC);
+
+		foreach ($result as $key => $row)
+		{
+			$result[$key]['url'] = urldecode($row['url']);
+			if(strpos($result[$key]['url'], 'http://') !== false)
+			{
+				$result[$key]['url'] = substr($result[$key]['url'], 7);
+			}
+
+		}
+		return $result;
 	}
 }
 ?>
