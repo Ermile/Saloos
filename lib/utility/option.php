@@ -196,17 +196,23 @@ class option
 					$myLangDir  = 'rtl';
 					break;
 
-				case 'en':
-					$myLangName = 'English';
+				case 'ar':
+					$myLangName = 'Arabic - العربية';
 					$myLangDir  = 'rtl';
 					break;
 
-				case 'fr':
-					$myLangName = 'French';
+				case 'en':
+					$myLangName = 'English';
+					$myLangDir  = 'ltr';
 					break;
 
-				case 'ar':
-					$myLangName = 'Arabic - العربية';
+				case 'de':
+					$myLangName = 'Deutsch';
+					break;
+
+
+				case 'fr':
+					$myLangName = 'French';
 					break;
 			}
 			$myList[$myLang] = $myLangName;
