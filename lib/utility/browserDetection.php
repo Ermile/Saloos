@@ -242,9 +242,9 @@ by resetting that data with the true UA value.
 *******************************************/
 
 // main script, uses two other functions, get_os_data() and get_item_version() as needed
-// Optional $test_excludes is either null or one of the above values
+// Optional $_test_excludes is either null or one of the above values
 
-function browser_detection( $which_test, $test_excludes='', $external_ua_string='' )
+static function browser_detection( $_which_test = 'full_assoc', $_test_excludes='', $_external_ua_string='' )
 {
 	/**
 	uncomment the global variable declaration if you want the variables to be available on
@@ -255,12 +255,12 @@ function browser_detection( $which_test, $test_excludes='', $external_ua_string=
 	/*
 	global $a_full_assoc_data, $a_mobile_data, $a_moz_data, $a_engine_data, $a_webkit_data, $b_dom_browser, $b_repeat, $b_safe_browser, $browser_name, $browser_number, $browser_math_number, $browser_user_agent, $browser_working, $html_type, $ie_version, $mobile_test, $moz_type_number, $moz_rv, $moz_rv_full, $moz_release_date, $moz_type, $os_number, $os_type, $layout_engine, $layout_engine_nu, $layout_engine_nu_full, $true_ie_number, $ua_type, $webkit_type, $webkit_type_number;
 	*/
-	script_time(); // set script timer to start timing
+	self::script_time(); // set script timer to start timing
 
 	static $a_full_assoc_data, $a_khtml_data, $a_mobile_data, $a_moz_data, $a_engine_data, $a_blink_data, $a_trident_data, $a_webkit_data, $b_dom_browser, $b_repeat, $b_safe_browser, $blink_type, $blink_type_number, $browser_name, $browser_number, $browser_math_number, $browser_user_agent, $browser_working, $html_type, $ie_version, $khtml_type, $khtml_type_number, $mobile_test, $moz_type_number, $moz_rv, $moz_rv_full, $moz_release_date, $moz_type, $os_number, $os_type, $layout_engine, $layout_engine_nu, $layout_engine_nu_full, $trident_type, $trident_type_number, $true_ie_number, $ua_type, $webkit_type, $webkit_type_number;
 
 	// switch off the optimization for external ua string testing.
-	if ( $external_ua_string ) {
+	if ( $_external_ua_string ) {
 		$b_repeat = false;
 	}
 	/**
@@ -316,8 +316,8 @@ function browser_detection( $which_test, $test_excludes='', $external_ua_string=
 		$webkit_type = '';
 		$webkit_type_number = '';
 		// set the excludes if required
-		if ( $test_excludes ) {
-			switch ( $test_excludes ) {
+		if ( $_test_excludes ) {
+			switch ( $_test_excludes ) {
 				case '1':
 					$b_os_test = false;
 					break;
@@ -329,7 +329,7 @@ function browser_detection( $which_test, $test_excludes='', $external_ua_string=
 					$b_mobile_test = false;
 					break;
 				default:
-					die( 'Error: bad $test_excludes parameter 2 used: ' . $test_excludes );
+					die( 'Error: bad $_test_excludes parameter 2 used: ' . $_test_excludes );
 					break;
 			}
 		}
@@ -338,8 +338,8 @@ function browser_detection( $which_test, $test_excludes='', $external_ua_string=
 		isset protects against blank user agent failure. tolower also lets the script use
 		strstr instead of stristr, which drops overhead slightly.
 		**/
-		if ( $external_ua_string ) {
-			$browser_user_agent = strtolower( $external_ua_string );
+		if ( $_external_ua_string ) {
+			$browser_user_agent = strtolower( $_external_ua_string );
 		}
 		elseif ( isset( $_SERVER['HTTP_USER_AGENT'] ) ) {
 			$browser_user_agent = strtolower( $_SERVER['HTTP_USER_AGENT'] );
@@ -515,7 +515,7 @@ function browser_detection( $which_test, $test_excludes='', $external_ua_string=
 					// check your implementation to make sure it works
 					case 'ns':
 						$b_safe_browser = false;
-						$browser_number = get_item_version( $browser_user_agent, 'mozilla' );
+						$browser_number = self::get_item_version( $browser_user_agent, 'mozilla' );
 						break;
 					/**
 					note: webkit returns always the webkit version number, not the specific user
@@ -524,32 +524,32 @@ function browser_detection( $which_test, $test_excludes='', $external_ua_string=
 					case 'blink':
 						// to get full number
 						if ( $browser_name == 'opr/' ){
-							get_set_count( 'set', 0 );
+							self::get_set_count( 'set', 0 );
 						}
-						$browser_number = get_item_version( $browser_user_agent, $browser_name );
+						$browser_number = self::get_item_version( $browser_user_agent, $browser_name );
 						// assign rendering engine data
 						$layout_engine = 'blink';
 						if ( strstr($browser_user_agent, 'blink') ) {
-							$layout_engine_nu_full = get_item_version( $browser_user_agent, 'blink' );
+							$layout_engine_nu_full = self::get_item_version( $browser_user_agent, 'blink' );
 						}
 						else {
-							$layout_engine_nu_full = get_item_version( $browser_user_agent, 'webkit' );
+							$layout_engine_nu_full = self::get_item_version( $browser_user_agent, 'webkit' );
 						}
-						$layout_engine_nu = get_item_math_number( $browser_number );
+						$layout_engine_nu = self::get_item_math_number( $browser_number );
 						// this is to pull out specific webkit versions, safari, google-chrome etc..
 						$j_count = count( $a_blink_types );
 						for ( $j = 0; $j < $j_count; $j++ ) {
 							if ( strstr( $browser_user_agent, $a_blink_types[$j] ) ) {
 								$blink_type = $a_blink_types[$j];
 								if ( $browser_name == 'opr/' ){
-									get_set_count( 'set', 0 );
+									self::get_set_count( 'set', 0 );
 								}
-								$blink_type_number = get_item_version( $browser_user_agent, $blink_type );
+								$blink_type_number = self::get_item_version( $browser_user_agent, $blink_type );
 								$browser_name = $a_blink_types[$j];
 								if ( $browser_name == 'opr/' ){
-									get_set_count( 'set', 0 );
+									self::get_set_count( 'set', 0 );
 								}
-								$browser_number = get_item_version( $browser_user_agent, $browser_name );
+								$browser_number = self::get_item_version( $browser_user_agent, $browser_name );
 								break;
 							}
 						}
@@ -558,34 +558,34 @@ function browser_detection( $which_test, $test_excludes='', $external_ua_string=
 						}
 						break;
 					case 'dillo':
-						$browser_number = get_item_version( $browser_user_agent, $browser_name );
+						$browser_number = self::get_item_version( $browser_user_agent, $browser_name );
 						// assign rendering engine data
 						$layout_engine = 'dillo';
-						$layout_engine_nu = get_item_math_number( $browser_number );
+						$layout_engine_nu = self::get_item_math_number( $browser_number );
 						$layout_engine_nu_full = $browser_number;
 						break;
 					case 'edge':
-						$browser_number = get_item_version( $browser_user_agent, $browser_name );
+						$browser_number = self::get_item_version( $browser_user_agent, $browser_name );
 						// assign rendering engine data
 						$layout_engine = 'edgehtml';
-						$layout_engine_nu = get_item_math_number( $browser_number );
+						$layout_engine_nu = self::get_item_math_number( $browser_number );
 						$layout_engine_nu_full = $browser_number;
 						break;
 					case 'khtml':
 						// note that this is the KHTML version number
-						$browser_number = get_item_version( $browser_user_agent, $browser_name );
+						$browser_number = self::get_item_version( $browser_user_agent, $browser_name );
 						// assign rendering engine data
 						$layout_engine = 'khtml';
-						$layout_engine_nu = get_item_math_number( $browser_number );
+						$layout_engine_nu = self::get_item_math_number( $browser_number );
 						$layout_engine_nu_full = $browser_number;
 						// this is to pull out specific khtml versions, konqueror
 						$j_count = count( $a_khtml_types );
 						for ( $j = 0; $j < $j_count; $j++ ) {
 							if ( strstr( $browser_user_agent, $a_khtml_types[$j] ) ) {
 								$khtml_type = $a_khtml_types[$j];
-								$khtml_type_number = get_item_version( $browser_user_agent, $khtml_type );
+								$khtml_type_number = self::get_item_version( $browser_user_agent, $khtml_type );
 								$browser_name = $a_khtml_types[$j];
-								$browser_number = get_item_version( $browser_user_agent, $browser_name );
+								$browser_number = self::get_item_version( $browser_user_agent, $browser_name );
 								break;
 							}
 						}
@@ -598,8 +598,8 @@ function browser_detection( $which_test, $test_excludes='', $external_ua_string=
 						numbering conventions here: http://www.mozilla.org/releases/cvstags.html
 						**/
 						// this will return alpha and beta version numbers, if present
-						get_set_count( 'set', 0 );
-						$moz_rv_full = get_item_version( $browser_user_agent, 'rv:' );
+						self::get_set_count( 'set', 0 );
+						$moz_rv_full = self::get_item_version( $browser_user_agent, 'rv:' );
 						// this slices them back off for math comparisons
 						$moz_rv = floatval( $moz_rv_full );
 						// this is to pull out specific mozilla versions, firebird, netscape etc..
@@ -607,7 +607,7 @@ function browser_detection( $which_test, $test_excludes='', $external_ua_string=
 						for ( $j = 0; $j < $j_count; $j++ ) {
 							if ( strstr( $browser_user_agent, $a_gecko_types[$j] ) ) {
 								$moz_type = $a_gecko_types[$j];
-								$moz_type_number = get_item_version( $browser_user_agent, $moz_type );
+								$moz_type_number = self::get_item_version( $browser_user_agent, $moz_type );
 								break;
 							}
 						}
@@ -627,8 +627,8 @@ function browser_detection( $which_test, $test_excludes='', $external_ua_string=
 						//the moz version will be taken from the rv number, see notes above for rv problems
 						$browser_number = $moz_rv;
 						// gets the actual release date, necessary if you need to do functionality tests
-						get_set_count( 'set', 0 );
-						$moz_release_date = get_item_version( $browser_user_agent, 'gecko/' );
+						self::get_set_count( 'set', 0 );
+						$moz_release_date = self::get_item_version( $browser_user_agent, 'gecko/' );
 						// assign rendering engine data
 						$layout_engine = 'gecko';
 						$layout_engine_nu = $moz_rv;
@@ -657,23 +657,23 @@ function browser_detection( $which_test, $test_excludes='', $external_ua_string=
 						if ( strstr($browser_user_agent, 'rv:' ) ) {
 							$browser_name = 'msie';
 							$b_gecko_ua = true;
-							get_set_count( 'set', 0 );
-							$browser_number = get_item_version( $browser_user_agent, 'rv:', '', '' );
+							self::get_set_count( 'set', 0 );
+							$browser_number = self::get_item_version( $browser_user_agent, 'rv:', '', '' );
 						}
 						else {
-							$browser_number = get_item_version( $browser_user_agent, $browser_name, true, 'trident/' );
+							$browser_number = self::get_item_version( $browser_user_agent, $browser_name, true, 'trident/' );
 
 						}
-						get_set_count( 'set', 0 );
-						$layout_engine_nu_full = get_item_version( $browser_user_agent, 'trident/', '', '' );
+						self::get_set_count( 'set', 0 );
+						$layout_engine_nu_full = self::get_item_version( $browser_user_agent, 'trident/', '', '' );
 						// construct the proper real number. For example, trident 4 is msie 8
 						if ( $layout_engine_nu_full  ) {
-							$layout_engine_nu = get_item_math_number( $layout_engine_nu_full );
+							$layout_engine_nu = self::get_item_math_number( $layout_engine_nu_full );
 							$layout_engine = 'trident';
 							// in compat mode, browser shows as msie 7, for now, check in future msie
 							// versions. Note that this isn't used in new gecko type ua, so no compat mode switch
 							if ( strstr( $browser_number, '7.' ) && !$b_gecko_ua ) {
-								$true_ie_number = get_item_math_number( $browser_number ) + ( intval( $layout_engine_nu ) - 3 );
+								$true_ie_number = self::get_item_math_number( $browser_number ) + ( intval( $layout_engine_nu ) - 3 );
 							}
 							else {
 								$true_ie_number = $browser_number;
@@ -683,7 +683,7 @@ function browser_detection( $which_test, $test_excludes='', $external_ua_string=
 							for ( $j = 0; $j < $j_count; $j++ ) {
 								if ( strstr( $browser_user_agent, $a_trident_types[$j] ) ) {
 									$trident_type = $a_trident_types[$j];
-									$trident_type_number = get_item_version( $browser_user_agent, $trident_type );
+									$trident_type_number = self::get_item_version( $browser_user_agent, $trident_type );
 									break;
 								}
 							}
@@ -734,28 +734,28 @@ function browser_detection( $which_test, $test_excludes='', $external_ua_string=
 						if ( $browser_name == 'opr/' ) {
 							$browser_name = 'opr';
 						}
-						$browser_number = get_item_version( $browser_user_agent, $browser_name );
+						$browser_number = self::get_item_version( $browser_user_agent, $browser_name );
 						// opera is leaving version at 9.80 (or xx) for 10.x - see this for explanation
 						// http://dev.opera.com/articles/view/opera-ua-string-changes/
 						if ( strstr( $browser_number, '9.' )
 						     && strstr( $browser_user_agent, 'version/' ) ) {
-							get_set_count( 'set', 0 );
-							$browser_number = get_item_version( $browser_user_agent, 'version/' );
+							self::get_set_count( 'set', 0 );
+							$browser_number = self::get_item_version( $browser_user_agent, 'version/' );
 						}
-						get_set_count( 'set', 0 );
-						$layout_engine_nu_full = get_item_version( $browser_user_agent, 'presto/' );
+						self::get_set_count( 'set', 0 );
+						$layout_engine_nu_full = self::get_item_version( $browser_user_agent, 'presto/' );
 						if ( $layout_engine_nu_full ) {
 							$layout_engine = 'presto';
-							$layout_engine_nu = get_item_math_number( $layout_engine_nu_full );
+							$layout_engine_nu = self::get_item_math_number( $layout_engine_nu_full );
 						}
 						if ( ! $layout_engine_nu_full && $browser_name == 'opr' ) {
 							if ( strstr($browser_user_agent, 'blink') ) {
-								$layout_engine_nu_full = get_item_version( $browser_user_agent, 'blink' );
+								$layout_engine_nu_full = self::get_item_version( $browser_user_agent, 'blink' );
 							}
 							else {
-								$layout_engine_nu_full = get_item_version( $browser_user_agent, 'webkit' );
+								$layout_engine_nu_full = self::get_item_version( $browser_user_agent, 'webkit' );
 							}
-							$layout_engine_nu = get_item_math_number( $layout_engine_nu_full );
+							$layout_engine_nu = self::get_item_math_number( $layout_engine_nu_full );
 							// assign rendering engine data
 							$layout_engine = 'blink';
 							$browser_name = 'opera';
@@ -772,10 +772,10 @@ function browser_detection( $which_test, $test_excludes='', $external_ua_string=
 					**/
 					case 'webkit':
 						// note that this is the Webkit version number
-						$browser_number = get_item_version( $browser_user_agent, $browser_name );
+						$browser_number = self::get_item_version( $browser_user_agent, $browser_name );
 						// assign rendering engine data
 						$layout_engine = 'webkit';
-						$layout_engine_nu = get_item_math_number( $browser_number );
+						$layout_engine_nu = self::get_item_math_number( $browser_number );
 						$layout_engine_nu_full = $browser_number;
 						// this is to pull out specific webkit versions, safari, google-chrome etc..
 						$j_count = count( $a_webkit_types );
@@ -788,8 +788,8 @@ function browser_detection( $which_test, $test_excludes='', $external_ua_string=
 								/*
 								if ( $a_webkit_types[$j] == 'safari'
 								     && strstr( $browser_user_agent, 'version/' ) ) {
-									get_set_count( 'set', 0 );
-									$webkit_type_number = get_item_version( $browser_user_agent, 'version/' );
+									self::get_set_count( 'set', 0 );
+									$webkit_type_number = self::get_item_version( $browser_user_agent, 'version/' );
 								}
 								else {
 								*/
@@ -798,9 +798,9 @@ function browser_detection( $which_test, $test_excludes='', $external_ua_string=
 								if omni web, we want the count 2, not default 1
 								**/
 								if ( $webkit_type == 'omniweb' ) {
-								  get_set_count( 'set', 2 );
+								  self::get_set_count( 'set', 2 );
 								}
-								$webkit_type_number = get_item_version( $browser_user_agent, $webkit_type );
+								$webkit_type_number = self::get_item_version( $browser_user_agent, $webkit_type );
 
 								// }
 								// epiphany hack
@@ -811,21 +811,21 @@ function browser_detection( $which_test, $test_excludes='', $external_ua_string=
 									$browser_name = $a_webkit_types[$j];
 								}
 								if ( ( $a_webkit_types[$j] == 'chrome' || $a_webkit_types[$j] == 'chromium' ) &&
-								     get_item_math_number( $webkit_type_number ) >= 28  ) {
+								     self::get_item_math_number( $webkit_type_number ) >= 28  ) {
 									if ( strstr($browser_user_agent, 'blink') ) {
-										$layout_engine_nu_full = get_item_version( $browser_user_agent, 'blink' );
-										$layout_engine_nu = get_item_math_number( $layout_engine_nu_full );
+										$layout_engine_nu_full = self::get_item_version( $browser_user_agent, 'blink' );
+										$layout_engine_nu = self::get_item_math_number( $layout_engine_nu_full );
 									}
 									// assign rendering engine data
 									$layout_engine = 'blink';
 								}
-								$browser_number = get_item_version( $browser_user_agent, $browser_name );
+								$browser_number = self::get_item_version( $browser_user_agent, $browser_name );
 								break;
 							}
 						}
 						break;
 					default:
-						$browser_number = get_item_version( $browser_user_agent, $browser_name );
+						$browser_number = self::get_item_version( $browser_user_agent, $browser_name );
 						break;
 				}
 				// the browser was id'ed
@@ -852,9 +852,9 @@ function browser_detection( $which_test, $test_excludes='', $external_ua_string=
 				$browser_name = $a_unhandled_browser[0];
 
 				if ( $browser_name == 'blackberry' ) {
-					get_set_count( 'set', 0 );
+					self::get_set_count( 'set', 0 );
 				}
-				$browser_number = get_item_version( $browser_user_agent, $browser_name );
+				$browser_number = self::get_item_version( $browser_user_agent, $browser_name );
 			}
 			else {
 				$browser_name = 'NA';
@@ -865,7 +865,7 @@ function browser_detection( $which_test, $test_excludes='', $external_ua_string=
 		}
 		// get os data, mac os x test requires browser/version information, this is a change from older scripts
 		if ( $b_os_test ) {
-			$a_os_data = get_os_data( $browser_user_agent, $browser_working, $browser_number );
+			$a_os_data = self::get_os_data( $browser_user_agent, $browser_working, $browser_number );
 			$os_type = $a_os_data[0];// os name, abbreviated
 			$os_number = $a_os_data[1];// os number or version if available
 		}
@@ -878,11 +878,11 @@ function browser_detection( $which_test, $test_excludes='', $external_ua_string=
 		pulls out primary version number from more complex string, like 7.5a,
 		use this for numeric version comparison
 		**/
-		$browser_math_number = get_item_math_number( $browser_number );
+		$browser_math_number = self::get_item_math_number( $browser_number );
 		if ( $b_mobile_test ) {
-			$mobile_test = check_is_mobile( $browser_user_agent );
+			$mobile_test = self::check_is_mobile( $browser_user_agent );
 			if ( $mobile_test ) {
-				$a_mobile_data = get_mobile_data( $browser_user_agent );
+				$a_mobile_data = self::get_mobile_data( $browser_user_agent );
 				$ua_type = 'mobile';
 			}
 		}
@@ -890,32 +890,32 @@ function browser_detection( $which_test, $test_excludes='', $external_ua_string=
 	//$browser_number = $_SERVER["REMOTE_ADDR"];
 	/**
 	This is where you return values based on what parameter you used to call the function
-	$which_test is the passed parameter in the initial browser_detection('os') for example returns
+	$_which_test is the passed parameter in the initial browser_detection('os') for example returns
 	the os version only.
 
 	Update deprecated parameter names to new names
 	**/
-	switch ( $which_test ) {
+	switch ( $_which_test ) {
 		case 'math_number':
-			$which_test = 'browser_math_number';
+			$_which_test = 'browser_math_number';
 			break;
 		case 'number':
-			$which_test = 'browser_number';
+			$_which_test = 'browser_number';
 			break;
 		case 'browser':
-			$which_test = 'browser_working';
+			$_which_test = 'browser_working';
 			break;
 		case 'moz_version':
-			$which_test = 'moz_data';
+			$_which_test = 'moz_data';
 			break;
 		case 'true_msie_version':
-			$which_test = 'true_ie_number';
+			$_which_test = 'true_ie_number';
 			break;
 		case 'type':
-			$which_test = 'ua_type';
+			$_which_test = 'ua_type';
 			break;
 		case 'webkit_version':
-			$which_test = 'webkit_data';
+			$_which_test = 'webkit_data';
 			break;
 	}
 	/**
@@ -940,10 +940,10 @@ function browser_detection( $which_test, $test_excludes='', $external_ua_string=
 	if ( !$a_webkit_data ) {
 		$a_webkit_data = array( $webkit_type, $webkit_type_number, $browser_number );
 	}
-	$run_time = script_time();
+	$run_time = self::script_time();
 	// now send the actual engine number to the html type function
 	if ( $layout_engine_nu ) {
-		$html_type = get_html_level( $layout_engine, $layout_engine_nu );
+		$html_type = self::get_html_level( $layout_engine, $layout_engine_nu );
 	}
 	// then pack the primary data array
 	if ( !$a_full_assoc_data ) {
@@ -971,7 +971,7 @@ function browser_detection( $which_test, $test_excludes='', $external_ua_string=
 		);
 	}
 	// return parameters, either full data arrays, or by associative array index key
-	switch ( $which_test ) {
+	switch ( $_which_test ) {
 		// returns all relevant browser information in an array with standard numeric indexes
 		case 'full':
 			$a_full_data = array(
@@ -1017,21 +1017,21 @@ function browser_detection( $which_test, $test_excludes='', $external_ua_string=
 			break;
 		default:
 			# check to see if the data is available, otherwise it's user typo of unsupported option
-			if ( isset( $a_full_assoc_data[$which_test] ) ) {
-				return $a_full_assoc_data[$which_test];
+			if ( isset( $a_full_assoc_data[$_which_test] ) ) {
+				return $a_full_assoc_data[$_which_test];
 			}
 			else {
-				die( "You passed the browser detector an unsupported option for parameter 1: " . $which_test );
+				die( "You passed the browser detector an unsupported option for parameter 1: " . $_which_test );
 			}
 			break;
 	}
 }
 
-function get_item_math_number( $pv_browser_number )
+static function get_item_math_number( $_pv_browser_number )
 {
 	$browser_math_number = '';
-	if ( $pv_browser_number
-		   && preg_match( '/^[0-9]*\.*[0-9]*/', $pv_browser_number, $a_browser_math_number ) ) {
+	if ( $_pv_browser_number
+		   && preg_match( '/^[0-9]*\.*[0-9]*/', $_pv_browser_number, $a_browser_math_number ) ) {
 		$browser_math_number = $a_browser_math_number[0];
 		//print_r($a_browser_math_number);
 	}
@@ -1039,7 +1039,7 @@ function get_item_math_number( $pv_browser_number )
 }
 
 // gets which os from the browser string
-function get_os_data ( $pv_browser_string, $pv_browser_name, $pv_version_number  )
+static function get_os_data ( $_pv_browser_string, $_pv_browser_name, $_pv_version_number  )
 {
 	// initialize variables
 	$os_working_type = '';
@@ -1065,11 +1065,11 @@ function get_os_data ( $pv_browser_string, $pv_browser_name, $pv_version_number 
 		$os_working_data = $a_os_types[$i];
 		/**
 		assign os to global os variable, os flag true on success
-		!strstr($pv_browser_string, "linux" ) corrects a linux detection bug
+		!strstr($_pv_browser_string, "linux" ) corrects a linux detection bug
 		**/
 		if ( !is_array( $os_working_data )
-		     && strstr( $pv_browser_string, $os_working_data )
-		     && !strstr( $pv_browser_string, "linux" ) ) {
+		     && strstr( $_pv_browser_string, $os_working_data )
+		     && !strstr( $_pv_browser_string, "linux" ) ) {
 			$os_working_type = $os_working_data;
 
 			switch ( $os_working_type ) {
@@ -1077,44 +1077,44 @@ function get_os_data ( $pv_browser_string, $pv_browser_name, $pv_version_number 
 				case 'nt':
 					// This returns either a number, like 3, or 5.1. It does not
 					// return any alpha/beta type data for the os version.
-					preg_match ( '/nt ([0-9]+[\.]?[0-9]?)/', $pv_browser_string, $a_nt_matches );
+					preg_match ( '/nt ([0-9]+[\.]?[0-9]?)/', $_pv_browser_string, $a_nt_matches );
 					if ( isset( $a_nt_matches[1] ) ) {
 						$os_working_number = $a_nt_matches[1];
 					}
 					break;
 				case 'win':
 					// windows vista, for opera ID
-					if ( strstr( $pv_browser_string, 'vista' ) ) {
+					if ( strstr( $_pv_browser_string, 'vista' ) ) {
 						$os_working_number = 6.0;
 						$os_working_type = 'nt';
 					}
 					// windows xp, for opera ID
-					elseif ( strstr( $pv_browser_string, 'xp' ) ) {
+					elseif ( strstr( $_pv_browser_string, 'xp' ) ) {
 						$os_working_number = 5.1;
 						$os_working_type = 'nt';
 					}
 					// windows server 2003, for opera ID
-					elseif ( strstr( $pv_browser_string, '2003' ) ) {
+					elseif ( strstr( $_pv_browser_string, '2003' ) ) {
 						$os_working_number = 5.2;
 						$os_working_type = 'nt';
 					}
 					// windows CE
-					elseif ( strstr( $pv_browser_string, 'windows ce' ) ) {
+					elseif ( strstr( $_pv_browser_string, 'windows ce' ) ) {
 						$os_working_number = 'ce';
 						$os_working_type = 'nt';
 					}
-					elseif ( strstr( $pv_browser_string, '95' ) ) {
+					elseif ( strstr( $_pv_browser_string, '95' ) ) {
 						$os_working_number = '95';
 					}
-					elseif ( ( strstr( $pv_browser_string, '9x 4.9' ) )
-					     || ( strstr( $pv_browser_string, ' me' ) ) ) {
+					elseif ( ( strstr( $_pv_browser_string, '9x 4.9' ) )
+					     || ( strstr( $_pv_browser_string, ' me' ) ) ) {
 						$os_working_number = 'me';
 					}
-					elseif ( strstr( $pv_browser_string, '98' ) ) {
+					elseif ( strstr( $_pv_browser_string, '98' ) ) {
 						$os_working_number = '98';
 					}
 					// windows 2000, for opera ID
-					elseif ( strstr( $pv_browser_string, '2000' ) ) {
+					elseif ( strstr( $_pv_browser_string, '2000' ) ) {
 						$os_working_number = 5.0;
 						$os_working_type = 'nt';
 					}
@@ -1123,11 +1123,11 @@ function get_os_data ( $pv_browser_string, $pv_browser_name, $pv_version_number 
 				case 'mac_':
 				case 'macintosh':
 					$os_working_type = 'mac';
-					if ( strstr( $pv_browser_string, 'os x' ) ) {
+					if ( strstr( $_pv_browser_string, 'os x' ) ) {
 						// if it doesn't have a version number, it is os x;
-						if ( strstr( $pv_browser_string, 'os x ' ) ) {
+						if ( strstr( $_pv_browser_string, 'os x ' ) ) {
 							// numbers are like: 10_2.4, others 10.2.4
-							$os_working_number = str_replace( '_', '.', get_item_version( $pv_browser_string, 'os x' ) );
+							$os_working_number = str_replace( '_', '.', get_item_version( $_pv_browser_string, 'os x' ) );
 						}
 						else {
 							$os_working_number = 10;
@@ -1137,10 +1137,10 @@ function get_os_data ( $pv_browser_string, $pv_browser_name, $pv_version_number 
 					this is a crude test for os x, since safari, camino, ie 5.2, & moz >= rv 1.3
 					are only made for os x
 					**/
-					elseif ( $pv_browser_name == 'saf'
-					         || $pv_browser_name == 'cam'
-					         || ( ( $pv_browser_name == 'moz' ) && ( $pv_version_number >= 1.3 ) )
-					         || ( ( $pv_browser_name == 'ie' ) && ( $pv_version_number >= 5.2 ) ) ) {
+					elseif ( $_pv_browser_name == 'saf'
+					         || $_pv_browser_name == 'cam'
+					         || ( ( $_pv_browser_name == 'moz' ) && ( $_pv_version_number >= 1.3 ) )
+					         || ( ( $_pv_browser_name == 'ie' ) && ( $_pv_version_number >= 5.2 ) ) ) {
 						$os_working_number = 10;
 					}
 					break;
@@ -1159,7 +1159,7 @@ function get_os_data ( $pv_browser_string, $pv_browser_name, $pv_version_number 
 		elseif ( is_array( $os_working_data ) && ( $i == ( $i_count - 2 ) ) ) {
 			$j_count = count($os_working_data);
 			for ($j = 0; $j < $j_count; $j++) {
-				if ( strstr( $pv_browser_string, $os_working_data[$j] ) ) {
+				if ( strstr( $_pv_browser_string, $os_working_data[$j] ) ) {
 					$os_working_type = 'unix'; //if the os is in the unix array, it's unix, obviously...
 					$os_working_number = ( $os_working_data[$j] != 'unix' ) ? $os_working_data[$j] : '';// assign sub unix version from the unix array
 					break;
@@ -1173,7 +1173,7 @@ function get_os_data ( $pv_browser_string, $pv_browser_name, $pv_version_number 
 		elseif ( is_array( $os_working_data ) && ( $i == ( $i_count - 1 ) ) ) {
 			$j_count = count($os_working_data);
 			for ($j = 0; $j < $j_count; $j++) {
-				if ( strstr( $pv_browser_string, $os_working_data[$j] ) ) {
+				if ( strstr( $_pv_browser_string, $os_working_data[$j] ) ) {
 					$os_working_type = 'lin';
 					// assign linux distro from the linux array, there's a default
 					//search for 'lin', if it's that, set version to ''
@@ -1196,7 +1196,7 @@ function get_item_version( $browser_user_agent, $search_string, $substring_lengt
 $pv_extra_search='' allows us to set an additional search/exit loop parameter, but we
 only want this running when needed
 **/
-function get_item_version( $pv_browser_user_agent, $pv_search_string, $pv_b_break_last='', $pv_extra_search='' )
+static function get_item_version( $pv_browser_user_agent, $pv_search_string, $pv_b_break_last='', $pv_extra_search='' )
 {
 	// 12 is the longest that will be required, handles release dates: 20020323; 0.8.0+
 	$substring_length = 15;
@@ -1237,7 +1237,7 @@ function get_item_version( $pv_browser_user_agent, $pv_search_string, $pv_b_brea
 	also corrects for the omniweb 'v'
 	**/
 
-	$start_pos += get_set_count( 'get' );
+	$start_pos += self::get_set_count( 'get' );
 	$string_working_number = substr( $pv_browser_user_agent, $start_pos, $substring_length );
 	// Find the space, ;, or parentheses that ends the number
 	$string_working_number = substr( $string_working_number, 0, strcspn($string_working_number, ' );/') );
@@ -1252,7 +1252,7 @@ function get_item_version( $pv_browser_user_agent, $pv_search_string, $pv_b_brea
 	return $string_working_number;
 }
 
-function get_set_count( $pv_type, $pv_value='' )
+static function get_set_count( $pv_type, $pv_value='' )
 {
 	static $slice_increment;
 	$return_value = '';
@@ -1277,7 +1277,7 @@ Special ID notes:
 Novarra-Vision is a Content Transformation Server (CTS)
 Some interesting notes on detection of actual mobile devices
 **/
-function check_is_mobile( $pv_browser_user_agent )
+static function check_is_mobile( $pv_browser_user_agent )
 {
 	$mobile_working_test = '';
 	/**
@@ -1320,7 +1320,7 @@ function check_is_mobile( $pv_browser_user_agent )
 thanks to this page: http://www.zytrax.com/tech/web/mobile_ids.html
 for data used here
 **/
-function get_mobile_data( $pv_browser_user_agent )
+static function get_mobile_data( $pv_browser_user_agent )
 {
 	$mobile_browser = '';
 	$mobile_browser_number = '';
@@ -1372,7 +1372,7 @@ function get_mobile_data( $pv_browser_user_agent )
 		if ( strstr( $pv_browser_user_agent, $a_mobile_browser[$k] ) ) {
 			$mobile_browser = $a_mobile_browser[$k];
 			// this may or may not work, highly unreliable because mobile ua strings are random
-			$mobile_browser_number = get_item_version( $pv_browser_user_agent, $mobile_browser );
+			$mobile_browser_number = self::get_item_version( $pv_browser_user_agent, $mobile_browser );
 			break;
 		}
 	}
@@ -1381,9 +1381,9 @@ function get_mobile_data( $pv_browser_user_agent )
 		if ( strstr( $pv_browser_user_agent, $a_mobile_device[$k] ) ) {
 			$mobile_device = trim ( $a_mobile_device[$k], '-_' ); // but not space trims yet
 			if ( $mobile_device == 'blackberry' ) {
-				get_set_count( 'set', 0 );
+				self::get_set_count( 'set', 0 );
 			}
-			$mobile_device_number = get_item_version( $pv_browser_user_agent, $mobile_device );
+			$mobile_device_number = self::get_item_version( $pv_browser_user_agent, $mobile_device );
 			$mobile_device = trim( $mobile_device ); // some of the id search strings have white space
 			break;
 		}
@@ -1400,7 +1400,7 @@ function get_mobile_data( $pv_browser_user_agent )
 				$mobile_os_number = str_replace( '_', '.', get_item_version( $pv_browser_user_agent, 'version' ) );
 				// eg: BlackBerry9000/5.0.0.93 Profile/M....
 				if ( empty( $mobile_os_number ) ) {
-					get_set_count( 'set', 5 );
+					self::get_set_count( 'set', 5 );
 					$mobile_os_number = str_replace( '_', '.', get_item_version( $pv_browser_user_agent, $mobile_os ) );
 				}
 			}
@@ -1412,7 +1412,7 @@ function get_mobile_data( $pv_browser_user_agent )
 		if ( strstr( $pv_browser_user_agent, $a_mobile_server[$k] ) ) {
 			$mobile_server = $a_mobile_server[$k];
 			// this may or may not work, highly unreliable
-			$mobile_server_number = get_item_version( $pv_browser_user_agent, $mobile_server );
+			$mobile_server_number = self::get_item_version( $pv_browser_user_agent, $mobile_server );
 			break;
 		}
 	}
@@ -1443,17 +1443,17 @@ function get_mobile_data( $pv_browser_user_agent )
 	     && ( $mobile_browser || $mobile_device || $mobile_server )
 	     && strstr( $pv_browser_user_agent, 'linux' ) ) {
 		$mobile_os = 'linux';
-		$mobile_os_number = get_item_version( $pv_browser_user_agent, 'linux' );
+		$mobile_os_number = self::get_item_version( $pv_browser_user_agent, 'linux' );
 	}
 
 	$a_mobile_data = array( $mobile_device, $mobile_browser, $mobile_browser_number, $mobile_os, $mobile_os_number, $mobile_server, $mobile_server_number, $mobile_device_number, $mobile_tablet );
 	return $a_mobile_data;
 }
 
-function get_html_level( $pv_render_engine, $pv_render_engine_nu )
+static function get_html_level( $_pv_render_engine, $_pv_render_engine_nu )
 {
 	$html_return = 1;
-	$engine_nu = $pv_render_engine_nu;
+	$engine_nu = $_pv_render_engine_nu;
 	/**
 	Until further notice, this is the primary comparison table/data used for determining
 	browser support: http://en.wikipedia.org/wiki/Comparison_of_layout_engines_%28HTML5%29
@@ -1489,19 +1489,19 @@ function get_html_level( $pv_render_engine, $pv_render_engine_nu )
 	// floatval/locales: https://bugs.php.net/bug.php?id=40653
 	$engine_nu = intval( 10 * floatval( $engine_nu ) );
 
-	if ( array_key_exists( $pv_render_engine, $a_html5_forms )
-	     && $a_html5_forms[$pv_render_engine] <= $engine_nu ) {
+	if ( array_key_exists( $_pv_render_engine, $a_html5_forms )
+	     && $a_html5_forms[$_pv_render_engine] <= $engine_nu ) {
 		$html_return = 3;
 	}
-	elseif ( array_key_exists( $pv_render_engine, $a_html5_basic )
-	         && $a_html5_basic[$pv_render_engine] <= $engine_nu ) {
+	elseif ( array_key_exists( $_pv_render_engine, $a_html5_basic )
+	         && $a_html5_basic[$_pv_render_engine] <= $engine_nu ) {
 		$html_return = 2;
 	}
 	return $html_return;
 }
 
 // track total script execution time
-function script_time()
+static function script_time()
 {
 	static $script_time;
 	$elapsed_time = '';
