@@ -13,6 +13,7 @@ class visitor
 	private static $visitor;
 	private static $link;
 	private static $result;
+	private static $external;
 
 
 
@@ -67,12 +68,14 @@ class visitor
 	public static function create_query()
 	{
 		// declare variables
-		self::$visitor['`visitor_ip`']         = ClientIP;
-		self::$visitor['`url_id`']             = self::checkDetailExist('url',     self::url());
-		self::$visitor['`agent_id`']           = self::checkDetailExist('agent',   self::agent());
-		self::$visitor['`url_idreferer`']      = self::checkDetailExist('url',     self::referer());
-		self::$visitor['`user_id`']            = self::user_id();
-		self::$visitor['`visitor_createdate`'] = "'".date('Y-m-d H:i:s')."'";
+		self::$visitor['`visitor_ip`']       = ClientIP;
+		self::$visitor['`url_id`']           = self::checkDetailExist('url',     self::url());
+		self::$visitor['`agent_id`']         = self::checkDetailExist('agent',   self::agent());
+		self::$visitor['`url_idreferer`']    = self::checkDetailExist('url',     self::referer());
+		self::$visitor['`user_id`']          = self::user_id();
+		self::$visitor['`visitor_external`'] = self::$external;
+		self::$visitor['`visitor_date`']     = "'".date('Y-m-d')."'";
+		self::$visitor['`visitor_time`']     = "'".date('H:i:s')."'";
 
 		// create query string
 		$qry_fields = implode(', ', array_keys(self::$visitor));
@@ -117,13 +120,39 @@ class visitor
 		$qry     = "INSERT INTO $_table"."s ( $_table".'_'."$_table ) VALUES ( '$_value' );";
 		if($_table === 'agent')
 		{
-			$is_bot  = self::isBot();
-			$qry     = "INSERT INTO $_table"."s ( $_table".'_'."$_table, `agent_robot` ) VALUES ( '$_value', $is_bot );";
+			// self::agent()
+			$is_bot = self::isBot();
+			$agent  = \lib\utility\browserDetection::browser_detection('full_assoc');
+			$qry    =
+			"INSERT INTO agents
+			(
+				`agent_agent`,
+				`agent_group`,
+				`agent_name`,
+				`agent_version`,
+				`agent_os`,
+				`agent_osnum`,
+				`agent_meta`,
+				`agent_robot`
+			)
+			VALUES
+			(
+				'$_value',
+				'".$agent['browser_working']."',
+				'".$agent['browser_name']."',
+				'".$agent['browser_number']."',
+				'".$agent['os']."',
+				'".$agent['os_number']."',
+				'".json_encode($agent, true)."',
+				$is_bot
+			);";
 		}
 		elseif($_table === 'url')
 		{
-			$is_external  = self::isExternal($_value);
-			$qry     = "INSERT INTO $_table"."s ( $_table".'_'."$_table, `url_external` ) VALUES ( '$_value', $is_external );";
+			$qry =
+			"INSERT INTO urls
+			( url_url, `url_host` )
+			VALUES ( '$_value', '". parse_url(urldecode($_value), PHP_URL_HOST). "' );";
 		}
 		// execute query
 		$result  = @mysqli_query(self::$link, $qry);
@@ -187,6 +216,16 @@ class visitor
 		{
 			$referer = $_SERVER['HTTP_REFERER'];
 		}
+		$host_referer   = parse_url(urldecode($referer), PHP_URL_HOST);
+		if($host_referer === $_SERVER['SERVER_NAME'])
+		{
+			self::$external = 0;
+		}
+		else
+		{
+			self::$external = 1;
+		}
+
 		// if user want encode referer
 		if($_encode)
 		{
@@ -216,23 +255,6 @@ class visitor
 		return $agent;
 	}
 
-
-	/**
-	 * compare two url and say hase diferrent host or not
-	 * @return boolean [description]
-	 */
-	public static function isExternal($_url)
-	{
-		$_url = urldecode($_url);
-		$external = parse_url($_url, PHP_URL_HOST);
-		if($external !== Service)
-		{
-			// return true if not same
-			return 1;
-		}
-		// return default value
-		return 0;
-	}
 
 	/**
 	 * check current user is bot or not
@@ -311,17 +333,20 @@ class visitor
 
 		$qry =
 			"SELECT
-				date_format(visitor_createdate,'%Y-%m-%d') as date,
+				visitor_date,
 				0 as bots,
 				count(*) as humans,
 				count(*) as total
 
 				FROM `visitors`
 
-				GROUP BY date
-				ORDER BY date ASC
+				GROUP BY visitor_date
+				ORDER BY visitor_date ASC
 				LIMIT 0, 10";
 		$result  = @mysqli_query(self::$link, $qry);
+		if(!$result)
+			return false;
+
 		$result  = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
 		$result_total = array_column($result, 'total');
@@ -351,6 +376,9 @@ class visitor
 			ORDER BY total DESC
 			LIMIT 0, $_count";
 		$result  = @mysqli_query(self::$link, $qry);
+		if(!$result)
+			return false;
+
 		$result  = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
 		foreach ($result as $key => $row)
