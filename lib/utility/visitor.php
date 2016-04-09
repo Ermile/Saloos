@@ -69,6 +69,7 @@ class visitor
 	{
 		// declare variables
 		self::$visitor['`visitor_ip`']       = ClientIP;
+		self::$visitor['`service_id`']       = self::checkDetailExist('service', self::url(true));
 		self::$visitor['`url_id`']           = self::checkDetailExist('url',     self::url());
 		self::$visitor['`agent_id`']         = self::checkDetailExist('agent',   self::agent());
 		self::$visitor['`url_idreferer`']    = self::checkDetailExist('url',     self::referer());
@@ -97,7 +98,16 @@ class visitor
 		// create link to database
 		self::createLink();
 		$default = 0;
-		$qry     = "SELECT * FROM $_table"."s WHERE $_table".'_'."$_table = '$_value';";
+		$field   = $_table. '_';
+		if($_table === 'service')
+		{
+			$field .= 'name';
+		}
+		else
+		{
+			$field .=  $_table;
+		}
+		$qry     = "SELECT * FROM $_table"."s WHERE $field = '$_value';";
 		// run qry and save result
 		$result  = @mysqli_query(self::$link, $qry);
 		// if result is not mysqli result return false
@@ -154,6 +164,10 @@ class visitor
 			( url_url, `url_host` )
 			VALUES ( '$_value', '". parse_url(urldecode($_value), PHP_URL_HOST). "' );";
 		}
+		elseif($_table === 'service')
+		{
+			$qry = "INSERT INTO services ( service_name ) VALUES ( '$_value' );";
+		}
 		// execute query
 		$result  = @mysqli_query(self::$link, $qry);
 		// give last insert id
@@ -172,7 +186,7 @@ class visitor
 	 * return current url
 	 * @return [type] [description]
 	 */
-	public static function url($_encode = true)
+	public static function url($_host = false)
 	{
 		$url = null;
 		// get protocol
@@ -183,13 +197,32 @@ class visitor
 		$url .= $_SERVER["SERVER_PORT"] != "80"? ":".$_SERVER["SERVER_PORT"]: '';
 		// get request url
 		$url .= $_SERVER['REQUEST_URI'];
-		// if user want encode referer
-		if($_encode)
+		// if user want only host
+		if($_host)
 		{
-			$url = urlencode($url);
+			$url = self::domain($url);
 		}
+		$url = urlencode($url);
 		// return result
 		return $url;
+	}
+
+
+
+	/**
+	 * get url and return the name of domain
+	 * @param  [type] $_url [description]
+	 * @return [type]       [description]
+	 */
+	public static function domain($_url)
+	{
+		$pieces = parse_url($_url);
+		$domain = isset($pieces['host']) ? $pieces['host'] : '';
+		if (preg_match('/(?P<domain>[a-z0-9][a-z0-9\-]{1,63}\.[a-z\.]{2,6})$/i', $domain, $regs))
+		{
+			return $regs['domain'];
+		}
+		return false;
 	}
 
 
@@ -351,9 +384,15 @@ class visitor
 
 		$result_total = array_column($result, 'total');
 		self::$result['chart'] = $result;
-		self::$result['total'] = array_sum($result_total);
-		self::$result['max']   = max($result_total);
-		self::$result['min']   = min($result_total);
+		self::$result['total'] = null;
+		self::$result['max']   = null;
+		self::$result['min']   = null;
+		if($result_total)
+		{
+			self::$result['total'] = array_sum($result_total);
+			self::$result['max']   = max($result_total);
+			self::$result['min']   = min($result_total);
+		}
 		// return result
 		return $result;
 	}
