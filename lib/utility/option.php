@@ -78,7 +78,7 @@ class option
 	 * @param  boolean $_pemissionDetails [description]
 	 * @return [type]                     [description]
 	 */
-	public static function fetch($_pemissionDetails = false)
+	public static function fetch()
 	{
 		// connect to default database
 		\lib\db::connect(true);
@@ -117,15 +117,10 @@ class option
 				// if status is enable
 				if($row['option_status'] == 'enable')
 				{
-					// save list of permission with details of it
-					if($_pemissionDetails)
-					{
-						$qry_result['permissions']['meta'][$row['option_value']] = json_decode($row['option_meta'], true);
-					}
-					else
-					{
-						$qry_result['permissions']['meta'][$row['option_key']] = $row['option_value'];
-					}
+					$qry_result['permissions']['meta'][$row['option_key']]         = json_decode($row['option_meta'], true);
+					$qry_result['permissions']['meta'][$row['option_key']]['id']   = $row['option_key'];
+					$qry_result['permissions']['meta'][$row['option_key']]['name'] = $row['option_value'];
+
 
 					// save current user permission as option permission value
 					if(isset($_SESSION['user']['permission']) && $row['option_key'] == $_SESSION['user']['permission'])
@@ -170,6 +165,48 @@ class option
 		}
 
 		return $qry_result;
+	}
+
+
+	/**
+	 * return permission detail of requested
+	 * work with permission id or name
+	 * @param  [type] $_id if empty return current user permission
+	 * @return [type]      array contain permission detail
+	 */
+	public static function permission($_id = null)
+	{
+		$permission = [];
+		// use current user permission if isset
+		if(!$_id && isset($_SESSION['user']['permission']))
+		{
+			$_id = $_SESSION['user']['permission'];
+		}
+		// if user pass string of permission name search with name
+		if(!is_numeric($_id))
+		{
+			$permission = self::permList();
+			$_id        = array_search($_id, $permission);
+		}
+		// search in permisssions and get detail of it
+		$permission = self::get('permissions', 'meta', $_id);
+		// return result
+		return $permission;
+	}
+
+
+
+	/**
+	 * return the list of permission
+	 * key is id of permission
+	 * value is the name of permission
+	 * @return [type] [description]
+	 */
+	public static function permList()
+	{
+		$permList = self::get('permissions', 'meta');
+		$permList = array_column($permList, 'name', 'id');
+		return $permList;
 	}
 
 
