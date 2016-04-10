@@ -195,7 +195,6 @@ class option
 	}
 
 
-
 	/**
 	 * return the list of permission
 	 * key is id of permission
@@ -207,6 +206,33 @@ class option
 		$permList = self::get('permissions', 'meta');
 		$permList = array_column($permList, 'name', 'id');
 		return $permList;
+	}
+
+
+	/**
+	 * return the list of contents exist in current project and addons
+	 * @return [type] [description]
+	 */
+	public static function contentList()
+	{
+		// get all content exist in saloos and current project
+		$addons   = glob(addons. "content_*", GLOB_ONLYDIR);
+		$project  = glob(root. "content_*",   GLOB_ONLYDIR);
+		$contents = array_merge($addons, $project);
+		$myList   = [];
+
+		foreach ($contents as $myContent)
+		{
+			$myContent = preg_replace("[\\\\]", "/", $myContent);
+			$myContent = substr( $myContent, ( strrpos( $myContent, "/" ) + 1) );
+			$myContent = substr( $myContent, ( strrpos( $myContent, "_" ) + 1) );
+			array_push($myList, $myContent);
+		}
+		$myList = array_flip($myList);
+		unset($myList['account']);
+		$myList = array_flip($myList);
+
+		return $myList;
 	}
 
 
