@@ -237,6 +237,56 @@ class option
 
 
 	/**
+	 * return the modules of each part of system
+	 * first check if function declare then return the permissions module of this content
+	 * @param  [string] $_content content name
+	 * @return [array]  return the permission modules list
+	 */
+	public static function moduleList($_content)
+	{
+		$myList      = [];
+		$contentName = preg_replace("/content(_[^\/]*)?\//", "content" . $_content, get_class(\lib\main::$controller));
+
+		if(method_exists($contentName, 'permModules'))
+		{
+			$myList = $contentName::permModules();
+			if(!is_array($myList))
+			{
+				$myList = [];
+			}
+
+			// recheck return value from permission modules list func
+			foreach ($myList as $permLoc => $permValue)
+			{
+				if(is_array($permValue))
+				{
+					$permCond = ['view', 'add', 'edit', 'delete', 'admin'];
+					$myList[$permLoc] = null;
+					foreach ($permCond as $value)
+					{
+						if(in_array($value, $permValue))
+						{
+							// $myList[$permLoc][$value] = 'show';
+							$myList[$permLoc][$value] = 'hide';
+						}
+						else
+						{
+							// $myList[$permLoc][$value] = 'hide';
+						}
+					}
+				}
+				else
+				{
+					$myList[$permLoc] = null;
+				}
+			}
+		}
+		// return result
+		return $myList;
+	}
+
+
+	/**
 	 * return list of languages in current project
 	 * read form folders exist in includes/languages
 	 * @return [type] [description]
