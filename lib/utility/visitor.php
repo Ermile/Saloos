@@ -208,6 +208,27 @@ class visitor
 	}
 
 
+	/**
+	 * return current service id
+	 * @return [type] [description]
+	 */
+	public static function service()
+	{
+		$domain = self::url(true);
+		$qry     = "SELECT * FROM services WHERE service_name = '$domain';";
+		// run qry and save result
+		$result  = @mysqli_query(self::$link, $qry);
+		// if has result return id
+		if(is_a($result, 'mysqli_result') && $row = @mysqli_fetch_assoc($result))
+		{
+			if(isset($row['id']))
+			{
+				return $row['id'];
+			}
+		}
+		return 'NULL';
+	}
+
 
 	/**
 	 * get url and return the name of domain
@@ -360,18 +381,20 @@ class visitor
 	public static function chart()
 	{
 		self::createLink();
+		$service_id = self::service();
 		/**
 		 add getting unique visitor in next update
 		 */
 
 		$qry =
 			"SELECT
-				visitor_date,
+				visitor_date as date,
 				0 as bots,
 				count(*) as humans,
 				count(*) as total
 
 				FROM `visitors`
+				WHERE `service_id` = $service_id
 
 				GROUP BY visitor_date
 				ORDER BY visitor_date ASC
@@ -405,12 +428,16 @@ class visitor
 	public static function top_pages($_count = 10)
 	{
 		self::createLink();
+		$service_id = self::service();
+
 		$qry =
 			"SELECT
 				urls.url_url as url,
 				count(visitors.id) as total
 			FROM urls
 			INNER JOIN visitors ON urls.id = visitors.url_id
+			WHERE visitors.`service_id` = $service_id
+
 			GROUP BY visitors.url_id
 			ORDER BY total DESC
 			LIMIT 0, $_count";
