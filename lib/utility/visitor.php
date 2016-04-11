@@ -6,7 +6,7 @@ class visitor
 {
 	/**
 	 * this library get visitor detail and do some work on it
-	 * v1.0
+	 * v1.1
 	 */
 
 	// declare private static variable to save options
@@ -371,6 +371,16 @@ class visitor
 		}
 		// return result
 		return $robot;
+	}
+
+
+	/**
+	 * Install visitor databases
+	 * @return [type] [description]
+	 */
+	public static function install()
+	{
+		return \lib\db::execFolder('(core_name)_tools', 'visitor', true);
 	}
 
 

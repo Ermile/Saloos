@@ -6,7 +6,7 @@ class db
 {
 	/**
 	 * this library doing useful db actions
-	 * v1.2
+	 * v1.3
 	 */
 
 	// save link to database
@@ -165,25 +165,20 @@ class db
 			$has_error = null;
 			foreach ($qry_list as $key => $qry)
 			{
-				if(!@mysqli_query(self::$link, $qry))
+				$qry = trim($qry);
+				if($qry && !@mysqli_query(self::$link, $qry))
 				{
 					$has_error = true;
 				}
 			}
-			if($has_error)
+			// if command execute successfully
+			if(!$has_error)
 			{
-				// error on creating table
-				return false;
+				return true;
 			}
-
-			// command execute successfully
-			return true;
 		}
-		else
-		{
-			// file not exist, return false
-			return false;
-		}
+		// file not exist or error on creating table, return false
+		return false;
 	}
 
 
@@ -193,7 +188,10 @@ class db
 		// if want to read from addons update location
 		if($_addons)
 		{
-			$_path = self::$_path_addons. $_path. '/';
+			$_path    = self::$path_addons. $_path;
+			$myDbName = self::find_dbName($_path);
+			$_path    = $_path.'/';
+			self::connect($myDbName, true);
 		}
 
 		// if want custom group of files, select this group
@@ -236,12 +234,7 @@ class db
 		// foreach address call exec folder func
 		foreach ($dbList as $myDbLoc)
 		{
-			$myDbName = preg_replace("[\\\\]", "/", $myDbLoc);
-			$myDbName = substr( $myDbName, (strrpos($myDbName, "/" )+ 1));
-
-			// change db_name and core_name to defined value
-			$myDbName = str_replace('(db_name)', db_name, $myDbName);
-			$myDbName = str_replace('(core_name)', core_name, $myDbName);
+			$myDbName = self::find_dbName($myDbLoc);
 
 			// if this table before this is not exist in current project
 			// then read this table in addons folder
@@ -279,12 +272,7 @@ class db
 		// foreach address call exec folder func
 		foreach ($dbList as $myDbLoc)
 		{
-			$myDbName = preg_replace("[\\\\]", "/", $myDbLoc);
-			$myDbName = substr( $myDbName, (strrpos($myDbName, "/" )+ 1));
-
-			// change db_name and core_name to defined value
-			$myDbName = str_replace('(db_name)', db_name, $myDbName);
-			$myDbName = str_replace('(core_name)', core_name, $myDbName);
+			$myDbName = self::find_dbName($myDbLoc);
 
 			// if this table before this is not exist in current project
 			// then read this table in addons folder
@@ -303,6 +291,17 @@ class db
 		ini_set('max_execution_time', $max_time); //300 seconds = 5 minutes
 
 		return $result;
+	}
+
+	public static function find_dbName($_loc)
+	{
+		$myDbName = preg_replace("[\\\\]", "/", $_loc);
+		$myDbName = substr( $myDbName, (strrpos($myDbName, "/" )+ 1));
+		// change db_name and core_name to defined value
+		$myDbName = str_replace('(db_name)', db_name, $myDbName);
+		$myDbName = str_replace('(core_name)', core_name, $myDbName);
+		// return result
+		return $myDbName;
 	}
 }
 ?>
