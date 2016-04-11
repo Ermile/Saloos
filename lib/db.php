@@ -303,5 +303,96 @@ class db
 		// return result
 		return $myDbName;
 	}
+
+
+
+	/**
+	 * this function create a backup from db with exec command
+	 * the backup file with bz2 compressing method is created in projectdir/backup/db/
+	 * for using this function call it with one of below types
+	 * db::backup();
+	 * db::backup('Daily');
+	 * db::backup('Weekly');
+	 * @param  [type] $_period the name of subfolder or type of backup
+	 * @return [type]          status of running commad
+	 */
+	public static function backup($_period = null)
+	{
+		$_period    = $_period? $_period.'/':null;
+		$db_host    = self::$db_host;
+		$db_charset = self::$db_charset;
+		$dest_file  = self::$db_name.'.'. date('d-m-Y_H-i-s'). '.sql';
+		$dest_dir   = database."backup/$_period";
+		// create folder if not exist
+		if(!is_dir($dest_dir))
+			mkdir($dest_dir, 0755, true);
+
+		$cmd  = "mysqldump --single-transaction --add-drop-table";
+		$cmd .= " --host='$db_host' --set-charset='$db_charset'";
+		$cmd .= " --user='".self::$db_user."'";
+		$cmd .= " --password='".self::$db_pass."' '". self::$db_name."'";
+		$cmd .= " | bzip2 -c > $dest_dir.$dest_file";
+
+		$return_var = NULL;
+		$output     = NULL;
+		$result     = exec($cmd, $output, $return_var);
+		if($return_var === 0)
+			return true;
+
+		return false;
+	}
+
+	/**
+	 * this function delete older backup file from db backup folder
+	 * you can pass type of clean (folder) and days to keep
+	 * call function with below syntax
+	 * db::clean();
+	 * db::clean('Daily');
+	 * db::clean('Weekly', 3);
+	 * @param  [type] $_period the name of subfolder or type of backup
+	 * @param  [type] $_arg    value of the days for keep files
+	 * @return [type]          the result of cleaning seperate by type in array
+	 */
+	public static function clean($_period = null, $_arg = null)
+	{
+		$_period      = $_period? $_period.'/':null;
+		$dest_dir     = database."backup/$_period";
+		$days_to_keep = $_arg[0]? $_arg[0]: 1;
+		$result       =
+		[
+			'folders' => 0,
+			'files'   => 0,
+			'deleted' => 0,
+			'skipped' => 0,
+		];
+
+		if(!is_dir($dest_dir))
+			return false;
+
+		$handle              = opendir($dest_dir);
+		$keep_threshold_time = strtotime("-$days_to_keep days");
+		while (false !== ($file = readdir($handle)))
+		{
+			if($file === '.' || $file === '..')
+			 continue;
+
+			$dest_file_path = "$dest_dir/$file";
+			if(!is_dir($dest_file_path))
+			{
+				$result['files'] += 1;
+				$file_time = filemtime($dest_file_path);
+				if($file_time < $keep_threshold_time)
+				{
+					$result['deleted'] += 1;
+					unlink($dest_file_path);
+				}
+				else
+					$result['skipped'] += 1;
+			}
+			else
+				$result['folders'] += 1;
+		}
+		return $result;
+	}
 }
 ?>
