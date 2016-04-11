@@ -452,7 +452,7 @@ class visitor
 			$result[$key]['url'] = urldecode($row['url']);
 			if(strpos($result[$key]['url'], 'http://') !== false)
 			{
-				$result[$key]['url'] = substr($result[$key]['url'], 7);
+				$result[$key]['text'] = substr($result[$key]['url'], 7);
 			}
 
 		}
