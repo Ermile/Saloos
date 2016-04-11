@@ -6,7 +6,7 @@ class db
 {
 	/**
 	 * this library doing useful db actions
-	 * v1.3
+	 * v1.4
 	 */
 
 	// save link to database
@@ -316,7 +316,7 @@ class db
 	 * @param  [type] $_period the name of subfolder or type of backup
 	 * @return [type]          status of running commad
 	 */
-	public static function backup($_period = null)
+	public static function backup_dump($_period = null)
 	{
 		$_period    = $_period? $_period.'/':null;
 		$db_host    = self::$db_host;
@@ -355,15 +355,20 @@ class db
 	 */
 	public static function clean($_period = null, $_arg = null)
 	{
+		$days_to_keep = $_arg[0]? $_arg[0]: 3;
+		if($_period === false)
+		{
+			$days_to_keep = 100;
+		}
 		$_period      = $_period? $_period.'/':null;
 		$dest_dir     = database."backup/$_period";
-		$days_to_keep = $_arg[0]? $_arg[0]: 1;
 		$result       =
 		[
-			'folders' => 0,
-			'files'   => 0,
-			'deleted' => 0,
-			'skipped' => 0,
+			'folders'   => 0,
+			'files'     => 0,
+			'deleted'   => 0,
+			'duplicate' => 0,
+			'skipped'   => 0,
 		];
 
 		if(!is_dir($dest_dir))
@@ -371,6 +376,7 @@ class db
 
 		$handle              = opendir($dest_dir);
 		$keep_threshold_time = strtotime("-$days_to_keep days");
+		$files_list          = [];
 		while (false !== ($file = readdir($handle)))
 		{
 			if($file === '.' || $file === '..')
@@ -380,19 +386,124 @@ class db
 			if(!is_dir($dest_file_path))
 			{
 				$result['files'] += 1;
-				$file_time = filemtime($dest_file_path);
+				$file_time       = filemtime($dest_file_path);
+				$file_code = substr($file, strrpos($file, '_')+1, -4);
+				if(isset($files_list[$file_code]))
+				{
+					$result['duplicate'] += 1;
+					unlink($dest_file_path);
+				}
+				else
+				{
+					$files_list[$file_code] = $file;
+				}
 				if($file_time < $keep_threshold_time)
 				{
 					$result['deleted'] += 1;
 					unlink($dest_file_path);
 				}
 				else
+				{
 					$result['skipped'] += 1;
+				}
 			}
 			else
+			{
 				$result['folders'] += 1;
+			}
 		}
+		$result['list'] = $files_list;
 		return $result;
+	}
+
+
+	public static function backup($_period = null, $tables = '*')
+	{
+		self::connect(true, false);
+		mysqli_select_db(self::$link, self::$db_name);
+
+		//get all of the tables
+		if($tables == '*')
+		{
+			$tables = [];
+			$result = mysqli_query(self::$link, 'SHOW TABLES');
+			while($row = mysqli_fetch_row($result))
+			{
+				$tables[] = $row[0];
+			}
+		}
+		else
+		{
+			$tables = is_array($tables) ? $tables : explode(',',$tables);
+		}
+		$return = null;
+
+		//cycle through
+		foreach($tables as $table)
+		{
+			$result     = mysqli_query(self::$link, 'SELECT * FROM '.$table);
+			$num_fields = mysqli_num_fields($result);
+			$return     .= 'DROP TABLE '.$table.';';
+			$row2       = mysqli_fetch_row(mysqli_query(self::$link, 'SHOW CREATE TABLE '.$table));
+			$return     .= "\n\n".$row2[1].";\n\n";
+
+			for ($i = 0; $i < $num_fields; $i++)
+			{
+				while($row = mysqli_fetch_row($result))
+				{
+					$return.= 'INSERT INTO '.$table.' VALUES(';
+					for($j=0; $j < $num_fields; $j++)
+					{
+						$row[$j] = addslashes($row[$j]);
+						$row[$j] = str_replace("\n","\\n",$row[$j]);
+
+						if (isset($row[$j]))
+						{
+							$return.= '"'.$row[$j].'"' ;
+						}
+						else
+						{
+							$return.= '""';
+						}
+						if ($j < ($num_fields-1))
+						{
+							$return.= ',';
+						}
+					}
+					$return.= ");\n";
+				}
+			}
+			$return.="\n\n\n";
+		}
+		// if user pass true in period we call clean func
+		if($_period === true)
+		{
+			$clean_result = self::clean(false);
+			print_r($clean_result);
+			echo "<hr />";
+			$_period = null;
+		}
+		//save file
+		$_period    = $_period? $_period.'/':null;
+		$dest_dir   = database."backup/$_period";
+		$dest_file  = self::$db_name.'_b'. date('Ymd_His').'_'. md5($return) . '.sql';
+		// create folder if not exist
+		if(!is_dir($dest_dir))
+			mkdir($dest_dir, 0755, true);
+
+		// $dest_file = 'db-backup-'.time().'-'.(md5(implode(',',$tables))).'.sql';
+		$handle = fopen($dest_dir. $dest_file, 'w+');
+		if(fwrite($handle, $return) === FALSE)
+		{
+			echo "Cannot write to file ($filename)";
+			return false;
+		}
+		// write successful close file and return true
+		fclose($handle);
+		echo "Successfully create database backup<br />";
+		echo "Location:  $dest_dir<br />";
+		echo "File name: $dest_file<hr />";
+		return true;
 	}
 }
 ?>
