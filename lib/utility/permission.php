@@ -24,7 +24,7 @@ class permission
 		if(isset($_SESSION['user']['permission']) && $_SESSION['user']['permission'] === "1")
 		{
 			$su       = true;
-			$suStatus = \lib\utility\option::permListFill('su');
+			$suStatus = self::permListFill('su');
 		}
 
 		// if programmer not set content, give it automatically from address
@@ -162,6 +162,128 @@ class permission
 			}
 		}
 		return $myStatus;
+	}
+
+
+	/**
+	 * return the modules of each part of system
+	 * first check if function declare then return the permissions module of this content
+	 * @param  [string] $_content content name
+	 * @return [array]  return the permission modules list
+	 */
+	public static function moduleList($_content)
+	{
+		$myList      = [];
+		$contentName = preg_replace("/content(_[^\/]*)?\//", "content" . $_content, get_class(\lib\main::$controller));
+
+		if(method_exists($contentName, 'permModules'))
+		{
+			$myList = $contentName::permModules();
+			if(!is_array($myList))
+			{
+				$myList = [];
+			}
+
+			// recheck return value from permission modules list func
+			foreach ($myList as $permLoc => $permValue)
+			{
+				if(is_array($permValue))
+				{
+					$permCond = ['view', 'add', 'edit', 'delete', 'admin'];
+					$myList[$permLoc] = null;
+					foreach ($permCond as $value)
+					{
+						if(in_array($value, $permValue))
+						{
+							// $myList[$permLoc][$value] = 'show';
+							$myList[$permLoc][$value] = 'hide';
+						}
+						else
+						{
+							// $myList[$permLoc][$value] = 'hide';
+						}
+					}
+				}
+				else
+				{
+					$myList[$permLoc] = null;
+				}
+			}
+		}
+		// return result
+		return $myList;
+	}
+
+
+	/**
+	 * [permListFill description]
+	 * @param  boolean $_fill [description]
+	 * @return [type]         [description]
+	 */
+	public static function permListFill($_fill = false)
+	{
+		$permResult = [];
+		$permCond   = ['view', 'add', 'edit', 'delete', 'admin'];
+
+		foreach (\lib\utility\option::contentList() as $myContent)
+		{
+			// for superusers allow access
+			if($_fill === "su")
+			{
+				$permResult[$myContent]['enable'] = true;
+			}
+			// if request fill for using in model give data from post and fill it
+			elseif($_fill)
+			{
+				// step1: get and fill content enable status
+				$postValue = \lib\utility::post('content-'.$myContent);
+				if($postValue === 'on')
+				{
+					$permResult[$myContent]['enable'] = true;
+				}
+				else
+				{
+					$permResult[$myContent]['enable'] = false;
+				}
+			}
+			// else fill as null
+			else
+			{
+				$permResult[$myContent]['enable'] = null;
+			}
+
+			// step2: fill content modules status
+			foreach (self::moduleList($myContent) as $myLoc =>$value)
+			{
+				foreach ($permCond as $cond)
+				{
+					// for superusers allow access
+					if($_fill === "su")
+					{
+						$permResult[$myContent]['modules'][$myLoc][$cond] = true;
+					}
+					// if request fill for using in model give data from post and fill it
+					elseif($_fill)
+					{
+						$locName = $myContent. '-'. $myLoc.'-'. $cond;
+						$postValue = \lib\utility::post($locName);
+						if($postValue === 'on')
+						{
+							$permResult[$myContent]['modules'][$myLoc][$cond] = true;
+						}
+						// else
+						// {
+							// $permResult[$myContent]['modules'][$myLoc][$cond] = null;
+						// }
+					}
+					else
+					{
+						$permResult[$myContent]['modules'][$myLoc][$cond] = null;
+					}
+				}
+			}
+		}
+		return $permResult;
 	}
 }
 ?>
