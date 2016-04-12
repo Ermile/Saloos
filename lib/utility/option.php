@@ -204,6 +204,8 @@ class option
 	public static function permList()
 	{
 		$permList = self::get('permissions', 'meta');
+		if(!$permList)
+			$permList = [];
 		$permList = array_column($permList, 'name', 'id');
 		return $permList;
 	}
