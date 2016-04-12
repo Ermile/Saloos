@@ -38,7 +38,7 @@ class controller
 	{
 		// close writing sessions and start saving it
 		// session_write_close();
-		// $visitor = new \lib\utility\Visitors();
+		// $visitor = new \lib\utility\visitors();
 		// if logvisitor on set visitors
 		if(\lib\utility\option::get('config', 'meta', 'logVisitors'))
 		{

@@ -13,7 +13,8 @@
  <p>Welcome to saloos installation process.</p>
  <p>First of all set database connection detail on <b>config.php</b> then we do others!</p>
 <?php
-	if(isset($_GET['install']) && $_GET['install'] === 'go')
+	if(isset($_GET['install']) && $_GET['install'] === 'go'
+		&& isset($_GET['time']) && $_GET['time'] === 'first_time')
 	{
 		$result = \lib\db::install();
 		if($result)
@@ -30,7 +31,7 @@
 	{
 ?>
  <div class="btn">
-  <a href="?install=go">Install</a>
+  <a href="?install=go&time=first_time">Install</a>
   <span class="bottom">Just a seconds!</span>
  </div>
 <?php

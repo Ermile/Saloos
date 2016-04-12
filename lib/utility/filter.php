@@ -61,7 +61,7 @@ class filter
 	 */
 	public static function slug($_string, $_splitor=null)
 	{
-		$slugify = new \lib\utility\Slugify();
+		$slugify = new \lib\utility\slugify();
 		$slugify->activateRuleset('persian');
 		if($_splitor)
 			return $slugify->slugify($_string, $_splitor);

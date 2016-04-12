@@ -24,7 +24,7 @@ class utility
 			// if set filter use filter class to clear input value
 			if($_type === 'filter')
 			{
-				if(method_exists('\lib\utility\Filter', $_name))
+				if(method_exists('\lib\utility\filter', $_name))
 					$myvalue = \lib\utility\filter::$_name($myvalue, $_arg);
 			}
 			// for password user hasher parameter for hash post value

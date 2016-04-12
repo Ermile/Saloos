@@ -212,7 +212,7 @@ class upload
 	public static function transfer($_url, $_folder = null)
 	{
 		if($_folder && !is_dir($_folder))
-			\lib\utility\File::makeDir($_folder, 0775, true);
+			\lib\utility\file::makeDir($_folder, 0775, true);
 
 		if($_folder && !is_dir($_folder))
 		{

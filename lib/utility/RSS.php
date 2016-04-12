@@ -34,7 +34,7 @@ class RSS
 	public function addItem($_link, $_title, $_desc, $_date)
 	{
 		// strip_tags(
-		$_desc = \lib\utility\Excerpt::extractRelevant($_desc, $_title, 500);
+		$_desc = \lib\utility\excerpt::extractRelevant($_desc, $_title, 500);
 		$this->rssFeed .= "\n";
 		$this->rssFeed .= '    <item>'."\n";
 		$this->rssFeed .= '      <title>' . $_title . '</title>'."\n";

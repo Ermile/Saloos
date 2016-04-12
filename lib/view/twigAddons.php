@@ -77,7 +77,7 @@ trait twigAddons{
 	{
 		return new \Twig_SimpleFilter('readableSize', function ($_string, $_type = 'file', $_emptyTxt = null)
 		{
-			return \lib\utility\Upload::readableSize($_string, $_type, $_emptyTxt);
+			return \lib\utility\upload::readableSize($_string, $_type, $_emptyTxt);
 		});
 	}
 

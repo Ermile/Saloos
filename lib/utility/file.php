@@ -334,7 +334,7 @@ class file
         if(!$_fileMime)
         {
             // get file mime from upload library
-            $_fileMime = \lib\utility\Upload::extCheck($_filePath);
+            $_fileMime = \lib\utility\upload::extCheck($_filePath);
             $_fileMime = $_fileMime['mime'];
         }
 

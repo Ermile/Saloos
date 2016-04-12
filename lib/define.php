@@ -65,7 +65,7 @@ class define
     // temporary disable because not work properly
     if(false)
     {
-      $handler = new \lib\utility\SessionHandler();
+      $handler = new \lib\utility\sessionHandler();
       session_set_save_handler($handler, true);
     }
     // start sessions
