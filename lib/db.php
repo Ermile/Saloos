@@ -6,7 +6,7 @@ class db
 {
 	/**
 	 * this library doing useful db actions
-	 * v1.4
+	 * v1.5
 	 */
 
 	// save link to database
@@ -140,6 +140,25 @@ class db
 		return false;
 	}
 
+
+	public static function fetch_all($_result, $resulttype = MYSQLI_ASSOC)
+	{
+		$result = [];
+		// if mysqli fetch all is exist use it
+		if(function_exists('mysqli_fetch_all'))
+		{
+			$result = @mysqli_fetch_all($_result, $resulttype);
+		}
+		else
+		{
+			for (; $tmp = $_result->fetch_array($resulttype);)
+			{
+				$result[] = $tmp;
+			}
+		}
+		// return result
+		return $result;
+	}
 
 	/**
 	 * execute sql file directly to add some database

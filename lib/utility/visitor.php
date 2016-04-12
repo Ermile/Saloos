@@ -413,7 +413,7 @@ class visitor
 		if(!$result)
 			return false;
 
-		$result  = mysqli_fetch_all($result, MYSQLI_ASSOC);
+		$result = \lib\db::fetch_all($result);
 
 		$result_total = array_column($result, 'total');
 		self::$result['chart'] = $result;
@@ -455,7 +455,7 @@ class visitor
 		if(!$result)
 			return false;
 
-		$result  = mysqli_fetch_all($result, MYSQLI_ASSOC);
+		$result = \lib\db::fetch_all($result);
 
 		foreach ($result as $key => $row)
 		{

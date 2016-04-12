@@ -3,7 +3,7 @@ namespace lib\utility;
 
 /**
  * db Tables Creator class
- * Version 2.4
+ * Version 2.5
  * 17 Feb 2016
  */
 class dbTables
@@ -26,7 +26,8 @@ class dbTables
   public static function create($_default = null)
   {
     ob_start();
-    echo "<!DOCTYPE html><meta charset='UTF-8'/><title>Create file from db</title><body style='padding:0 1%;direction:ltr;'>";
+
+    $output = "<!DOCTYPE html><meta charset='UTF-8'/><title>Create file from db</title><body style='padding:0 1%;direction:ltr;'>";
 
     // init database folder address
     $folder = database.db_name;
@@ -50,8 +51,8 @@ class dbTables
       $content     = "<?php\n". "namespace database\\".db_name.";\n" . "class $TableName\n{\n";
       $fn          = "\n";
 
-      // echo table name and it to translation list
-      echo '<h2>'.$TableName.'</h2><ul style="margin:0 20px">';
+      // save table name and it to translation list
+      $output .= '<h2>'.$TableName.'</h2><pre><ul style="margin:0 20px;padding:0 10px;">';
       self::$translation['Table '.$TableName]       = $TableName;
       self::$translation[substr($TableName, 0, -1)] = $TablePrefix;
 
@@ -225,10 +226,10 @@ class dbTables
 
         $fn      .= $txt_fn. $txt_child . "}\n";
 
-        echo('<li style="list-style-type:disc;"><pre style="margin:0;padding:0;background:none;max-width:100%;">'.$variable.'</pre></li>');
+        $output .= '<li style="list-style-type:disc;">'.$variable.'</li>';
         self::$translation[$myfield]  = $varProp['label'];
       }
-      echo '</ul>';
+      $output .= '</ul></pre>';
 
       $content .= $fn . "}\n?>";
       file_put_contents($folder."/$TableName.php", $content);
@@ -248,8 +249,10 @@ class dbTables
     file_put_contents($folder."/translation.php", $translation_output);
 
     // show final result!
-    echo "<br/><br/><hr/><h1>Finish..!</h1>";
-    echo "<p class='alert alert-success'>Convert db to file and create translation file completed!</p></body></html>";
+    $output .= "<br/><br/><hr/><h1>Finish..!</h1>";
+    $output .= "<p class='alert alert-success'>Convert db to file and create translation file completed!</p>";
+    // return final output
+    return $output;
   }
 
 

@@ -104,8 +104,8 @@ class option
 		}
 
 		// fetch all records
-		$result   = @mysqli_fetch_all($result, MYSQLI_ASSOC);
-		$permList = [];
+		$result     = \lib\db::fetch_all($result);
+		$permList   = [];
 		$qry_result = null;
 
 

@@ -91,11 +91,6 @@ else
 	exit("<p>There doesn't seem to be a <code>config.php</code> file. I need this before we can get started.</p>");
 }
 
-if(!function_exists('mysqli_fetch_all'))
-{
-  die('you must install mysqlnd enabled!');
-}
-
 // Define Project Methods *****************************************************
 // define object method
 function object($val = array())
