@@ -68,9 +68,8 @@ class dbconnection
 			{
 				// database does not exist, go to install page
 				// echo( "<p>".T_("We can't connect to correct database!")." " .T_("Please contact administrator!")."</p>" );
-				require_once(lib."install.php");
-				\lib\main::$controller->redirector('/cp/install?time=first_time', true)->redirect();
-				\lib\main::$controller->_processor(['force_stop' => true, 'force_json' => false]);
+				\lib\main::$controller->redirector('/cp/install?time=first_time', true);
+				\lib\main::$controller->_processor(['force_stop' => true, 'force_json' => true]);
 			}
 			else{
 				$this->error(self::$connection->connect_error, self::$connection->connect_errno);
