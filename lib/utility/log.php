@@ -35,7 +35,7 @@ class log
 	 */
 	public function __construct($filepath){
 		$filepath = DATA_DIR.Config::DIR_DATA_LOGS.$filepath;
-		if(!File::exists(File::getPath($filepath)))
+		if(!file::exists(file::getPath($filepath)))
 			throw new Exception('Log directory "'.$filepath.'" not found!');
 		$this->filepath = $filepath;
 	}
@@ -46,13 +46,13 @@ class log
 	 * @param string $line
 	 */
 	public function write($line){
-		File::append($this->filepath, date($this->date_format).' - '.$line."\n");
+		file::append($this->filepath, date($this->date_format).' - '.$line."\n");
 		// If the max size is exceeded
-		if(File::getSize($this->filepath) >= $this->max_size){
-			File::delete($this->filepath.'.'.$this->nb_old_logs);
+		if(file::getSize($this->filepath) >= $this->max_size){
+			file::delete($this->filepath.'.'.$this->nb_old_logs);
 			for($i = $this->nb_old_logs; $i >= 1; $i--){
-				if(File::exists($this->filepath.($i==1 ? '' : '.'.($i-1))))
-					File::rename($this->filepath.($i==1 ? '' : '.'.($i-1)), $this->filepath.'.'.$i);
+				if(file::exists($this->filepath.($i==1 ? '' : '.'.($i-1))))
+					file::rename($this->filepath.($i==1 ? '' : '.'.($i-1)), $this->filepath.'.'.$i);
 			}
 		}
 	}

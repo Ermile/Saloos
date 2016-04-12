@@ -49,7 +49,7 @@ class image
 	public static function load($filepath)
 	{
 		self::$loaded = false;
-		if(File::exists($filepath))
+		if(file::exists($filepath))
 		{
 			list(self::$width, self::$height, $type) = getimagesize($filepath);
 			// unset(self::$img);
