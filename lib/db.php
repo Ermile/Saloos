@@ -141,6 +141,12 @@ class db
 	}
 
 
+	/**
+	 * fetch all row from database
+	 * @param  [type] $_result    [description]
+	 * @param  [type] $resulttype [description]
+	 * @return [type]             [description]
+	 */
 	public static function fetch_all($_result, $resulttype = MYSQLI_ASSOC)
 	{
 		$result = [];
@@ -201,6 +207,13 @@ class db
 	}
 
 
+	/**
+	 * execute files in one folder
+	 * @param  [type]  $_path   [description]
+	 * @param  [type]  $_group  [description]
+	 * @param  boolean $_addons [description]
+	 * @return [type]           [description]
+	 */
 	public static function execFolder($_path = null, $_group = null, $_addons = false)
 	{
 		$result = [];
@@ -228,6 +241,24 @@ class db
 			$result[$filename] = self::execFile($filename);
 		}
 
+		return $result;
+	}
+
+
+	/**
+	 * check db exist or not
+	 * @return [type] no of tables in database
+	 */
+	public static function exist($_create = false)
+	{
+		$result  = false;
+		$connect = self::connect(true, $_create);
+		if($connect)
+		{
+			$result = mysqli_query(self::$link, 'SHOW TABLES');
+			$result = $result->num_rows;
+		}
+		// return result
 		return $result;
 	}
 
@@ -444,12 +475,9 @@ class db
 		//get all of the tables
 		if($tables == '*')
 		{
-			$tables = [];
-			$result = mysqli_query(self::$link, 'SHOW TABLES');
-			while($row = mysqli_fetch_row($result))
-			{
-				$tables[] = $row[0];
-			}
+			$tables   = [];
+			$result   = mysqli_query(self::$link, 'SHOW TABLES');
+			$tables[] = self::fetch_all($result);
 		}
 		else
 		{
