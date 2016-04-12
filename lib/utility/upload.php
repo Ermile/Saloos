@@ -86,7 +86,7 @@ class upload
 				throw new \RuntimeException(T_('Exceeded file extension limit'));
 			}
 
-			self::$fileFullName = \lib\utility\Filter::slug(self::$fileName). '.'. self::$fileExt;
+			self::$fileFullName = \lib\utility\filter::slug(self::$fileName). '.'. self::$fileExt;
 			self::$fileMd5      = md5_file($_FILES[self::$fieldName]['tmp_name']);
 
 

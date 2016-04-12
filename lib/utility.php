@@ -25,7 +25,7 @@ class utility
 			if($_type === 'filter')
 			{
 				if(method_exists('\lib\utility\Filter', $_name))
-					$myvalue = \lib\utility\Filter::$_name($myvalue, $_arg);
+					$myvalue = \lib\utility\filter::$_name($myvalue, $_arg);
 			}
 			// for password user hasher parameter for hash post value
 			elseif($_type === 'hash')
