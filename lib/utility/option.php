@@ -104,7 +104,7 @@ class option
 		}
 
 		// fetch all records
-		$result   = mysqli_fetch_all($result, MYSQLI_ASSOC);
+		$result   = @mysqli_fetch_all($result, MYSQLI_ASSOC);
 		$permList = [];
 		$qry_result = null;
 
