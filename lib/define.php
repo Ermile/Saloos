@@ -8,6 +8,11 @@ class define
     if(version_compare(phpversion(), '5.6', '<'))
       die("<p>For using Saloos you must update php version to 5.6 or higher!</p>");
 
+    if(function_exists('mysqli_fetch_all'))
+    {
+      die('you must install mysqlnd enabled!');
+    }
+
     /**
      * If DEBUG is TRUE you can see the full error description, If set to FALSE show userfriendly messages
      * change it from project config.php
