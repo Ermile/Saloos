@@ -6,7 +6,7 @@ class db
 {
 	/**
 	 * this library doing useful db actions
-	 * v1.5
+	 * v2.0
 	 */
 
 	// save link to database
@@ -267,82 +267,88 @@ class db
 	 * read current project and addons folder to find database folder
 	 * then start installing files into databases
 	 *** database name must not use - in name!
-	 * @return [type] true if all is good
+	 * @param  boolean $_onlyUpgrade run upgrade process if true
+	 * @param  boolean $_addonsFirst first run addons query
+	 * @return [type]                array contain a result of installation
 	 */
-	public static function install()
+	public static function install($_onlyUpgrade = false, $_addonsFirst = true)
 	{
 		// increase php code execution time
 		ini_set('max_execution_time', 300); //300 seconds = 5 minutes
 
 		$result = [];
+		$myList = [];
 		// find addresses
-		$project = glob(self::$path_project.'*', GLOB_ONLYDIR);
-		$addons  = glob(self::$path_addons.'*',  GLOB_ONLYDIR);
+		$path_project = self::$path_project;
+		$path_addons  = self::$path_addons;
+		// if want to only upgrade read upgrade folder
+		if($_onlyUpgrade)
+		{
+			$path_project = substr(self::$path_project, 0, -8). 'upgrade/';
+			$path_addons  = substr(self::$path_addons,  0, -8). 'upgrade/';
+		}
+		// read folders
+		$project = glob($path_project.'*', GLOB_ONLYDIR);
+		$addons  = glob($path_addons.'*',  GLOB_ONLYDIR);
+		// merge two location list in one array
 		$dbList  = array_merge($project, $addons);
-		$myList  = [];
-
-		// foreach address call exec folder func
-		foreach ($dbList as $myDbLoc)
+		// create a array to install each table only one times, remove duplicate
+		foreach ($dbList as $key => $myDbLoc)
 		{
 			$myDbName = self::find_dbName($myDbLoc);
-
-			// if this table before this is not exist in current project
-			// then read this table in addons folder
 			if(!in_array($myDbName, $myList))
 			{
-				$result[$myDbName]['connect'] = db::connect($myDbName, true);
-				$result[$myDbName]['exec']    = self::execFolder($myDbLoc.'/');
+				$myList[$myDbName] = $myDbLoc;
 			}
-
-			array_push($myList, $myDbName);
+		}
+		// flip array to change location to key
+		$myList = array_flip($myList);
+		// reverse because first install addons databases
+		if($_addonsFirst)
+		{
+			$myList = array_reverse($myList);
 		}
 
-		$result['upgrade'] = self::upgrade();
-
-		return $result;
-	}
-
-
-
-	public static function upgrade()
-	{
-		// increase php code execution time
-		ini_set('max_execution_time', 300); //300 seconds = 5 minutes
-
-		$result       = [];
-		$path_project = substr(self::$path_project, 0, -8). 'upgrade/';
-		$path_addons  = substr(self::$path_addons,  0, -8). 'upgrade/';
-
-		// find addresses
-		$project      = glob($path_project.'*', GLOB_ONLYDIR);
-		$addons       = glob($path_addons.'*',  GLOB_ONLYDIR);
-		$dbList       = array_merge($project, $addons);
-		$myList       = [];
-
-		// foreach address call exec folder func
-		foreach ($dbList as $myDbLoc)
+		// run query for each folder
+		foreach ($myList as $myDbLoc => $myDbName)
 		{
-			$myDbName = self::find_dbName($myDbLoc);
-
-			// if this table before this is not exist in current project
-			// then read this table in addons folder
-			if(!in_array($myDbName, $myList))
+			$myDbCon = $myDbName;
+			if(substr($myDbName, -1) === '+')
 			{
-				$result[$myDbName]['connect'] = db::connect($myDbName, false);
+				$myDbCon = substr($myDbName, 0, -1);
+			}
+			// if only want to upgrade run connection in specefic condition
+			if($_onlyUpgrade)
+			{
+				$result[$myDbName]['connect'] = db::connect($myDbCon, false);
 				$result[$myDbName]['exec']    = self::execFolder($myDbLoc.'/', 'v.');
 			}
-
-			array_push($myList, $myDbName);
+			// run normal installation
+			else
+			{
+				$result[$myDbName]['connect'] = db::connect($myDbCon, true);
+				$result[$myDbName]['exec']    = self::execFolder($myDbLoc.'/');
+			}
+		}
+		// on normal installation call upgrade process to complete installation
+		if(!$_onlyUpgrade)
+		{
+			$result['upgrade'] = self::install(true);
 		}
 
 		// decrease php code execution time to default value
 		// reset to default
 		$max_time = ini_get("max_execution_time");
 		ini_set('max_execution_time', $max_time); //300 seconds = 5 minutes
-
+		// return final result
 		return $result;
 	}
 
+	/**
+	 * find db name by giving folder location
+	 * @param  [type] $_loc [description]
+	 * @return [type]       [description]
+	 */
 	public static function find_dbName($_loc)
 	{
 		$myDbName = preg_replace("[\\\\]", "/", $_loc);
