@@ -6,7 +6,7 @@ class session
 {
 	/**
 	 * this library work with session
-	 * v1.1
+	 * v1.2
 	 */
 
 
@@ -47,10 +47,10 @@ class session
 			foreach ($_id as $value)
 			{
 				$filename = $path. '/sess_'.$value;
-				$result[$filename] = null;
+				$result[$value] = null;
 				if(file_exists($filename))
 				{
-					$result[$filename] = @unlink($filename);
+					$result[$value] = @unlink($filename);
 				}
 			}
 		}
@@ -67,7 +67,8 @@ class session
 	 */
 	public static function deleteByPerm($_permName)
 	{
-		$permList = \lib\utility\option::permList(true);
+		$permList     = \lib\utility\option::permList(true);
+		$deleteResult = [];
 
 		// if permission exist
 		if(isset($permList[$_permName]))
@@ -80,7 +81,7 @@ class session
 			"SELECT `options`.option_value
 				FROM users
 				INNER JOIN `options` ON `options`.user_id = `users`.id
-				WHERE `options`.option_cat = 'sessions' and
+				WHERE `options`.option_cat = 'sessions' AND
 					user_permission = $perm_id;";
 			// run query and give result
 			$result = @mysqli_query(\lib\db::$link, $qry);
@@ -88,7 +89,18 @@ class session
 			$result = \lib\db::fetch_all($result, 'option_value');
 			if($result)
 			{
-				return self::delete($result);
+				$deleteResult = self::delete($result);
+				// for each file in delete
+				foreach ($deleteResult as $key => $value)
+				{
+					// if file is deleted
+					if($value === true)
+					{
+						$qry = "DELETE FROM options WHERE option_cat = 'sessions' AND option_value = '$key';";
+						@mysqli_query(\lib\db::$link, $qry);
+					}
+				}
+				return $deleteResult;
 			}
 		}
 		return null;
