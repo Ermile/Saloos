@@ -201,12 +201,17 @@ class option
 	 * value is the name of permission
 	 * @return [type] [description]
 	 */
-	public static function permList()
+	public static function permList($_flip = false)
 	{
 		$permList = self::get('permissions', 'meta');
 		if(!$permList)
 			$permList = [];
 		$permList = array_column($permList, 'name', 'id');
+		if($_flip)
+		{
+			$permList = array_flip($permList);
+		}
+
 		return $permList;
 	}
 
