@@ -147,7 +147,7 @@ class db
 	 * @param  [type] $resulttype [description]
 	 * @return [type]             [description]
 	 */
-	public static function fetch_all($_result, $resulttype = MYSQLI_ASSOC)
+	public static function fetch_all($_result, $_field = null, $resulttype = MYSQLI_ASSOC)
 	{
 		$result = [];
 		// if mysqli fetch all is exist use it
@@ -161,6 +161,11 @@ class db
 			{
 				$result[] = $tmp;
 			}
+		}
+		// give only one column of result
+		if($_field !== null && !is_array($_field))
+		{
+			$result = array_column($result, $_field);
 		}
 		// return result
 		return $result;
@@ -359,7 +364,6 @@ class db
 		// return result
 		return $myDbName;
 	}
-
 
 
 	/**
