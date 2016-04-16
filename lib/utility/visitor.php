@@ -6,7 +6,7 @@ class visitor
 {
 	/**
 	 * this library get visitor detail and do some work on it
-	 * v1.1
+	 * v1.2
 	 */
 
 	// declare private static variable to save options
@@ -251,10 +251,18 @@ class visitor
 	 * return user_id if loginned to system
 	 * @return [type] [description]
 	 */
-	public static function user_id()
+	public static function user_id($_returnNull = true)
 	{
-		$userid = isset($_SESSION['user']['id'])? $_SESSION['user']['id']: 'NULL';
-
+		$userid = null;
+		if($_returnNull)
+		{
+			$userid = 'NULL';
+		}
+		if(isset($_SESSION['user']['id']))
+		{
+			$userid = $_SESSION['user']['id'];
+		}
+		// return result
 		return $userid;
 	}
 

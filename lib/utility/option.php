@@ -6,7 +6,7 @@ class option
 {
 	/**
 	 * this library get options from db only one times!
-	 * v1.0
+	 * v1.1
 	 */
 
 	// declare private static variable to save options
@@ -289,6 +289,119 @@ class option
 
 		}
 		return $myList;
+	}
+
+
+	/**
+	 * set new record in options
+	 * @param [array] $_args contain key and value of new record
+	 */
+	public static function set($_args)
+	{
+		$datarow =
+		[
+			'option_status' => 'enable',
+		];
+
+		// add option user if set
+		if(isset($_args['user']))
+		{
+			$op_user = $_args['user'];
+			if($op_user === true)
+			{
+				$op_user = \lib\utility\visitor::user_id(false);
+				if(!$op_user)
+				{
+					return false;
+				}
+			}
+			if($op_user)
+			{
+				$datarow['user_id'] = $op_user;
+			}
+		}
+
+		// add option post if set
+		if(isset($_args['post']))
+		{
+			$datarow['post_id'] = $_args['post'];
+		}
+
+		// add option cat if set
+		if(isset($_args['cat']))
+		{
+			$datarow['option_cat'] = $_args['cat'];
+		}
+		else
+		{
+			return false;
+		}
+
+		// add option key if set
+		if(isset($_args['key']))
+		{
+			// replace _USER_ with user_id
+			$_args['key'] = str_replace('_USER_', \lib\utility\visitor::user_id(false), $_args['key']);
+
+			$datarow['option_key'] = $_args['key'];
+		}
+		else
+		{
+			return false;
+		}
+
+		// add option value if set
+		if(isset($_args['value']))
+		{
+			$datarow['option_value'] = $_args['value'];
+		}
+
+		// add option meta if set
+		if(isset($_args['meta']))
+		{
+			$datarow['option_meta'] = $_args['meta'];
+		}
+
+		// add option status if set
+		if(isset($_args['status']))
+		{
+			// only allow defined$_args['status'])e
+			switch ($op_status)
+			{
+				case 'enable':
+				case 'disable':
+				case 'expire':
+					break;
+
+				default:
+					$op_status = 'enable';
+					break;
+			}
+			$datarow['option_status'] = $op_status;
+		}
+
+		// create query string
+		$qry_fields = implode(', ', array_keys($datarow));
+		foreach ($datarow as $key => $value)
+		{
+			$datarow[$key] = "'". $value. "'";
+		}
+		$qry_values = implode(', ', $datarow);
+		// create query string
+		$qry = "INSERT INTO options ( $qry_fields ) VALUES ( $qry_values );";
+		// connect to database
+		\lib\db::connect(true);
+		// execute query
+		$result = @mysqli_query(\lib\db::$link, $qry);
+		// give last insert id
+		$last_id = @mysqli_insert_id(\lib\db::$link);
+		// if have last insert it return it
+		if($last_id)
+		{
+			return $last_id;
+		}
+		// return default value
+		return false;
 	}
 }
 ?>
