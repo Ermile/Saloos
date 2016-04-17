@@ -220,7 +220,7 @@ class option
 	 * return the list of contents exist in current project and addons
 	 * @return [type] [description]
 	 */
-	public static function contentList()
+	public static function contentList($_addMain = false)
 	{
 		// get all content exist in saloos and current project
 		$addons   = glob(addons. "content_*", GLOB_ONLYDIR);
@@ -234,6 +234,11 @@ class option
 			$myContent = substr( $myContent, ( strrpos( $myContent, "/" ) + 1) );
 			$myContent = substr( $myContent, ( strrpos( $myContent, "_" ) + 1) );
 			array_push($myList, $myContent);
+		}
+		if($_addMain)
+		{
+			array_push($myList, 'home');
+			$myList = array_reverse($myList);
 		}
 		$myList = array_flip($myList);
 		unset($myList['account']);
