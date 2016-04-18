@@ -6,6 +6,7 @@ class slugify
 {
 	/**
 	 * Slugify
+	 * v2.0
 	 * https://github.com/cocur/slugify
 	 *
 	 * @package   org.cocur.slugify
@@ -770,7 +771,14 @@ class slugify
 			'هجده'		=>'18',
 			'نوزده'		=>'19',
 			'بیست'		=>'20',
-
+			'اول'		=>'‍1m',
+			'سوم'		=>'3m',
+			'پنجم'		=>'5m',
+			'پرسش'		=>'porsesh',
+			'چرا'		=>'chera',
+			'کدام'		=>'kodam',
+			'آیا'		=>'aya',
+			'هیچ'		=>'hich',
 
 
 
