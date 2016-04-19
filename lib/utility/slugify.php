@@ -6,7 +6,7 @@ class slugify
 {
 	/**
 	 * Slugify
-	 * v2.0
+	 * v2.1
 	 * https://github.com/cocur/slugify
 	 *
 	 * @package   org.cocur.slugify
@@ -779,6 +779,14 @@ class slugify
 			'کدام'		=>'kodam',
 			'آیا'		=>'aya',
 			'هیچ'		=>'hich',
+			'نظر'		=>'nazar',
+			'سنجی'		=>'sanji',
+			'سرشمار'	=>'sarshomar',
+			'جیبرس'	=>'jibres',
+			'سالوس'		=>'saloos',
+			'ارمایل'		=>'ermile',
+			'تلمبار'		=>'talambar',
+			'ازویر'		=>'azvir',
 
 
 
