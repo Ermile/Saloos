@@ -1127,7 +1127,7 @@ static function get_os_data ( $_pv_browser_string, $_pv_browser_name, $_pv_versi
 						// if it doesn't have a version number, it is os x;
 						if ( strstr( $_pv_browser_string, 'os x ' ) ) {
 							// numbers are like: 10_2.4, others 10.2.4
-							$os_working_number = str_replace( '_', '.', get_item_version( $_pv_browser_string, 'os x' ) );
+							$os_working_number = str_replace( '_', '.', self::get_item_version( $_pv_browser_string, 'os x' ) );
 						}
 						else {
 							$os_working_number = 10;
@@ -1394,14 +1394,14 @@ static function get_mobile_data( $pv_browser_user_agent )
 			$mobile_os = $a_mobile_os[$k];
 			if ( $mobile_os != 'blackberry' ) {
 				// this may or may not work, highly unreliable
-				$mobile_os_number = str_replace( '_', '.', get_item_version( $pv_browser_user_agent, $mobile_os ) );
+				$mobile_os_number = str_replace( '_', '.', self::get_item_version( $pv_browser_user_agent, $mobile_os ) );
 			}
 			else {
-				$mobile_os_number = str_replace( '_', '.', get_item_version( $pv_browser_user_agent, 'version' ) );
+				$mobile_os_number = str_replace( '_', '.', self::get_item_version( $pv_browser_user_agent, 'version' ) );
 				// eg: BlackBerry9000/5.0.0.93 Profile/M....
 				if ( empty( $mobile_os_number ) ) {
 					self::get_set_count( 'set', 5 );
-					$mobile_os_number = str_replace( '_', '.', get_item_version( $pv_browser_user_agent, $mobile_os ) );
+					$mobile_os_number = str_replace( '_', '.', self::get_item_version( $pv_browser_user_agent, $mobile_os ) );
 				}
 			}
 			break;
