@@ -6,7 +6,7 @@ class slugify
 {
 	/**
 	 * Slugify
-	 * v2.1
+	 * v2.2
 	 * https://github.com/cocur/slugify
 	 *
 	 * @package   org.cocur.slugify
@@ -787,6 +787,8 @@ class slugify
 			'ارمایل'		=>'ermile',
 			'تلمبار'		=>'talambar',
 			'ازویر'		=>'azvir',
+			'عمومی'		=>'omoomi',
+			'سرویس'	=>'service',
 
 
 

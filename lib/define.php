@@ -97,40 +97,11 @@ class define
     $default_lang = \lib\utility\option::get('config', 'meta', 'defaultLang');
     if($default_lang)
     {
-      router::set_storage('defaultLang', $default_lang );
+      router::set_storage('defaultLanguage', $default_lang );
     }
     else
     {
       router::set_storage('defaultLanguage', 'en_US' );
-    }
-
-    // if current tld is ir or referrer from site with ir tld,
-    // change language to fa_IR
-    if(router::get_storage('language'))
-    {
-      $myLang = router::get_storage('language');
-      switch (Tld)
-      {
-        case 'ir':
-          $myLang = "fa_IR";
-          break;
-
-        default:
-          break;
-      }
-
-      if(defined('MainService') && Tld !== 'dev')
-      {
-        // for example redirect ermile.ir to ermile.com/fa
-        $myLang = substr($myLang, 0, 2);
-        $myredirect = new \lib\redirector();
-        $myredirect->set_domain()->set_url($myLang)->redirect();
-      }
-      else
-      {
-        // else show in that domain with fa langusage
-        router::set_storage('language', $myLang );
-      }
     }
 
     // if current tld is ir or referrer from site with ir tld,
