@@ -11,8 +11,21 @@ class utility
 	 */
 	public static function post($_name = null, $_type = null, $_arg = null)
 	{
+		$myvalue = null;
 		if(!$_name)
 			return $_POST;
+		elseif(is_array($_name))
+		{
+			$_name = current($_name);
+			foreach ($_POST as $key => $value)
+			{
+				if (strpos($key, $_name) === 0)
+				{
+					$myvalue[$key] = $value;
+				}
+			}
+			return $myvalue;
+		}
 		elseif(isset($_POST[$_name]))
 		{
 			if(is_array($_POST[$_name]))
