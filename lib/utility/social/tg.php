@@ -27,6 +27,8 @@ class tg
 		}
 		require $mycomposer;
 
+		$message = json_decode(file_get_contents('php://input'), true);
+		file_put_contents('tg.json', json_encode($message));
 
 		try {
 			$API_KEY   = $mykey;
@@ -89,7 +91,7 @@ class tg
 					}
 
 					//// Add an additional commands path
-					$commands_path = addons. lib. 'SocialNetwork/php-telegram-bot/Commands/';
+					$commands_path = addons. lib. 'SocialNetwork/php-telegram-bot/src/Commands/';
 					// $commands_path = __DIR__ . '/Commands/';
 					$telegram->addCommandsPath($commands_path);
 
