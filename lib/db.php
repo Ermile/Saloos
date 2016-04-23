@@ -6,7 +6,7 @@ class db
 {
 	/**
 	 * this library doing useful db actions
-	 * v2.0
+	 * v2.1
 	 */
 
 	// save link to database
@@ -487,7 +487,7 @@ class db
 		{
 			$tables   = [];
 			$result   = mysqli_query(self::$link, 'SHOW TABLES');
-			$tables[] = self::fetch_all($result);
+			$tables = self::fetch_all($result, 'Tables_in_'. db_name);
 		}
 		else
 		{

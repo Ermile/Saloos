@@ -89,9 +89,9 @@ class tg
 							'host'     => 'localhost',
 							'user'     => db_user,
 							'password' => db_pass,
-							'database' => db_name,
+							'database' => core_name.'_tools',
 						];
-						$telegram->enableMySQL($mysql_credentials, 'tg_');
+						$telegram->enableMySQL($mysql_credentials);
 					}
 
 					//// Add an additional commands path
