@@ -85,7 +85,11 @@ class file
      */
     public static function makeDir( $dirpath, $mode = 0775, $recursive = false )
     {
-        return mkdir( $dirpath, $mode, $recursive );
+        if(!file_exists($dirpath))
+        {
+            return mkdir( $dirpath, $mode, $recursive );
+        }
+        return null;
     }
 
     /**
