@@ -70,6 +70,32 @@ class tg
 					}
 					break;
 
+				case 'test':
+					// Get the chat id and message text from the CLI parameters.
+					$chat_id = \lig\utility::get('id');
+					$message = \lig\utility::get('msg');
+
+					if ($chat_id !== '' && $message !== '')
+					{
+						$data =
+						[
+							'chat_id' => $chat_id,
+							'text'    => $message,
+						];
+
+						$result = Request::sendMessage($data);
+
+						if ($result->isOk())
+						{
+							echo 'Message sent succesfully to: ' . $chat_id;
+						}
+						else
+						{
+							echo 'Sorry message not sent to: ' . $chat_id;
+						}
+					}
+					break;
+
 				case 'hook':
 				default:
 
@@ -87,7 +113,7 @@ class tg
 							'password' => db_pass,
 							'database' => core_name.'_tools',
 						];
-						$telegram->enableMySQL($mysql_credentials);
+						// $telegram->enableMySQL($mysql_credentials);
 					}
 
 					//// Add an additional commands path
