@@ -34,6 +34,7 @@ class visitor
 			// return resul
 			return $result;
 		}
+		header("HTTP/1.1 200 OK");
 		return $connect;
 	}
 
