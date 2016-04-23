@@ -28,7 +28,7 @@ class tg
 		require $mycomposer;
 
 		$message = json_decode(file_get_contents('php://input'), true);
-		file_put_contents('tg.json', json_encode($message). "\r\n");
+		file_put_contents('tg.json', json_encode($message). "\r\n", FILE_APPEND);
 
 		try {
 			$API_KEY   = $mykey;
