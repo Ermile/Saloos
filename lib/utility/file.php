@@ -83,7 +83,7 @@ class file
      * @param bool $recursive	Creates the dir recursively
      * @return bool	True on success, false on failure
      */
-    public static function makeDir( $dirpath, $mode = 0777, $recursive = false )
+    public static function makeDir( $dirpath, $mode = 0775, $recursive = false )
     {
         return mkdir( $dirpath, $mode, $recursive );
     }
