@@ -25,21 +25,15 @@ class tg
 		{
 			return 'autoload is not exist!';
 		}
+		require $mycomposer;
 
-		require_once $mycomposer;
-
-
-
-		$API_KEY  = $mykey;
-		$BOT_NAME = $mybot;
-
-		//$commands_path = __DIR__ . '/Commands/';
-
-		$tg_folder = root.'public_html/files/tg/';
 
 		try {
+			$API_KEY   = $mykey;
+			$BOT_NAME  = $mybot;
+			$tg_folder = root.'public_html/files/tg/';
 			// Create Telegram API object
-			$telegram = new \Longman\TelegramBot\Telegram($API_KEY, $BOT_NAME);
+			$telegram  = new \Longman\TelegramBot\Telegram($API_KEY, $BOT_NAME);
 
 			// if is not set then
 			if($_type === null)
@@ -95,7 +89,9 @@ class tg
 					}
 
 					//// Add an additional commands path
-					//$telegram->addCommandsPath($commands_path);
+					$commands_path = addons. lib. 'SocialNetwork/php-telegram-bot/Commands/';
+					// $commands_path = __DIR__ . '/Commands/';
+					$telegram->addCommandsPath($commands_path);
 
 					//// Here you can enable admin interface for the channel you want to manage
 					//$telegram->enableAdmins(['your_telegram_id']);
@@ -106,13 +102,14 @@ class tg
 					//$telegram->setCommandConfig('date', ['google_api_key' => 'your_google_api_key_here']);
 
 					//// Logging
-					$telegram->setLogRequests(true);
-					$telegram->setLogPath($BOT_NAME . '.log');
-					$telegram->setLogVerbosity(3);
+					// $telegram->setLogRequests(true);
+					// $telegram->setLogPath($tg_folder. $BOT_NAME . '.log');
+					// $telegram->setLogVerbosity(3);
 
 					//// Set custom Upload and Download path
 					$telegram->setDownloadPath($tg_folder.'download/');
 					$telegram->setUploadPath($tg_folder.'upload/');
+
 
 					// Handle telegram webhook request
 					$telegram->handle();
