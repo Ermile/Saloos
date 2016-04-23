@@ -76,7 +76,7 @@ class define
      * developer must set get parameter like site.com/dev=anyvalue
      * for disable this attribute turn off it from config.php in project root
      */
-    if(\lib\utility\option::get('config', 'meta', 'coming'))
+    if(\lib\utility\option::get('config', 'meta', 'coming') || defined('CommingSoon'))
     {
       // if user set dev in get, show the site
       if(isset($_GET['dev']))
