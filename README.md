@@ -35,7 +35,7 @@ Also you can see [Saloos Official Website]
 
 Requirements
 ------------
- * PHP 5.4 or greater
+ * PHP 5.6 or greater
  * MySQL 4.1.2 or greater
  * The mod_rewrite Apache module
 
