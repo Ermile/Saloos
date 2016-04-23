@@ -106,9 +106,9 @@ class tg
 					//$telegram->setCommandConfig('date', ['google_api_key' => 'your_google_api_key_here']);
 
 					//// Logging
-					//$telegram->setLogRequests(true);
-					//$telegram->setLogPath($BOT_NAME . '.log');
-					//$telegram->setLogVerbosity(3);
+					$telegram->setLogRequests(true);
+					$telegram->setLogPath($BOT_NAME . '.log');
+					$telegram->setLogVerbosity(3);
 
 					//// Set custom Upload and Download path
 					$telegram->setDownloadPath($tg_folder.'download/');
