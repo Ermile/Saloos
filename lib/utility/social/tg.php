@@ -4,7 +4,7 @@ namespace lib\utility\social;
 /** telegram **/
 class tg
 {
-	public static function check()
+	public static function do($_type = null)
 	{
 		// if telegram is off then do not run
 		if(!\lib\utility\option::get('telegram', 'status'))
@@ -71,8 +71,43 @@ class tg
 			//$telegram->setDownloadPath('../Download');
 			//$telegram->setUploadPath('../Upload');
 
-			// Handle telegram webhook request
-			$telegram->handle();
+			// if is not set then
+			if($_type === null)
+			{
+				$_type = \lib\utility::get('do');
+			}
+
+			switch ($_type)
+			{
+				// Set webhook
+				case 'set':
+					$hook_url = 'https://'.Domain.'.'.Tld.'/cp/tg/$*Ermile*$/';
+					$result = $telegram->setWebHook($hook_url);
+					// Uncomment to use certificate
+					//$result = $telegram->setWebHook($hook_url, $path_certificate);
+
+					if ($result->isOk())
+					{
+						return $result->getDescription();
+					}
+					break;
+
+				// Unset webhook
+				case 'unset':
+					$result = $telegram->unsetWebHook();
+
+					if ($result->isOk())
+					{
+						return $result->getDescription();
+					}
+					break;
+
+				case 'hook':
+				default:
+					// Handle telegram webhook request
+					$telegram->handle();
+					break;
+			}
 		}
 		catch (\Longman\TelegramBot\Exception\TelegramException $e)
 		{
