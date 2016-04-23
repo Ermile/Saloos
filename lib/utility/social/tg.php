@@ -28,6 +28,7 @@ class tg
 		require $mycomposer;
 
 		$message = json_decode(file_get_contents('php://input'), true);
+		$message = $message . "\r\n";
 		file_put_contents('tg.json', json_encode($message));
 
 		try {
