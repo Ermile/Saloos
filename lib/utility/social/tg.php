@@ -6,7 +6,7 @@ class tg
 {
 	/**
 	 * this library get and send telegram messages
-	 * v1.5
+	 * v1.6
 	 */
 	public static $saveLog = true;
 
@@ -109,7 +109,7 @@ class tg
 		var_dump($_data);
 		if (!empty($_data))
 		{
-			$curlConfig[CURLOPT_POSTFIELDS] = $_data;
+			$curlConfig[CURLOPT_POSTFIELDS] = json_encode($_data, true);
 		}
 		curl_setopt_array($ch, $curlConfig);
 		$result = curl_exec($ch);
