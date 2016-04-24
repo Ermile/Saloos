@@ -8,26 +8,31 @@ class tg
 	 * this library get and send telegram messages
 	 * v1.2
 	 */
+	public static $saveLog = true;
 
 	/**
 	 * hook telegram messages
 	 * @param  boolean $_save [description]
 	 * @return [type]         [description]
 	 */
-	public static function hook($_save = false)
+	public static function hook()
 	{
 		// if telegram is off then do not run
 		if(!\lib\utility\option::get('telegram', 'status'))
 			return 'telegram is off!';
-
+		self::saveLog($message);
 		$message = json_decode(file_get_contents('php://input'), true);
-		if($_save)
-		{
-			file_put_contents('tg.json', json_encode($message). "\r\n", FILE_APPEND);
-		}
 		return $message;
 	}
 
+
+	private static function saveLog($_data)
+	{
+		if(self::$saveLog)
+		{
+			file_put_contents('tg.json', json_encode($_data). "\r\n", FILE_APPEND);
+		}
+	}
 
 	/**
 	 * setWebhook for telegram
@@ -44,14 +49,13 @@ class tg
 				$tld = '.com';
 			}
 			$_url = 'https://'. Domain. $tld. '/saloos_tg/';
-			$_url .= \lib\utility\option::get('telegram', 'meta', 'hook');
+			$_url .= \lib\utility\option::get('telegram', 'meta', 'hook') . '/';
 		}
-
 		$data = ['url' => $_url];
-		if (!is_null($_file))
-		{
-			$data['certificate'] = \CURLFile($_file);
-		}
+		// if (!is_null($_file))
+		// {
+		// 	$data['certificate'] = \CURLFile($_file);
+		// }
 		return self::executeCurl('setWebhook', $data, 'description');
 	}
 
@@ -105,6 +109,7 @@ class tg
 				$server_output = $server_output[$_output];
 			}
 		}
+		self::saveLog($server_output);
 		// return result
 		return $server_output;
 	}
