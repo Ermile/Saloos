@@ -6,7 +6,7 @@ namespace lib;
 class saloos
 {
 	// @var saloos core current version
-	const version = '5.2.0';
+	const version = '5.2.2';
 
 	// @var saloos core current commit number
 	// now get it automatically from git commands
@@ -20,9 +20,9 @@ class saloos
 	 */
 	public function __construct()
 	{
-		if(php_sapi_name() == "cli"){
-			return;
-		}
+		// if(php_sapi_name() == "cli"){
+		// 	return;
+		// }
 		self::lib()->router();
 		self::lib()->define();
 
