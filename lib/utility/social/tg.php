@@ -74,6 +74,9 @@ class tg
 					// Get the chat id and message text from the CLI parameters.
 					$chat_id = \lib\utility::get('id');
 					$message = \lib\utility::get('msg');
+					$count  = \lib\utility::get('count');
+					if(!$count)
+						$count = 1;
 
 					if ($chat_id !== '' && $message !== '')
 					{
@@ -83,16 +86,22 @@ class tg
 							'text'    => $message,
 						];
 
-						$result = \Longman\TelegramBot\Request::sendMessage($data);
 
-						if ($result->isOk())
+
+						\Longman\TelegramBot\Request::sendChatAction(['chat_id' => $chat_id, 'action' => 'typing']);
+						for ($i=0; $i < $count; $i++)
 						{
-							echo 'Message sent succesfully to: ' . $chat_id;
+							$result = \Longman\TelegramBot\Request::sendMessage($data);
+							if ($result->isOk())
+							{
+								echo "Message $i sent succesfully to: " . $chat_id . "\r\n<br />";
+							}
+							else
+							{
+								echo "Sorry message $i not sent to: " . $chat_id . "\r\n<br />";
+							}
 						}
-						else
-						{
-							echo 'Sorry message not sent to: ' . $chat_id;
-						}
+
 					}
 					break;
 
@@ -113,7 +122,7 @@ class tg
 							'password' => db_pass,
 							'database' => core_name.'_tools',
 						];
-						// $telegram->enableMySQL($mysql_credentials);
+						$telegram->enableMySQL($mysql_credentials);
 					}
 
 					//// Add an additional commands path
@@ -140,7 +149,7 @@ class tg
 
 
 					// Handle telegram webhook request
-					$telegram->handle();
+					// $telegram->handle();
 					break;
 			}
 		}
