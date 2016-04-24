@@ -6,7 +6,7 @@ class tg
 {
 	/**
 	 * this library get and send telegram messages
-	 * v1.0
+	 * v1.2
 	 */
 
 	/**
@@ -30,6 +30,33 @@ class tg
 
 
 	/**
+	 * setWebhook for telegram
+	 * @param string $_url  [description]
+	 * @param [type] $_file [description]
+	 */
+	public static function setWebhook($_url = '', $_file = null)
+	{
+		if(empty($_url))
+		{
+			$tld = MainTld;
+			if($tld === '.dev')
+			{
+				$tld = '.com';
+			}
+			$_url = 'https://'. Domain. $tld. '/saloos_tg/';
+			$_url .= \lib\utility\option::get('telegram', 'meta', 'hook');
+		}
+
+		$data = ['url' => $_url];
+		if (!is_null($_file))
+		{
+			$data['certificate'] = \CURLFile($_file);
+		}
+		return self::executeCurl('setWebhook', $data, 'description');
+	}
+
+
+	/**
 	 * execute telegram method
 	 * @param  [type] $_name [description]
 	 * @param  [type] $_args [description]
@@ -37,7 +64,7 @@ class tg
 	 */
 	static function __callStatic($_name, $_args)
 	{
-		return self::execute($_name, $_args);
+		return self::executeCurl($_name, $_args);
 	}
 
 
@@ -47,7 +74,7 @@ class tg
 	 * @param  [type] $_content [description]
 	 * @return [type]           [description]
 	 */
-	private static function execute($_method, $_content)
+	private static function executeCurl($_method, $_content, $_output = null)
 	{
 		// if telegram is off then do not run
 		if(!\lib\utility\option::get('telegram', 'status'))
@@ -56,10 +83,10 @@ class tg
 		$mykey = \lib\utility\option::get('telegram', 'meta', 'key');
 		$mybot = \lib\utility\option::get('telegram', 'meta', 'bot');
 		// if key is not correct return
-		if(strlen(!$mykey) < 20)
+		if(strlen($mykey) < 20)
 			return 'api key is not correct!';
 
-		$url   = "https://api.telegram.org/bot$mykey/$_method";
+		$_url   = "https://api.telegram.org/bot$mykey/$_method";
 		$ch    = curl_init();
 		curl_setopt($ch, CURLOPT_URL, $_url);
 		curl_setopt($ch, CURLOPT_POST, 1);
@@ -69,6 +96,15 @@ class tg
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 		$server_output = curl_exec($ch);
 		curl_close ($ch);
+
+		if(substr($server_output, 0,1) === "{")
+		{
+			$server_output = json_decode($server_output, true);
+			if($_output && isset($server_output[$_output]))
+			{
+				$server_output = $server_output[$_output];
+			}
+		}
 		// return result
 		return $server_output;
 	}
