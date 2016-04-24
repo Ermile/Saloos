@@ -6,7 +6,7 @@ class tg
 {
 	/**
 	 * this library get and send telegram messages
-	 * v1.8
+	 * v1.9
 	 */
 	public static $saveLog = true;
 
@@ -99,23 +99,30 @@ class tg
 		}
 		$_url   = "https://api.telegram.org/bot$mykey/$_method";
 
-		$curlConfig =
-		[
-			CURLOPT_URL            => "https://api.telegram.org/bot$mykey/$_method",
-			CURLOPT_POST           => true,
-			CURLOPT_RETURNTRANSFER => true,
-			CURLOPT_HEADER         => true,
-			CURLOPT_SAFE_UPLOAD    => true,
-		];
-		curl_setopt_array($ch, $curlConfig);
+		// $curlConfig =
+		// [
+		// 	CURLOPT_URL            => "https://api.telegram.org/bot$mykey/$_method",
+		// 	CURLOPT_POST           => true,
+		// 	CURLOPT_RETURNTRANSFER => true,
+		// 	CURLOPT_HEADER         => true,
+		// 	CURLOPT_SAFE_UPLOAD    => true,
+		// ];
+		// curl_setopt_array($ch, $curlConfig);
 
-		if (!empty($_data))
-		{
-			$_data = json_encode($_data, true);
-			curl_setopt( $ch, CURLOPT_POSTFIELDS, $_data );
-			curl_setopt( $ch, CURLOPT_HTTPHEADER, ['Content-Type:application/json']);
+		// if (!empty($_data))
+		// {
+		// 	$_data = json_encode($_data, true);
+		// 	curl_setopt( $ch, CURLOPT_POSTFIELDS, $_data );
+		// 	curl_setopt( $ch, CURLOPT_HTTPHEADER, ['Content-Type:application/json']);
+		// }
 
-		}
+		curl_setopt($ch, CURLOPT_URL, $_url);
+		curl_setopt($ch, CURLOPT_POST, 1);
+		curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($_data));
+		curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/x-www-form-urlencoded'));
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
 		$result = curl_exec($ch);
 		if ($result === false)
 		{
