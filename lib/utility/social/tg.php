@@ -6,7 +6,7 @@ class tg
 {
 	/**
 	 * this library get and send telegram messages
-	 * v1.2
+	 * v1.3
 	 */
 	public static $saveLog = true;
 
@@ -20,8 +20,8 @@ class tg
 		// if telegram is off then do not run
 		if(!\lib\utility\option::get('telegram', 'status'))
 			return 'telegram is off!';
-		self::saveLog($message);
 		$message = json_decode(file_get_contents('php://input'), true);
+		self::saveLog($message);
 		return $message;
 	}
 
