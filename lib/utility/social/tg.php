@@ -72,8 +72,8 @@ class tg
 
 				case 'test':
 					// Get the chat id and message text from the CLI parameters.
-					$chat_id = \lig\utility::get('id');
-					$message = \lig\utility::get('msg');
+					$chat_id = \lib\utility::get('id');
+					$message = \lib\utility::get('msg');
 
 					if ($chat_id !== '' && $message !== '')
 					{
