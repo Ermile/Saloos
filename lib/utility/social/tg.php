@@ -83,7 +83,7 @@ class tg
 							'text'    => $message,
 						];
 
-						$result = Request::sendMessage($data);
+						$result = \Longman\TelegramBot\Request::sendMessage($data);
 
 						if ($result->isOk())
 						{
