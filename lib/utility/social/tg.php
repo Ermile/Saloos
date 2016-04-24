@@ -6,7 +6,7 @@ class tg
 {
 	/**
 	 * this library get and send telegram messages
-	 * v1.3
+	 * v1.4
 	 */
 	public static $saveLog = true;
 
@@ -73,12 +73,14 @@ class tg
 
 
 	/**
-	 * execute command to telegram server
-	 * @param  [type] $_url     [description]
-	 * @param  [type] $_content [description]
-	 * @return [type]           [description]
+	 * Execute cURL call
+	 *
+	 * @param string     $_method Action to execute
+	 * @param array|null $_data   Data to attach to the execution
+	 *
+	 * @return mixed Result of the cURL call
 	 */
-	private static function executeCurl($_method, $_content, $_output = null)
+	public static function executeCurl($_method, array $_data = null, $_output = null)
 	{
 		// if telegram is off then do not run
 		if(!\lib\utility\option::get('telegram', 'status'))
@@ -90,17 +92,37 @@ class tg
 		if(strlen($mykey) < 20)
 			return 'api key is not correct!';
 
+		$ch = curl_init();
+		if ($ch === false)
+		{
+			return 'Curl failed to initialize';
+		}
 		$_url   = "https://api.telegram.org/bot$mykey/$_method";
-		$ch    = curl_init();
-		curl_setopt($ch, CURLOPT_URL, $_url);
-		curl_setopt($ch, CURLOPT_POST, 1);
-		curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($_content));
-		curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/x-www-form-urlencoded'));
-		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-		$server_output = curl_exec($ch);
-		curl_close ($ch);
 
+		$curlConfig =
+		[
+			CURLOPT_URL            => "https://api.telegram.org/bot$mykey/$_method",
+			CURLOPT_POST           => true,
+			CURLOPT_RETURNTRANSFER => true,
+			CURLOPT_SAFE_UPLOAD    => true,
+		];
+		var_dump($_data);
+		if (!empty($_data))
+		{
+			$curlConfig[CURLOPT_POSTFIELDS] = $_data;
+		}
+		curl_setopt_array($ch, $curlConfig);
+		$result = curl_exec($ch);
+		if ($result === false)
+		{
+			return curl_error($ch). ':'. curl_errno($ch);
+		}
+		if (empty($result) | is_null($result))
+		{
+			return 'Empty server response';
+		}
+		curl_close($ch);
+		//Logging curl requests
 		if(substr($server_output, 0,1) === "{")
 		{
 			$server_output = json_decode($server_output, true);
@@ -109,9 +131,9 @@ class tg
 				$server_output = $server_output[$_output];
 			}
 		}
-		self::saveLog($server_output);
+		self::saveLog($result);
 		// return result
-		return $server_output;
+		return $result;
 	}
 }
 ?>
