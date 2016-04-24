@@ -6,7 +6,7 @@ class tg
 {
 	/**
 	 * this library get and send telegram messages
-	 * v1.4
+	 * v1.5
 	 */
 	public static $saveLog = true;
 
@@ -123,12 +123,12 @@ class tg
 		}
 		curl_close($ch);
 		//Logging curl requests
-		if(substr($server_output, 0,1) === "{")
+		if(substr($result, 0,1) === "{")
 		{
-			$server_output = json_decode($server_output, true);
-			if($_output && isset($server_output[$_output]))
+			$result = json_decode($result, true);
+			if($_output && isset($result[$_output]))
 			{
-				$server_output = $server_output[$_output];
+				$result = $result[$_output];
 			}
 		}
 		self::saveLog($result);
