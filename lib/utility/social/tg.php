@@ -6,7 +6,7 @@ class tg
 {
 	/**
 	 * this library get and send telegram messages
-	 * v1.7
+	 * v1.8
 	 */
 	public static $saveLog = true;
 
@@ -104,13 +104,18 @@ class tg
 			CURLOPT_URL            => "https://api.telegram.org/bot$mykey/$_method",
 			CURLOPT_POST           => true,
 			CURLOPT_RETURNTRANSFER => true,
+			CURLOPT_HEADER         => true,
 			CURLOPT_SAFE_UPLOAD    => true,
 		];
+		curl_setopt_array($ch, $curlConfig);
+
 		if (!empty($_data))
 		{
-			$curlConfig[CURLOPT_POSTFIELDS] = http_build_query($_data);
+			$_data = json_encode($_data, true);
+			curl_setopt( $ch, CURLOPT_POSTFIELDS, $_data );
+			curl_setopt( $ch, CURLOPT_HTTPHEADER, ['Content-Type:application/json']);
+
 		}
-		curl_setopt_array($ch, $curlConfig);
 		$result = curl_exec($ch);
 		if ($result === false)
 		{
