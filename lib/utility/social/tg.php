@@ -4,7 +4,50 @@ namespace lib\utility\social;
 /** telegram **/
 class tg
 {
-	public static function do($_type = null, $_save_in_db = true)
+	/**
+	 * this library get and send telegram messages
+	 * v1.0
+	 */
+
+	/**
+	 * hook telegram messages
+	 * @param  boolean $_save [description]
+	 * @return [type]         [description]
+	 */
+	public static function hook($_save = false)
+	{
+		// if telegram is off then do not run
+		if(!\lib\utility\option::get('telegram', 'status'))
+			return 'telegram is off!';
+
+		$message = json_decode(file_get_contents('php://input'), true);
+		if($_save)
+		{
+			file_put_contents('tg.json', json_encode($message). "\r\n", FILE_APPEND);
+		}
+		return $message;
+	}
+
+
+	/**
+	 * execute telegram method
+	 * @param  [type] $_name [description]
+	 * @param  [type] $_args [description]
+	 * @return [type]        [description]
+	 */
+	static function __callStatic($_name, $_args)
+	{
+		return self::execute($_name, $_args);
+	}
+
+
+	/**
+	 * execute command to telegram server
+	 * @param  [type] $_url     [description]
+	 * @param  [type] $_content [description]
+	 * @return [type]           [description]
+	 */
+	private static function execute($_method, $_content)
 	{
 		// if telegram is off then do not run
 		if(!\lib\utility\option::get('telegram', 'status'))
@@ -12,152 +55,22 @@ class tg
 		// get key and botname
 		$mykey = \lib\utility\option::get('telegram', 'meta', 'key');
 		$mybot = \lib\utility\option::get('telegram', 'meta', 'bot');
+		// if key is not correct return
+		if(strlen(!$mykey) < 20)
+			return 'api key is not correct!';
 
-		//This configuration file is intended to run the bot with the webhook method.
-		//Uncommented parameters must be filled
-		//Please notice that if you open this file with your browser you'll get the "Input is empty!" Exception.
-		//This is a normal behaviour because this address has to be reached only by Telegram server
-
-		// Load composer
-		$mycomposer = addons. lib. 'SocialNetwork/php-telegram-bot/vendor/autoload.php';
-		// check file exist
-		if(!file_exists($mycomposer))
-		{
-			return 'autoload is not exist!';
-		}
-		require $mycomposer;
-
-		$message = json_decode(file_get_contents('php://input'), true);
-		file_put_contents('tg.json', json_encode($message). "\r\n", FILE_APPEND);
-
-		try {
-			$API_KEY   = $mykey;
-			$BOT_NAME  = $mybot;
-			$tg_folder = root.'public_html/files/tg/';
-			// Create Telegram API object
-			$telegram  = new \Longman\TelegramBot\Telegram($API_KEY, $BOT_NAME);
-
-			// if is not set then
-			if($_type === null)
-			{
-				$_type = \lib\utility::get('do');
-			}
-
-			switch ($_type)
-			{
-				// Set webhook
-				case 'set':
-					$hook_url = 'https://'.Domain.'.'.Tld.'/cp/tg/$*Ermile*$/';
-					$result = $telegram->setWebHook($hook_url);
-					// Uncomment to use certificate
-					//$result = $telegram->setWebHook($hook_url, $path_certificate);
-
-					if ($result->isOk())
-					{
-						\lib\utility\file::makeDir($tg_folder.'download/', 0775, true);
-						\lib\utility\file::makeDir($tg_folder.'upload/',   0775, true);
-						return $result->getDescription();
-					}
-					break;
-
-				// Unset webhook
-				case 'unset':
-					$result = $telegram->unsetWebHook();
-
-					if ($result->isOk())
-					{
-						return $result->getDescription();
-					}
-					break;
-
-				case 'test':
-					// Get the chat id and message text from the CLI parameters.
-					$chat_id = \lib\utility::get('id');
-					$message = \lib\utility::get('msg');
-					$count  = \lib\utility::get('count');
-					if(!$count)
-						$count = 1;
-
-					if ($chat_id !== '' && $message !== '')
-					{
-						$data =
-						[
-							'chat_id' => $chat_id,
-							'text'    => $message,
-						];
-
-
-
-						\Longman\TelegramBot\Request::sendChatAction(['chat_id' => $chat_id, 'action' => 'typing']);
-						for ($i=0; $i < $count; $i++)
-						{
-							$result = \Longman\TelegramBot\Request::sendMessage($data);
-							if ($result->isOk())
-							{
-								echo "Message $i sent succesfully to: " . $chat_id . "\r\n<br />";
-							}
-							else
-							{
-								echo "Sorry message $i not sent to: " . $chat_id . "\r\n<br />";
-							}
-						}
-
-					}
-					break;
-
-				case 'hook':
-				default:
-
-					//// Enable MySQL
-					// $telegram->enableMySQL($mysql_credentials);
-
-					//// Enable MySQL with table prefix
-					// $telegram->enableMySQL($mysql_credentials, $BOT_NAME . '_');
-					if($_save_in_db)
-					{
-						$mysql_credentials =
-						[
-							'host'     => 'localhost',
-							'user'     => db_user,
-							'password' => db_pass,
-							'database' => core_name.'_tools',
-						];
-						$telegram->enableMySQL($mysql_credentials);
-					}
-
-					//// Add an additional commands path
-					$commands_path = addons. lib. 'SocialNetwork/php-telegram-bot/src/Commands/';
-					// $commands_path = __DIR__ . '/Commands/';
-					$telegram->addCommandsPath($commands_path);
-
-					//// Here you can enable admin interface for the channel you want to manage
-					//$telegram->enableAdmins(['your_telegram_id']);
-					//$telegram->setCommandConfig('sendtochannel', ['your_channel' => '@type_here_your_channel']);
-
-					//// Here you can set some command specific parameters,
-					//// for example, google geocode/timezone api key for date command:
-					//$telegram->setCommandConfig('date', ['google_api_key' => 'your_google_api_key_here']);
-
-					//// Logging
-					// $telegram->setLogRequests(true);
-					// $telegram->setLogPath($tg_folder. $BOT_NAME . '.log');
-					// $telegram->setLogVerbosity(3);
-
-					//// Set custom Upload and Download path
-					$telegram->setDownloadPath($tg_folder.'download/');
-					$telegram->setUploadPath($tg_folder.'upload/');
-
-
-					// Handle telegram webhook request
-					// $telegram->handle();
-					break;
-			}
-		}
-		catch (\Longman\TelegramBot\Exception\TelegramException $e)
-		{
-			// Silence is golden!
-			// log telegram errors
-			return $e->getMessage();
-		}
+		$url   = "https://api.telegram.org/bot$mykey/$_method";
+		$ch    = curl_init();
+		curl_setopt($ch, CURLOPT_URL, $_url);
+		curl_setopt($ch, CURLOPT_POST, 1);
+		curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($_content));
+		curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/x-www-form-urlencoded'));
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		$server_output = curl_exec($ch);
+		curl_close ($ch);
+		// return result
+		return $server_output;
 	}
 }
+?>
