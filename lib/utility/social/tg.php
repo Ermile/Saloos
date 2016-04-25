@@ -6,7 +6,7 @@ class tg
 {
 	/**
 	 * this library get and send telegram messages
-	 * v2.3
+	 * v2.4
 	 */
 	public static $saveLog = true;
 
@@ -83,9 +83,19 @@ class tg
 		// if telegram is off then do not run
 		if(!\lib\utility\option::get('telegram', 'status'))
 			return 'telegram is off!';
-		// get key and botname
-		$mykey = \lib\utility\option::get('telegram', 'meta', 'key');
-		$mybot = \lib\utility\option::get('telegram', 'meta', 'bot');
+		// get custom api key in custom conditon
+		if(isset($_data['api_key']))
+		{
+			$mykey = $_data['api_key'];
+			unset($_data['api_key']);
+		}
+		else
+		{
+			$mykey = \lib\utility\option::get('telegram', 'meta', 'key');
+			// get key and botname
+			// $mybot = \lib\utility\option::get('telegram', 'meta', 'bot');
+
+		}
 		// if key is not correct return
 		if(strlen($mykey) < 20)
 			return 'api key is not correct!';
