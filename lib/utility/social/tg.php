@@ -6,7 +6,7 @@ class tg
 {
 	/**
 	 * this library get and send telegram messages
-	 * v2.0
+	 * v2.1
 	 */
 	public static $saveLog = true;
 
@@ -43,13 +43,22 @@ class tg
 	{
 		if(empty($_url))
 		{
-			$tld = MainTld;
-			if($tld === '.dev')
+			$_url = 'https://';
+			if(\lib\utility\option::get('config', 'meta', 'multiDomain') &&
+				$mainSite = \lib\utility\option::get('config', 'meta', 'mainSite'))
 			{
-				$tld = '.com';
+				$_url .= $mainSite;
 			}
-			$_url = 'https://'. Domain. $tld. '/saloos_tg/';
-			$_url .= \lib\utility\option::get('telegram', 'meta', 'hook') . '/';
+			else
+			{
+				$tld = MainTld;
+				if($tld === '.dev')
+				{
+					$tld = '.com';
+				}
+				$_url .= Domain. $tld;
+			}
+			$_url .= '/saloos_tg/'. \lib\utility\option::get('telegram', 'meta', 'hook') . '/';
 		}
 		$data = ['url' => $_url];
 		// if (!is_null($_file))

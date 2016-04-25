@@ -166,7 +166,6 @@ class router
 				define('MainTld', (Tld === 'dev'? '.dev': '.com'));
 			}
 		}
-		var_dump(MainTld);
 
 		// like ermile
 		if(!defined('Domain'))
