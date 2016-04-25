@@ -6,7 +6,7 @@ class tg
 {
 	/**
 	 * this library get and send telegram messages
-	 * v2.1
+	 * v2.2
 	 */
 	public static $saveLog = true;
 
@@ -65,7 +65,7 @@ class tg
 		// {
 		// 	$data['certificate'] = \CURLFile($_file);
 		// }
-		return self::executeCurl('setWebhook', $data, 'description');
+		return self::executeCurl('setWebhook', $data, 'description') .': '. $_url;
 	}
 
 
@@ -117,7 +117,7 @@ class tg
 			CURLOPT_URL            => "https://api.telegram.org/bot$mykey/$_method",
 			CURLOPT_POST           => true,
 			CURLOPT_RETURNTRANSFER => true,
-			CURLOPT_HEADER         => true,
+			// CURLOPT_HEADER         => true, // get header
 			CURLOPT_SAFE_UPLOAD    => true,
 			CURLOPT_SSL_VERIFYPEER => false,
 		];
