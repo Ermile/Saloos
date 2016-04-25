@@ -6,9 +6,10 @@ class tg
 {
 	/**
 	 * this library get and send telegram messages
-	 * v2.4
+	 * v2.5
 	 */
 	public static $saveLog = true;
+	public static $response = null;
 
 	/**
 	 * hook telegram messages
@@ -22,10 +23,95 @@ class tg
 			return 'telegram is off!';
 		$message = json_decode(file_get_contents('php://input'), true);
 		self::saveLog($message);
+		self::$response = $message;
 		return $message;
 	}
 
 
+	/**
+	 * handle response and return needed key if exist
+	 * @param  [type] $_needle [description]
+	 * @return [type]          [description]
+	 */
+	static function response($_needle = null, $_arg = 'id')
+	{
+		$data = null;
+
+		switch ($_needle)
+		{
+			case 'update_id':
+				if(isset(self::$response['update_id']))
+				{
+					$data = self::$response['update_id'];
+				}
+				break;
+
+			case 'message_id':
+				if(isset(self::$response['message']['message_id']))
+				{
+					$data = self::$response['message']['message_id'];
+				}
+				elseif(isset(self::$response['callback_query']['message']['message_id']))
+				{
+					$data = self::$response['callback_query']['message']['message_id'];
+				}
+				break;
+
+			case 'from':
+				if(isset(self::$response['message']['from']))
+				{
+					$data = self::$response['message']['from'];
+				}
+				elseif(isset(self::$response['callback_query']['from']))
+				{
+					$data = self::$response['callback_query']['from'];
+				}
+				if($_arg)
+				{
+					$data = $data[$_arg];
+				}
+				break;
+
+			case 'chat':
+				if(isset(self::$response['message']['chat']))
+				{
+					$data = self::$response['message']['chat'];
+				}
+				elseif(isset(self::$response['callback_query']['message']['chat']))
+				{
+					$data = self::$response['callback_query']['message']['chat'];
+				}
+				if($_arg)
+				{
+					$data = $data[$_arg];
+				}
+				break;
+
+			case 'text':
+				if(isset(self::$response['message']['text']))
+				{
+					$data = self::$response['message']['text'];
+				}
+				elseif(isset(self::$response['callback_query']['data']))
+				{
+					$data = 'cb_'.self::$response['callback_query']['data'];
+				}
+				break;
+
+
+			default:
+				break;
+		}
+
+		return $data;
+	}
+
+
+	/**
+	 * save log of process into file
+	 * @param  [type] $_data [description]
+	 * @return [type]        [description]
+	 */
 	private static function saveLog($_data)
 	{
 		if(self::$saveLog)
