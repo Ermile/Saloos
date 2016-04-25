@@ -153,7 +153,20 @@ class router
 
 		// like .dev or .com
 		if(!defined('MainTld'))
-			define('MainTld', (Tld === 'dev'? '.dev': '.com'));
+		{
+			// if enabling multi domain and set default tld define main tld
+			if(\lib\utility\option::get('config', 'meta', 'multiDomain') &&
+				$defaultTld = \lib\utility\option::get('config', 'meta', 'defaultTld'))
+			{
+				define('MainTld', '.'. $defaultTld);
+			}
+			// else detect it
+			else
+			{
+				define('MainTld', (Tld === 'dev'? '.dev': '.com'));
+			}
+		}
+		var_dump(MainTld);
 
 		// like ermile
 		if(!defined('Domain'))
