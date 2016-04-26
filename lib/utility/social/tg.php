@@ -6,11 +6,27 @@ class tg
 {
 	/**
 	 * this library get and send telegram messages
-	 * v2.7
+	 * v3.0
 	 */
-	public static $saveLog  = true;
-	public static $response = null;
-	public static $cmd      = null;
+	public static $text;
+	public static $chat_id;
+	public static $message_id;
+	public static $replyMarkup;
+	public static $api_key   = null;
+	public static $saveLog   = true;
+	public static $response  = null;
+	public static $callback  = false;
+	public static $cmd       = null;
+	public static $cmdFolder = null;
+	public static $priority  =
+	[
+		'callback',
+		'menu',
+		'user',
+		'simple',
+		'conversation',
+	];
+
 
 	/**
 	 * hook telegram messages
@@ -34,7 +50,7 @@ class tg
 	 * @param  [type] $_needle [description]
 	 * @return [type]          [description]
 	 */
-	static function response($_needle = null, $_arg = 'id')
+	public static function response($_needle = null, $_arg = 'id')
 	{
 		$data = null;
 
@@ -104,6 +120,148 @@ class tg
 		}
 
 		return $data;
+	}
+
+
+	/**
+	 * handle tg requests
+	 * @return [type] [description]
+	 */
+	public static function handle()
+	{
+		// run hook and get it
+		self::hook();
+		// extract chat_id if not exist return false
+		self::$chat_id = self::response('chat');
+		// define variables
+		// call debug handler function
+		self::debug_handler();
+		// generate response from defined commands
+		self::generateResponse();
+		// send response and return result of it
+		return self::sendResponse();
+	}
+
+
+	/**
+	 * generate response and sending message
+	 * @return [type] result of sending
+	 */
+	public static function sendResponse()
+	{
+		if(!self::$chat_id || !self::$text)
+		{
+			return false;
+		}
+		// generate data for response
+		$data =
+		[
+			'chat_id'      => self::$chat_id,
+			'text'         => self::$text,
+			'parse_mode'   => 'markdown',
+		];
+		// create markup if exist
+		if(self::$replyMarkup)
+		{
+			$data['reply_markup'] = json_encode(self::$replyMarkup);
+			$data['force_reply'] = true;
+		}
+		else
+		{
+			$data['reply_markup'] = null;
+		}
+		// add reply message id
+		$data['reply_to_message_id'] = self::response('message_id');
+		if(self::$api_key)
+		{
+			$data['api_key'] = self::$api_key;
+		}
+		// for callbacks dont use reply message and only do work
+		if(self::$callback)
+		{
+			unset($data['reply_to_message_id']);
+			// $data['inline_message_id'] = $hook['callback_query']['id'];
+			// $result = self::editMessageText($data);
+			// fix it to work on the fly
+		}
+		// call bot send message func
+		$result = self::sendMessage($data);
+		// return result of sending
+		return $result;
+	}
+
+
+	/**
+	 * default action to handle message texts
+	 * @param  [type] [description]
+	 * @return [type]       [description]
+	 */
+	private static function generateResponse()
+	{
+		$response  = null;
+		// read from saloos command template
+		$cmdFolder = __NAMESPACE__ .'\commands\\';
+
+		// use user defined command
+		if(self::$cmdFolder)
+		{
+			$cmdFolder = self::$cmdFolder;
+		}
+		foreach (self::$priority as $class)
+		{
+			$funcName = $cmdFolder. $class.'::exec';
+			// generate func name
+			if(is_callable($funcName))
+			{
+				// get response
+				$response = call_user_func($funcName, self::$cmd);
+				// if has response break loop
+				if($response)
+				{
+					break;
+				}
+			}
+		}
+		// if does not have response return default text
+		if(!$response)
+		{
+			if(\lib\utility\option::get('telegram', 'meta', 'debug'))
+			{
+				// then if not exist set default text
+				$response = ['text' => 'تعریف نشده'];
+			}
+		}
+
+		// set text if exist
+		if(isset($response['text']))
+		{
+			self::$text = $response['text'];
+		}
+		// set replyMarkup if exist
+		if(isset($response['replyMarkup']))
+		{
+			self::$replyMarkup = $response['replyMarkup'];
+		}
+	}
+
+
+	/**
+	 * debug mode give data from user
+	 * @return [type] [description]
+	 */
+	public static function debug_handler()
+	{
+		if(\lib\utility\option::get('telegram', 'meta', 'debug'))
+		{
+			if(!self::$chat_id)
+			{
+				self::$chat_id = \lib\utility::get('id');
+				if(!self::$cmd['text'])
+				{
+					self::$cmd = self::cmd(\lib\utility::get('text'));
+				}
+			}
+		}
 	}
 
 
