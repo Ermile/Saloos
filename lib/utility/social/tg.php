@@ -6,7 +6,7 @@ class tg
 {
 	/**
 	 * this library get and send telegram messages
-	 * v2.6
+	 * v2.7
 	 */
 	public static $saveLog  = true;
 	public static $response = null;
@@ -117,6 +117,7 @@ class tg
 		// define variable
 		$cmd =
 		[
+			'text'  => null,
 			'command'  => null,
 			'optional' => null,
 			'argument' => null,
@@ -126,6 +127,7 @@ class tg
 		{
 			$_input = self::response('text');
 		}
+		$cmd['text'] = $_input;
 		$text = explode(' ', $_input);
 		if(isset($text[0]))
 		{
