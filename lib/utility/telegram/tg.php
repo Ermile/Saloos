@@ -6,7 +6,7 @@ class tg
 {
 	/**
 	 * this library get and send telegram messages
-	 * v3.1
+	 * v3.2
 	 */
 	public static $text;
 	public static $chat_id;
@@ -147,8 +147,19 @@ class tg
 	 * generate response and sending message
 	 * @return [type] result of sending
 	 */
-	public static function sendResponse()
+	public static function sendResponse($_text = null, $_chat = null)
 	{
+		// if text is not set use user passed text
+		if($_text)
+		{
+			self::$text = $_text;
+		}
+		// uf chat id is not set use user passed chat
+		if($_chat)
+		{
+			self::$chat_id = $_chat;
+		}
+		// if chat or text is not set return false
 		if(!self::$chat_id || !self::$text)
 		{
 			return false;
