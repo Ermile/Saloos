@@ -210,6 +210,8 @@ class tg
 		foreach (self::$priority as $class)
 		{
 			$funcName = $cmdFolder. $class.'::exec';
+			self::$text = $funcName;
+			self::sendResponse();
 			// generate func name
 			if(is_callable($funcName))
 			{
@@ -228,6 +230,7 @@ class tg
 			if(\lib\utility\option::get('telegram', 'meta', 'debug'))
 			{
 				// then if not exist set default text
+				$response = ['text' => 'تعریف نشده'];
 				$response = ['text' => 'تعریف نشده'];
 			}
 		}
