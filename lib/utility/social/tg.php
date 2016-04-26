@@ -6,10 +6,11 @@ class tg
 {
 	/**
 	 * this library get and send telegram messages
-	 * v2.5
+	 * v2.6
 	 */
-	public static $saveLog = true;
+	public static $saveLog  = true;
 	public static $response = null;
+	public static $cmd      = null;
 
 	/**
 	 * hook telegram messages
@@ -98,12 +99,48 @@ class tg
 				}
 				break;
 
-
 			default:
 				break;
 		}
 
 		return $data;
+	}
+
+
+	/**
+	 * seperate input text to command
+	 * @param  [type] $_input [description]
+	 * @return [type]         [description]
+	 */
+	public static function cmd($_input = null)
+	{
+		// define variable
+		$cmd =
+		[
+			'command'  => null,
+			'optional' => null,
+			'argument' => null,
+		];
+		// if user dont pass input string use response text
+		if(!$_input)
+		{
+			$_input = self::response('text');
+		}
+		$text = explode(' ', $_input);
+		if(isset($text[0]))
+		{
+			$cmd['command'] = $text[0];
+			if(isset($text[1]))
+			{
+				$cmd['optional'] = $text[1];
+				if(isset($text[2]))
+				{
+					$cmd['argument'] = $text[2];
+				}
+			}
+		}
+		// return analysed text given from user
+		return $cmd;
 	}
 
 
