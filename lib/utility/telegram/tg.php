@@ -6,19 +6,21 @@ class tg
 {
 	/**
 	 * this library get and send telegram messages
-	 * v3.3
+	 * v4.0
 	 */
 	public static $text;
 	public static $chat_id;
 	public static $message_id;
 	public static $replyMarkup;
-	public static $api_key   = null;
-	public static $saveLog   = true;
-	public static $response  = null;
-	public static $callback  = false;
-	public static $cmd       = null;
-	public static $cmdFolder = null;
-	public static $priority  =
+	public static $api_key     = null;
+	public static $saveLog     = true;
+	public static $response    = null;
+	public static $callback    = false;
+	public static $cmd         = null;
+	public static $cmdFolder   = null;
+	public static $useSample   = null;
+	public static $defaultText = 'Undefined';
+	public static $priority    =
 	[
 		'callback',
 		'menu',
@@ -139,7 +141,11 @@ class tg
 		// call debug handler function
 		self::debug_handler();
 		// generate response from defined commands
-		self::generateResponse();
+		$hasResponse = self::generateResponse();
+		if(!$hasResponse && self::$useSample)
+		{
+			$hasResponse = self::generateResponse(true);
+		}
 		// send response and return result of it
 		return self::sendResponse();
 	}
@@ -209,14 +215,14 @@ class tg
 	 * @param  [type] [description]
 	 * @return [type]       [description]
 	 */
-	private static function generateResponse()
+	private static function generateResponse($forceSample = null)
 	{
 		$response  = null;
 		// read from saloos command template
 		$cmdFolder = __NAMESPACE__ .'\commands\\';
 
 		// use user defined command
-		if(self::$cmdFolder)
+		if(!$forceSample && self::$cmdFolder)
 		{
 			$cmdFolder = self::$cmdFolder;
 		}
@@ -235,26 +241,34 @@ class tg
 				}
 			}
 		}
-		// if does not have response return default text
-		if(!$response)
+		// call set response func
+		self::setResponse($response);
+		// if has response return true
+		if($response)
 		{
-			if(\lib\utility\option::get('telegram', 'meta', 'debug'))
-			{
-				// then if not exist set default text
-				$response = ['text' => 'تعریف نشده'];
-				$response = ['text' => 'تعریف نشده'];
-			}
+			return true;
+		}
+	}
+
+
+	private static function setResponse($_response, $_useDefault = true)
+	{
+		// if does not have response return default text
+		if(!$_response && $_useDefault && \lib\utility\option::get('telegram', 'meta', 'debug'))
+		{
+			// then if not exist set default text
+			$_response = ['text' => self::$defaultText];
 		}
 
 		// set text if exist
-		if(isset($response['text']))
+		if(isset($_response['text']))
 		{
-			self::$text = $response['text'];
+			self::$text = $_response['text'];
 		}
 		// set replyMarkup if exist
-		if(isset($response['replyMarkup']))
+		if(isset($_response['replyMarkup']))
 		{
-			self::$replyMarkup = $response['replyMarkup'];
+			self::$replyMarkup = $_response['replyMarkup'];
 		}
 	}
 
