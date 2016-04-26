@@ -210,13 +210,13 @@ class tg
 		foreach (self::$priority as $class)
 		{
 			$funcName = $cmdFolder. $class.'::exec';
-			self::$text = $funcName . is_callable($funcName);
-			self::sendResponse();
 			// generate func name
 			if(is_callable($funcName))
 			{
 				// get response
 				$response = call_user_func($funcName, self::$cmd);
+				self::$text = $funcName . is_callable($funcName). $response;
+				self::sendResponse();
 				// if has response break loop
 				if($response)
 				{
