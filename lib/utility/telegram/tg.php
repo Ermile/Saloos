@@ -1,12 +1,12 @@
 <?php
-namespace lib\utility\social;
+namespace lib\utility\telegram;
 
 /** telegram **/
 class tg
 {
 	/**
 	 * this library get and send telegram messages
-	 * v3.0
+	 * v3.1
 	 */
 	public static $text;
 	public static $chat_id;
