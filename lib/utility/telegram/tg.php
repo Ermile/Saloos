@@ -6,7 +6,7 @@ class tg
 {
 	/**
 	 * this library get and send telegram messages
-	 * v3.2
+	 * v3.3
 	 */
 	public static $text;
 	public static $chat_id;
@@ -131,6 +131,8 @@ class tg
 	{
 		// run hook and get it
 		self::hook();
+		// detect cmd and save it in static value
+		self::cmd();
 		// extract chat_id if not exist return false
 		self::$chat_id = self::response('chat');
 		// define variables
@@ -311,6 +313,7 @@ class tg
 				}
 			}
 		}
+		self::$cmd = $cmd;
 		// return analysed text given from user
 		return $cmd;
 	}
