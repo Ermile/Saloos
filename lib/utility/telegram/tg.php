@@ -215,8 +215,6 @@ class tg
 			{
 				// get response
 				$response = call_user_func($funcName, self::$cmd);
-				self::$text = $funcName . is_callable($funcName). $response;
-				self::sendResponse();
 				// if has response break loop
 				if($response)
 				{
