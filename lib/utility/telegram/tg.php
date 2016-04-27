@@ -6,7 +6,7 @@ class tg
 {
 	/**
 	 * this library get and send telegram messages
-	 * v4.3
+	 * v4.4
 	 */
 	public static $text;
 	public static $chat_id;
@@ -187,7 +187,7 @@ class tg
 		// set method if user wan to set it
 		if(isset(self::$answer['method']))
 		{
-			self::$method = self::$method;
+			self::$method = self::$answer['method'];
 			unset(self::$answer['method']);
 		}
 
@@ -218,21 +218,35 @@ class tg
 				// for callbacks dont use reply message and only do work
 				if(self::$callback)
 				{
-					unset($data['reply_to_message_id']);
+					unset(self::$answer['reply_to_message_id']);
 					// $data['inline_message_id'] = $hook['callback_query']['id'];
 					// $result = self::editMessageText($data);
 					// fix it to work on the fly
 				}
 				break;
 
-			case 'answerCallbackQuery':
-				self::$answer['callback_query_id'] = self::response('callback_query_id');
-				break;
 
 			case 'editMessageText':
 				self::$answer['chat_id']    = self::$chat_id;
 				self::$answer['message_id'] = self::response('message_id');
 				self::$answer['parse_mode'] = 'markdown';
+				// if callback is set then call one callback
+				if(isset(self::$answer['callback']) && isset(self::$answer['callback']['text']))
+				{
+					// generate callback query
+					$data =
+					[
+						'callback_query_id' => self::response('callback_query_id'),
+						'text'              => self::$answer['callback']['text'],
+					];
+					if(isset(self::$answer['callback']['show_alert']))
+					{
+						$data['show_alert'] = self::$answer['callback']['show_alert'];
+					}
+					// call callback answer
+					self::answerCallbackQuery($data);
+				}
+
 				break;
 
 			default:
@@ -274,6 +288,10 @@ class tg
 				// if has response break loop
 				if(self::$answer)
 				{
+					if($class === 'callback')
+					{
+						self::$callback = true;
+					}
 					break;
 				}
 			}
@@ -424,7 +442,7 @@ class tg
 	 * Execute cURL call
 	 * @return mixed Result of the cURL call
 	 */
-	public static function executeCurl($_output = null)
+	public static function executeCurl($_method = null, array $_data = null, $_output = null)
 	{
 		// if telegram is off then do not run
 		if(!\lib\utility\option::get('telegram', 'status'))
@@ -443,7 +461,20 @@ class tg
 		}
 		// if key is not correct return
 		if(strlen($mykey) < 20)
+		{
 			return 'api key is not correct!';
+		}
+		// if method is not set use global method
+		if(!$_method)
+		{
+			$_method = self::$method;
+		}
+		// if data is not set use global answer
+		if(!$_data)
+		{
+			$_data = self::$answer;
+		}
+
 
 		$ch = curl_init();
 		if ($ch === false)
@@ -453,7 +484,7 @@ class tg
 
 		$curlConfig =
 		[
-			CURLOPT_URL            => "https://api.telegram.org/bot$mykey/". self::$method,
+			CURLOPT_URL            => "https://api.telegram.org/bot$mykey/$_method",
 			CURLOPT_POST           => true,
 			CURLOPT_RETURNTRANSFER => true,
 			// CURLOPT_HEADER         => true, // get header
@@ -462,9 +493,9 @@ class tg
 		];
 		curl_setopt_array($ch, $curlConfig);
 
-		if (!empty(self::$answer))
+		if (!empty($_data))
 		{
-			curl_setopt( $ch, CURLOPT_POSTFIELDS, http_build_query(self::$answer));
+			curl_setopt( $ch, CURLOPT_POSTFIELDS, http_build_query($_data));
 			curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/x-www-form-urlencoded'));
 		}
 		if(Tld === 'dev')
