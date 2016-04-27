@@ -6,7 +6,7 @@ class tg
 {
 	/**
 	 * this library get and send telegram messages
-	 * v4.1
+	 * v4.2
 	 */
 	public static $text;
 	public static $chat_id;
@@ -176,16 +176,23 @@ class tg
 		// 	return false;
 		// }
 		// generate data for response
+
+		// set method if user wan to set it
+		if(isset(self::$answer['method']))
+		{
+			self::$method = self::$method;
+			unset(self::$answer['method']);
+		}
+
 		switch (self::$method)
 		{
 			// create send message format
 			case 'sendMessage':
-				self::$answer =
-				[
-					'chat_id'      => self::$chat_id,
-					'text'         => self::$text,
-					'parse_mode'   => 'markdown',
-				];
+				// require chat id
+				self::$answer['chat_id']    = self::$chat_id;
+				// markdown is enable by default
+				self::$answer['parse_mode'] = 'markdown';
+
 				// create markup if exist
 				if(self::$replyMarkup)
 				{
@@ -212,12 +219,11 @@ class tg
 				break;
 
 			case 'answerCallbackQuery':
-				self::$answer =
-				[
-					'callback_query_id' => self::$chat_id,
-					'text'              => self::$text,
-					'show_alert'        => true,
-				];
+				self::$answer['callback_query_id'] = 123;
+				break;
+
+			case 'editMessageText':
+				self::$answer['parse_mode'] = 'markdown';
 				break;
 
 			default:

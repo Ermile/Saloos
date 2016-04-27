@@ -28,7 +28,12 @@ class callback
 		}
 		if($response)
 		{
-			self::$callback = true;
+			$response['method']     = 'answerCallbackQuery';
+			if(!isset($result['show_alert']))
+			{
+				$response['show_alert'] = true;
+			}
+
 		}
 		return $response;
 	}
