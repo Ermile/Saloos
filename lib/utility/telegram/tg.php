@@ -6,7 +6,7 @@ class tg
 {
 	/**
 	 * this library get and send telegram messages
-	 * v4.2
+	 * v4.3
 	 */
 	public static $text;
 	public static $chat_id;
@@ -76,6 +76,13 @@ class tg
 				elseif(isset(self::$response['callback_query']['message']['message_id']))
 				{
 					$data = self::$response['callback_query']['message']['message_id'];
+				}
+				break;
+
+			case 'callback_query_id':
+				if(isset(self::$response['callback_query']['id']))
+				{
+					$data = self::$response['callback_query']['id'];
 				}
 				break;
 
@@ -219,10 +226,12 @@ class tg
 				break;
 
 			case 'answerCallbackQuery':
-				self::$answer['callback_query_id'] = 123;
+				self::$answer['callback_query_id'] = self::response('callback_query_id');
 				break;
 
 			case 'editMessageText':
+				self::$answer['chat_id']    = self::$chat_id;
+				self::$answer['message_id'] = self::response('message_id');
 				self::$answer['parse_mode'] = 'markdown';
 				break;
 
