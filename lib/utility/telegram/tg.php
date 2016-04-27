@@ -6,7 +6,7 @@ class tg
 {
 	/**
 	 * this library get and send telegram messages
-	 * v4.4
+	 * v4.5
 	 */
 	public static $text;
 	public static $chat_id;
@@ -245,8 +245,9 @@ class tg
 					}
 					// call callback answer
 					self::answerCallbackQuery($data);
+					// unset callback
+					unset(self::$answer['callback']);
 				}
-
 				break;
 
 			default:
