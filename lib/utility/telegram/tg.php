@@ -6,7 +6,7 @@ class tg
 {
 	/**
 	 * this library get and send telegram messages
-	 * v4.0
+	 * v4.1
 	 */
 	public static $text;
 	public static $chat_id;
@@ -19,6 +19,7 @@ class tg
 	public static $cmd         = null;
 	public static $cmdFolder   = null;
 	public static $useSample   = null;
+	public static $method      = 'sendMessage';
 	public static $defaultText = 'Undefined';
 	public static $priority    =
 	[
@@ -204,7 +205,8 @@ class tg
 			// fix it to work on the fly
 		}
 		// call bot send message func
-		$result = self::sendMessage($data);
+		$funcName = 'self::'. self::$method;
+		$result = call_user_func($funcName, $data);
 		// return result of sending
 		return $result;
 	}

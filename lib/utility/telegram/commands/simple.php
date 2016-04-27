@@ -53,8 +53,6 @@ class simple
 	public static function test()
 	{
 		$result['text'] = 'Test *'.ucfirst(core_name).'* bot on '. Domain;
-		bot::$text = $result['text'];
-		bot::sendResponse();
 		return $result;
 	}
 
