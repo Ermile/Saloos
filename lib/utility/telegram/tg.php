@@ -21,6 +21,8 @@ class tg
 	public static $useSample   = null;
 	public static $method      = 'sendMessage';
 	public static $defaultText = 'Undefined';
+	public static $answer      = null;
+
 	public static $priority    =
 	[
 		'callback',
@@ -142,10 +144,10 @@ class tg
 		// call debug handler function
 		self::debug_handler();
 		// generate response from defined commands
-		$hasResponse = self::generateResponse();
-		if(!$hasResponse && self::$useSample)
+		self::generateResponse();
+		if(!self::$answer && self::$useSample)
 		{
-			$hasResponse = self::generateResponse(true);
+			self::generateResponse(true);
 		}
 		// send response and return result of it
 		return self::sendResponse();
@@ -169,44 +171,62 @@ class tg
 			self::$chat_id = $_chat;
 		}
 		// if chat or text is not set return false
-		if(!self::$chat_id || !self::$text)
-		{
-			return false;
-		}
+		// if(!self::$chat_id || !self::$text)
+		// {
+		// 	return false;
+		// }
 		// generate data for response
-		$data =
-		[
-			'chat_id'      => self::$chat_id,
-			'text'         => self::$text,
-			'parse_mode'   => 'markdown',
-		];
-		// create markup if exist
-		if(self::$replyMarkup)
+		switch (self::$method)
 		{
-			$data['reply_markup'] = json_encode(self::$replyMarkup);
-			$data['force_reply'] = true;
+			// create send message format
+			case 'sendMessage':
+				self::$answer =
+				[
+					'chat_id'      => self::$chat_id,
+					'text'         => self::$text,
+					'parse_mode'   => 'markdown',
+				];
+				// create markup if exist
+				if(self::$replyMarkup)
+				{
+					self::$answer['reply_markup'] = json_encode(self::$replyMarkup);
+					self::$answer['force_reply'] = true;
+				}
+				else
+				{
+					self::$answer['reply_markup'] = null;
+				}
+				// add reply message id
+				if(self::response('message_id'))
+				{
+					self::$answer['reply_to_message_id'] = self::response('message_id');
+				}
+				// for callbacks dont use reply message and only do work
+				if(self::$callback)
+				{
+					unset($data['reply_to_message_id']);
+					// $data['inline_message_id'] = $hook['callback_query']['id'];
+					// $result = self::editMessageText($data);
+					// fix it to work on the fly
+				}
+				break;
+
+			case 'answerCallbackQuery':
+				self::$answer =
+				[
+					'callback_query_id' => self::$chat_id,
+					'text'              => self::$text,
+					'show_alert'        => true,
+				];
+				break;
+
+			default:
+				break;
 		}
-		else
-		{
-			$data['reply_markup'] = null;
-		}
-		// add reply message id
-		$data['reply_to_message_id'] = self::response('message_id');
-		if(self::$api_key)
-		{
-			$data['api_key'] = self::$api_key;
-		}
-		// for callbacks dont use reply message and only do work
-		if(self::$callback)
-		{
-			unset($data['reply_to_message_id']);
-			// $data['inline_message_id'] = $hook['callback_query']['id'];
-			// $result = self::editMessageText($data);
-			// fix it to work on the fly
-		}
+
 		// call bot send message func
 		$funcName = 'self::'. self::$method;
-		$result = call_user_func($funcName, $data);
+		$result   = call_user_func($funcName);
 		// return result of sending
 		return $result;
 	}
@@ -235,18 +255,18 @@ class tg
 			if(is_callable($funcName))
 			{
 				// get response
-				$response = call_user_func($funcName, self::$cmd);
+				self::$answer = call_user_func($funcName, self::$cmd);
 				// if has response break loop
-				if($response)
+				if(self::$answer)
 				{
 					break;
 				}
 			}
 		}
 		// call set response func
-		self::setResponse($response);
+		self::setResponse(self::$answer);
 		// if has response return true
-		if($response)
+		if(self::$answer)
 		{
 			return true;
 		}
@@ -359,12 +379,13 @@ class tg
 		{
 			$_url = \lib\utility\option::get('telegram', 'meta', 'hook');
 		}
-		$data = ['url' => $_url];
+		self::$answer = ['url' => $_url];
+		self::$method = 'setWebhook';
 		// if (!is_null($_file))
 		// {
 		// 	$data['certificate'] = \CURLFile($_file);
 		// }
-		return self::executeCurl('setWebhook', $data, 'description') .': '. $_url;
+		return self::executeCurl('setWebhook', 'description') .': '. $_url;
 	}
 
 
@@ -386,22 +407,17 @@ class tg
 
 	/**
 	 * Execute cURL call
-	 *
-	 * @param string     $_method Action to execute
-	 * @param array|null $_data   Data to attach to the execution
-	 *
 	 * @return mixed Result of the cURL call
 	 */
-	public static function executeCurl($_method, array $_data = null, $_output = null)
+	public static function executeCurl($_output = null)
 	{
 		// if telegram is off then do not run
 		if(!\lib\utility\option::get('telegram', 'status'))
 			return 'telegram is off!';
 		// get custom api key in custom conditon
-		if(isset($_data['api_key']))
+		if(isset(self::$api_key) && self::$api_key)
 		{
-			$mykey = $_data['api_key'];
-			unset($_data['api_key']);
+			$mykey = self::$api_key;
 		}
 		else
 		{
@@ -419,11 +435,10 @@ class tg
 		{
 			return 'Curl failed to initialize';
 		}
-		$_url   = "https://api.telegram.org/bot$mykey/$_method";
 
 		$curlConfig =
 		[
-			CURLOPT_URL            => "https://api.telegram.org/bot$mykey/$_method",
+			CURLOPT_URL            => "https://api.telegram.org/bot$mykey/". self::$method,
 			CURLOPT_POST           => true,
 			CURLOPT_RETURNTRANSFER => true,
 			// CURLOPT_HEADER         => true, // get header
@@ -432,9 +447,9 @@ class tg
 		];
 		curl_setopt_array($ch, $curlConfig);
 
-		if (!empty($_data))
+		if (!empty(self::$answer))
 		{
-			curl_setopt( $ch, CURLOPT_POSTFIELDS, http_build_query($_data));
+			curl_setopt( $ch, CURLOPT_POSTFIELDS, http_build_query(self::$answer));
 			curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/x-www-form-urlencoded'));
 		}
 		if(Tld === 'dev')
