@@ -12,15 +12,14 @@ class tg
 	public static $cmd         = null;
 	public static $cmdFolder   = null;
 	public static $saveLog     = true;
-	public static $answer      = null;
 	public static $hook        = null;
 	public static $fill        = null;
 	public static $defaultText = 'Undefined';
 	public static $priority    =
 	[
 		'callback',
-		'menu',
 		'user',
+		'menu',
 		'simple',
 		'conversation',
 	];
@@ -257,7 +256,7 @@ class tg
 			// self::$answer['force_reply'] = true;
 		}
 		// markdown is enable by default
-		if(isset(self::$answer['text']) && !isset(self::$answer['parse_mode']))
+		if(isset($_prop['text']) && !isset($_prop['parse_mode']))
 		{
 			$_prop['parse_mode'] = 'markdown';
 		}

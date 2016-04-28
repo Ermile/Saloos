@@ -12,10 +12,38 @@ class menu
 		$response = null;
 		switch ($_cmd['command'])
 		{
+			case '/menu':
 			case 'menu':
+			case 'main':
+			case 'mainmenu':
 			case 'منو':
-				$response = self::menu0();
+				$response = self::main();
 				break;
+
+			case '/intro':
+			case 'intro':
+			case '/tour':
+			case 'tour':
+			case 'معرفی':
+				$response = self::intro();
+				break;
+
+
+			case 'امکانات':
+			case 'امکانات هتل':
+				$response = self::features();
+				break;
+
+			case 'مشخصات':
+			case 'مشخصات عمومی':
+				$response = self::global();
+				break;
+
+			case 'لیست':
+			case 'لیست اتاق‌ها':
+				$response = self::global();
+				break;
+
 
 			case 'loc':
 			case 'موقعیت':
@@ -28,23 +56,16 @@ class menu
 				$response = self::menu_inline();
 				break;
 
-			case 'main':
-			case 'mainmenu':
-			case 'menu0':
-			case 'منو۰':
-				$response = self::menu_main();
-				break;
-
 			case 'return':
 			case 'بازگشت':
 				switch ($_cmd['text'])
 				{
 					case 'بازگشت به منوی اصلی':
-
+						$response = self::main();
 						break;
 
 					default:
-
+						$response = self::main();
 						break;
 				}
 				$response = self::returnBtn();
@@ -69,64 +90,135 @@ class menu
 
 
 	/**
-	 * return menu
-	 * @return [type] [description]
+	 * create mainmenu
+	 * @param  boolean $_onlyMenu [description]
+	 * @return [type]             [description]
 	 */
-	public static function menu_main()
+	public static function main($_onlyMenu = false)
 	{
-		// disable return from main menu
-		$result['text']        = 'منوی اصلی'."\r\n";
-		$result['replyMarkup'] =
+		// define
+		$menu =
 		[
 			'keyboard' =>
 			[
-				[""],
-				[""],
-				[""],
-				[""],
+				["معرفی _type_"],
+				["درباره _type_", "تماس با ما"],
 			],
 		];
-		return $result;
-	}
 
-	/**
-	 * return menu
-	 * @return [type] [description]
-	 */
-	public static function returnBtn()
-	{
-		$result['text'] = 'بازگشت به منوی قبلی'."\r\n";
-		$result['text'] .= 'مثلا برگشتیم'."\r\n";
-		$result['replyMarkup'] =
+		if($_onlyMenu)
+		{
+			return $menu;
+		}
+
+		$result =
 		[
-			'keyboard' =>
 			[
-					["خوب"],
-					["بد"],
+				'text'         => "*_fullName_*\r\n\nمنوی اصلی",
+				'reply_markup' => $menu,
 			],
 		];
+
+		// return menu
 		return $result;
 	}
 
 
 	/**
-	 * return menu
-	 * @return [type] [description]
+	 * create mainmenu
+	 * @param  boolean $_onlyMenu [description]
+	 * @return [type]             [description]
 	 */
-	public static function menu0()
+	public static function intro($_onlyMenu = false)
 	{
-		$result['text'] = 'منوی آزمایشی'."\r\n";
-		$result['replyMarkup'] =
+		// define
+		$menu =
 		[
 			'keyboard' =>
 			[
-					["سلام"],
-					["خوبی"],
-					["خوب", "بد"],
+				["لیست اتاق‌ها"],
+				["مشخصات عمومی", "امکانات هتل"],
+				["بازگشت به منوی اصلی"],
 			],
 		];
+
+		if($_onlyMenu)
+		{
+			return $menu;
+		}
+
+		$result =
+		[
+			[
+				'text'         => "*_fullName_*\r\n\n_intro_",
+				'reply_markup' => $menu,
+			],
+		];
+
+		// return menu
 		return $result;
 	}
+
+
+	/**
+	 * show features message
+	 * @return [type] [description]
+	 */
+	public static function features()
+	{
+		$result['text'] = "*_fullName_*\r\n\n_features_";
+		return $result;
+	}
+
+
+	/**
+	 * show global message
+	 * @return [type] [description]
+	 */
+	public static function global()
+	{
+		$result['text'] = "*_fullName_*\r\n\n_globals_";
+		return $result;
+	}
+
+
+	/**
+	 * create mainmenu
+	 * @param  boolean $_onlyMenu [description]
+	 * @return [type]             [description]
+	 */
+	public static function list($_onlyMenu = false)
+	{
+		// define
+		$menu =
+		[
+			'keyboard' =>
+			[
+				["دو تخته استاندارد"],
+				["دو تخته میهمان خارجی"],
+				["سوئیت جونیور"],
+				["سوئیت جونیور میهمان خارجی"],
+			],
+		];
+
+		if($_onlyMenu)
+		{
+			return $menu;
+		}
+
+		$result =
+		[
+			[
+				'text'         => "*_fullName_*\r\n\n_list_",
+				'reply_markup' => $menu,
+			],
+		];
+
+		// return menu
+		return $result;
+	}
+
+
 
 
 
