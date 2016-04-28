@@ -50,7 +50,7 @@ class user
 		[
 			[
 				'text'         => "به *_fullName_* خوش آمدید.",
-				'reply_markup' => menu::main(false),
+				'reply_markup' => menu::main(true),
 			],
 		];
 		// on debug mode send made by ermile at the end of start msg
