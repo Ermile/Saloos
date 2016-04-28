@@ -12,6 +12,7 @@ class user
 	 */
 	public static function exec($_cmd)
 	{
+
 		$response = null;
 		switch ($_cmd['command'])
 		{
@@ -37,11 +38,6 @@ class user
 				break;
 		}
 
-		if(isset($response['text']))
-		{
-			$response['text'] = $response['text']. "\r\n\n\n". 'Made by @Ermile';
-		}
-
 		return $response;
 	}
 
@@ -52,16 +48,37 @@ class user
 	 */
 	public static function start()
 	{
-		$result['text'] = 'به *_fullName_* خوش آمدید.';
-		$result['reply_markup'] =
-		[
-			'keyboard' =>
-			[
-				["آشنایی با _type_"],
-				["درباره _type_"],
-				["تماس با ما"],
-			],
-		];
+		// $result =
+		// [
+		// 	[
+		// 		'method'       => 'sendMessage',
+		// 		'text'         =>'به *_fullName_* خوش آمدید.',
+		// 		'reply_markup' =>
+		// 		[
+		// 			'keyboard' =>
+		// 			[
+		// 				["آشنایی با _type_"],
+		// 				["درباره _type_", "تماس با ما"],
+		// 				[],
+		// 			],
+		// 		],
+		// 	]
+		// ];
+
+		$result['text'] = "_start_";
+		$result['text'] .= "\r\n\n\n". 'Made by @Ermile';
+
+		// $result =
+		// [
+		// 	[
+		// 		'text' => "_start_"."\r\n\n\n". 'Made by @Ermile',
+		// 	],
+		// 	[
+		// 		'text' => "salam",
+		// 	],
+		// ];
+
+
 		return $result;
 	}
 
@@ -73,6 +90,8 @@ class user
 	public static function about()
 	{
 		$result['text'] = "_about_";
+		$result['text'] .= "\r\n\n\n". 'Made by @Ermile';
+
 		return $result;
 	}
 
@@ -84,8 +103,9 @@ class user
 	public static function contact()
 	{
 		$result['text'] = "_contact_";
+		$result['text'] .= "\r\n\n\n". 'Made by @Ermile';
+
 		return $result;
 	}
-
 }
 ?>
