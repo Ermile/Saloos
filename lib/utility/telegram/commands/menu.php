@@ -41,7 +41,7 @@ class menu
 
 			case 'لیست':
 			case 'لیست اتاق‌ها':
-				$response = self::global();
+				$response = self::list();
 				break;
 
 
@@ -169,7 +169,7 @@ class menu
 	 */
 	public static function features()
 	{
-		$result['text'] = "*_fullName_*\r\n\n_features_";
+		$result['text'] = "*_fullName_*\r\n\n_features_\n----------";
 		return $result;
 	}
 
@@ -180,7 +180,7 @@ class menu
 	 */
 	public static function global()
 	{
-		$result['text'] = "*_fullName_*\r\n\n_globals_";
+		$result['text'] = "*_fullName_*\r\n\n_globals_\n----------";
 		return $result;
 	}
 
