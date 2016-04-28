@@ -6,7 +6,7 @@ class tg
 {
 	/**
 	 * this library get and send telegram messages
-	 * v6.0
+	 * v6.1
 	 */
 	public static $api_key     = null;
 	public static $cmd         = null;
@@ -71,13 +71,11 @@ class tg
 		// if telegram is off then do not run
 		if(!\lib\utility\option::get('telegram', 'status'))
 			return 'telegram is off!';
-		$message = json_decode(file_get_contents('php://input'), true);
+		self::$hook = json_decode(file_get_contents('php://input'), true);
 		// save log if allow
-		self::saveLog($message);
+		self::saveLog(self::$hook);
 		// detect cmd and save it in static value
-		self::cmd($message['text']);
-		// save hook value
-		self::$hook = $message;
+		self::cmd(self::$hook['text']);
 	}
 
 
@@ -111,7 +109,7 @@ class tg
 			'argument' => null,
 		];
 		// if debug mode is enable give text from get parameter
-		if(\lib\utility\option::get('telegram', 'meta', 'debug'))
+		if(!$_input && \lib\utility\option::get('telegram', 'meta', 'debug'))
 		{
 			$_input = \lib\utility::get('text');
 		}
