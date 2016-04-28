@@ -86,11 +86,13 @@ class user
 	 */
 	public static function contact()
 	{
-		$result['text'] = "_contact_";
+		$result['photo'] = "@http://ermile.com/static/images/favicon.png";
+		$result['caption'] = "_contact_";
 		if(\lib\utility\option::get('telegram', 'meta', 'debug'))
 		{
-			$result['text'] .= "\r\n\n\n". 'Made by @Ermile';
+			$result['caption'] .= "\r\n\n\n". 'Made by @Ermile';
 		}
+
 		return $result;
 	}
 }

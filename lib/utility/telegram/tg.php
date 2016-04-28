@@ -6,7 +6,7 @@ class tg
 {
 	/**
 	 * this library get and send telegram messages
-	 * v6.2
+	 * v6.3
 	 */
 	public static $api_key     = null;
 	public static $cmd         = null;
@@ -217,7 +217,19 @@ class tg
 				$_prop['message_id'] = self::response('message_id');
 				break;
 
+			case 'sendPhoto':
+			case 'sendAudio':
+			case 'sendDocument':
+			case 'sendSticker':
+			case 'sendVideo':
+			case 'sendVoice':
+			case 'sendLocation':
+			case 'sendVenue':
+			case 'sendContact':
+			case 'sendChatAction':
 			default:
+				// require chat id
+				$_prop['chat_id']    = self::response('chat');
 				break;
 		}
 		// if array key exist but is null
