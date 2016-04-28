@@ -169,7 +169,7 @@ class menu
 	 */
 	public static function features()
 	{
-		$result['text'] = "*_fullName_*\r\n\n_features_\n----------";
+		$result['text'] = "*_fullName_*\r\n\n_features_";
 		return $result;
 	}
 
@@ -180,7 +180,7 @@ class menu
 	 */
 	public static function global()
 	{
-		$result['text'] = "*_fullName_*\r\n\n_globals_\n----------";
+		$result['text'] = "*_fullName_*\r\n\n_globals_";
 		return $result;
 	}
 
