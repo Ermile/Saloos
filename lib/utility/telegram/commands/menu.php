@@ -64,11 +64,14 @@ class menu
 						$response = self::main();
 						break;
 
+					case 'بازگشت به منوی معرفی':
+						$response = self::intro();
+						break;
+
 					default:
 						$response = self::main();
 						break;
 				}
-				$response = self::returnBtn();
 				break;
 
 			default:
@@ -198,6 +201,7 @@ class menu
 				["دو تخته میهمان خارجی"],
 				["سوئیت جونیور"],
 				["سوئیت جونیور میهمان خارجی"],
+				["بازگشت به منوی معرفی"],
 			],
 		];
 
