@@ -6,7 +6,7 @@ class tg
 {
 	/**
 	 * this library get and send telegram messages
-	 * v6.1
+	 * v6.2
 	 */
 	public static $api_key     = null;
 	public static $cmd         = null;
@@ -75,7 +75,7 @@ class tg
 		// save log if allow
 		self::saveLog(self::$hook);
 		// detect cmd and save it in static value
-		self::cmd(self::$hook['text']);
+		self::cmd(self::response('text'));
 	}
 
 
@@ -216,13 +216,13 @@ class tg
 			case 'editMessageText':
 				$_prop['chat_id']    = self::response('chat');
 				$_prop['message_id'] = self::response('message_id');
-				// if callback is set then call one callback
 				break;
 
 			default:
 				break;
 		}
-		if($_prop['chat_id'] === null)
+		// if array key exist but is null
+		if(array_key_exists('chat_id', $_prop) && is_null($_prop['chat_id']))
 		{
 			$_prop['chat_id'] = \lib\utility::get('id');
 		}
