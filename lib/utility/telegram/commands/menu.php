@@ -5,7 +5,7 @@ use \lib\utility\telegram\tg as bot;
 
 class menu
 {
-	public static $return = true;
+	public static $return = false;
 
 	public static function exec($_cmd)
 	{
@@ -37,6 +37,16 @@ class menu
 
 			case 'return':
 			case 'بازگشت':
+				switch ($_cmd['text'])
+				{
+					case 'بازگشت به منوی اصلی':
+
+						break;
+
+					default:
+
+						break;
+				}
 				$response = self::returnBtn();
 				break;
 
@@ -57,6 +67,27 @@ class menu
 		return $response;
 	}
 
+
+	/**
+	 * return menu
+	 * @return [type] [description]
+	 */
+	public static function menu_main()
+	{
+		// disable return from main menu
+		$result['text']        = 'منوی اصلی'."\r\n";
+		$result['replyMarkup'] =
+		[
+			'keyboard' =>
+			[
+				[""],
+				[""],
+				[""],
+				[""],
+			],
+		];
+		return $result;
+	}
 
 	/**
 	 * return menu
@@ -98,27 +129,6 @@ class menu
 	}
 
 
-	/**
-	 * return menu
-	 * @return [type] [description]
-	 */
-	public static function menu_main()
-	{
-		// disable return from main menu
-		self::$return          = false;
-		$result['text']        = 'منوی اصلی'."\r\n";
-		$result['replyMarkup'] =
-		[
-			'keyboard' =>
-			[
-					["منوی آزمایش"],
-					["نظرسنجی های من"],
-					["مقالات"],
-					["پروفایل"],
-			],
-		];
-		return $result;
-	}
 
 
 	/**

@@ -6,12 +6,12 @@ class tg
 {
 	/**
 	 * this library get and send telegram messages
-	 * v4.5
+	 * v5.0
 	 */
 	public static $text;
 	public static $chat_id;
 	public static $message_id;
-	public static $replyMarkup;
+	public static $reply_markup;
 	public static $api_key     = null;
 	public static $saveLog     = true;
 	public static $response    = null;
@@ -21,6 +21,7 @@ class tg
 	public static $useSample   = null;
 	public static $method      = 'sendMessage';
 	public static $defaultText = 'Undefined';
+	public static $fill        = null;
 	public static $answer      = null;
 
 	public static $priority    =
@@ -201,15 +202,15 @@ class tg
 				self::$answer['parse_mode'] = 'markdown';
 
 				// create markup if exist
-				if(self::$replyMarkup)
-				{
-					self::$answer['reply_markup'] = json_encode(self::$replyMarkup);
-					self::$answer['force_reply'] = true;
-				}
-				else
-				{
-					self::$answer['reply_markup'] = null;
-				}
+				// if(self::$reply_markup)
+				// {
+				// 	// self::$answer['reply_markup'] = json_encode(self::$reply_markup);
+				// 	self::$answer['force_reply'] = true;
+				// }
+				// else
+				// {
+				// 	self::$answer['reply_markup'] = null;
+				// }
 				// add reply message id
 				if(self::response('message_id'))
 				{
@@ -321,10 +322,10 @@ class tg
 		{
 			self::$text = $_response['text'];
 		}
-		// set replyMarkup if exist
-		if(isset($_response['replyMarkup']))
+		// set reply_markup if exist
+		if(isset($_response['reply_markup']))
 		{
-			self::$replyMarkup = $_response['replyMarkup'];
+			self::$reply_markup = $_response['reply_markup'];
 		}
 	}
 
@@ -440,6 +441,47 @@ class tg
 
 
 	/**
+	 * replace fill values if exist
+	 * @param  [type] $_data [description]
+	 * @return [type]        [description]
+	 */
+	private static function replaceFill($_data)
+	{
+		if(!self::$fill)
+		{
+			return $_data;
+		}
+
+		// replace all texts
+		if(isset($_data['text']))
+		{
+			foreach (self::$fill as $search => $replace)
+			{
+				$search	= '_'.$search.'_';
+				$_data['text'] = str_replace($search, $replace, $_data['text']);
+			}
+		}
+
+		if(isset($_data['reply_markup']['keyboard']))
+		{
+			foreach ($_data['reply_markup']['keyboard'] as $itemRowKey => $itemRow)
+			{
+				foreach ($itemRow as $key => $itemValue)
+				{
+					foreach (self::$fill as $search => $replace)
+					{
+						$search	= '_'.$search.'_';
+						$newValue = str_replace($search, $replace, $itemValue);
+						$_data['reply_markup']['keyboard'][$itemRowKey][$key] = $newValue;
+					}
+				}
+			}
+		}
+		return $_data;
+	}
+
+
+	/**
 	 * Execute cURL call
 	 * @return mixed Result of the cURL call
 	 */
@@ -475,8 +517,15 @@ class tg
 		{
 			$_data = self::$answer;
 		}
+		// replace values
+		$_data = self::replaceFill($_data);
+		// decode markup if exist
+		if(isset($_data['reply_markup']))
+		{
+			$_data['reply_markup'] = json_encode($_data['reply_markup']);
+		}
 
-
+		// initialize curl
 		$ch = curl_init();
 		if ($ch === false)
 		{

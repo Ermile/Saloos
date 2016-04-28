@@ -27,8 +27,19 @@ class user
 				$response = self::about();
 				break;
 
+			case '/contanct':
+			case 'contanct':
+			case 'تماس':
+				$response = self::contact();
+				break;
+
 			default:
 				break;
+		}
+
+		if(isset($response['text']))
+		{
+			$response['text'] = $response['text']. "\r\n\n\n". 'Made by @Ermile';
 		}
 
 		return $response;
@@ -41,7 +52,16 @@ class user
 	 */
 	public static function start()
 	{
-		$result['text'] = 'Welcome to *Sarshomar*';
+		$result['text'] = 'به *_fullName_* خوش آمدید.';
+		$result['reply_markup'] =
+		[
+			'keyboard' =>
+			[
+				["آشنایی با _type_"],
+				["درباره _type_"],
+				["تماس با ما"],
+			],
+		];
 		return $result;
 	}
 
@@ -52,10 +72,20 @@ class user
 	 */
 	public static function about()
 	{
-		$result['text'] = '['.T_('Sarshomar').'](http://sarshomar.ir)'."\r\n";
-		$result['text'] .= T_("Sarshomar start jumping")."\r\n";
-		$result['text'] .= 'Created and developed by '.ucfirst(core_name);
+		$result['text'] = "_about_";
 		return $result;
 	}
+
+
+	/**
+	 * show contact message
+	 * @return [type] [description]
+	 */
+	public static function contact()
+	{
+		$result['text'] = "_contact_";
+		return $result;
+	}
+
 }
 ?>
