@@ -6,9 +6,10 @@ class tg
 {
 	/**
 	 * this library get and send telegram messages
-	 * v6.4
+	 * v7.0
 	 */
 	public static $api_key     = null;
+	public static $name        = null;
 	public static $cmd         = null;
 	public static $cmdFolder   = null;
 	public static $saveLog     = true;
@@ -170,10 +171,21 @@ class tg
 			}
 		}
 		// if we dont have answer text then use default text
-		if(!$answer && \lib\utility\option::get('telegram', 'meta', 'debug'))
+		if(!$answer)
 		{
-			// then if not exist set default text
-			$answer = ['text' => self::$defaultText];
+			if(self::response('chat', 'type') === 'public')
+			{
+				// if saloos bot joied to group show thanks message
+				if(self::response('new_chat_member', 'username') === self::$name)
+				{
+					$answer = ['text' => "Thanks for using me!\r\n\nI'm ".ucfirst(self::$name)];
+				}
+			}
+			elseif(\lib\utility\option::get('telegram', 'meta', 'debug'))
+			{
+				// then if not exist set default text
+				$answer = ['text' => self::$defaultText];
+			}
 		}
 		return $answer;
 	}
@@ -383,13 +395,15 @@ class tg
 				break;
 
 			case 'chat':
-				if(isset(self::$hook['message']['chat']))
+			case 'new_chat_member':
+			case 'new_chat_participant':
+				if(isset(self::$hook['message'][$_needle]))
 				{
-					$data = self::$hook['message']['chat'];
+					$data = self::$hook['message'][$_needle];
 				}
-				elseif(isset(self::$hook['callback_query']['message']['chat']))
+				elseif(isset(self::$hook['callback_query']['message'][$_needle]))
 				{
-					$data = self::$hook['callback_query']['message']['chat'];
+					$data = self::$hook['callback_query']['message'][$_needle];
 				}
 				if($_arg)
 				{
@@ -406,6 +420,7 @@ class tg
 				{
 					$data = 'cb_'.self::$hook['callback_query']['data'];
 				}
+				$data = str_replace('@'.self::$name.' ', '', $data);
 				break;
 
 			default:
