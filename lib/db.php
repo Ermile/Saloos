@@ -6,7 +6,7 @@ class db
 {
 	/**
 	 * this library doing useful db actions
-	 * v2.1
+	 * v2.2
 	 */
 
 	// save link to database
@@ -170,6 +170,24 @@ class db
 		// return result
 		return $result;
 	}
+
+
+	/**
+	 * read query info and analyse it and return array contain result
+	 * @return [type] [description]
+	 */
+	public static function qry_info($_needle = null)
+	{
+		preg_match_all ('/(\S[^:]+): (\d+)/', mysqli_info(self::$link), $matches);
+		$info = array_combine ($matches[1], $matches[2]);
+		if($_needle && isset($info[$_needle]))
+		{
+			$info = $info[$_needle];
+		}
+
+		return $info;
+	}
+
 
 	/**
 	 * execute sql file directly to add some database

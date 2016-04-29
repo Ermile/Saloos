@@ -103,8 +103,8 @@ class Botan
                 'content' => json_encode($body)
             ]
         ];
-        $context = stream_context_create($options);
-        $response = file_get_contents($url, false, $context);
+        $context  = stream_context_create($options);
+        $response = @file_get_contents($url, false, $context);
         if ($response === false)
         {
             return 'Error Processing Request';

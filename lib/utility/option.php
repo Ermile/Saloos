@@ -6,7 +6,7 @@ class option
 {
 	/**
 	 * this library get options from db only one times!
-	 * v1.1
+	 * v1.2
 	 */
 
 	// declare private static variable to save options
@@ -306,7 +306,7 @@ class option
 	 * set new record in options
 	 * @param [array] $_args contain key and value of new record
 	 */
-	public static function set($_args)
+	public static function set($_args, $_ifExistUpdate = false)
 	{
 		$datarow =
 		[
@@ -370,13 +370,17 @@ class option
 		if(isset($_args['meta']))
 		{
 			$datarow['option_meta'] = $_args['meta'];
+			if(is_array($datarow['option_meta']))
+			{
+				$datarow['option_meta'] = json_encode($datarow['option_meta']);
+			}
 		}
 
 		// add option status if set
 		if(isset($_args['status']))
 		{
 			// only allow defined$_args['status'])e
-			switch ($op_status)
+			switch ($_args['status'])
 			{
 				case 'enable':
 				case 'disable':
@@ -384,10 +388,10 @@ class option
 					break;
 
 				default:
-					$op_status = 'enable';
+					$_args['status'] = 'enable';
 					break;
 			}
-			$datarow['option_status'] = $op_status;
+			$datarow['option_status'] = $_args['status'];
 		}
 
 		// create query string
@@ -397,10 +401,37 @@ class option
 			$datarow[$key] = "'". $value. "'";
 		}
 		$qry_values = implode(', ', $datarow);
-		// create query string
-		$qry = "INSERT INTO options ( $qry_fields ) VALUES ( $qry_values );";
 		// connect to database
 		\lib\db::connect(true);
+		if($_ifExistUpdate)
+		{
+			// start creating query data
+			$qry_data = null;
+			foreach ($datarow as $key => $value)
+			{
+				$qry_data .= $key .'='. $datarow[$key] .', ';
+			}
+			// remove last ,
+			$qry_data = substr($qry_data, 0, -2);
+			$qry = "UPDATE options
+				SET $qry_data
+				WHERE
+					`option_cat`   =". $datarow['option_cat']." AND
+					`option_key`   =". $datarow['option_key']." AND
+					`option_value` =". $datarow['option_value'];
+
+			$result = @mysqli_query(\lib\db::$link, $qry);
+			// if row is match then return true
+			// this means row is same and data is duplicate or not
+			// affecting row is not important in this condition
+			if($result && \lib\db::qry_info('Rows matched'))
+			{
+				return true;
+			}
+		}
+
+		// create query string
+		$qry = "INSERT INTO options ( $qry_fields ) VALUES ( $qry_values );";
 		// execute query
 		$result = @mysqli_query(\lib\db::$link, $qry);
 		// give last insert id

@@ -92,6 +92,20 @@ class tg
 		if(self::$saveLog)
 		{
 			file_put_contents('tg.json', json_encode($_data). "\r\n", FILE_APPEND);
+			// define user detail array
+			if(isset($_data['message']['from']) && $user_id = self::response('from'))
+			{
+				$userDetail =
+				[
+					'cat'    => 'telegram',
+					'key'    => 'user',
+					'value'  => $user_id,
+					'meta'   => $_data['message']['from'],
+					'status' => 'disable'
+				];
+				// save in options table
+				\lib\utility\option::set($userDetail, true);
+			}
 		}
 	}
 
