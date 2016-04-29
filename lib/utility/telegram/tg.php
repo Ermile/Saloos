@@ -179,6 +179,7 @@ class tg
 				if(self::response('new_chat_member', 'username') === self::$name)
 				{
 					$msg = "Thanks for using me!\r\n\nI'm Bot.";
+					$msg = "با تشکر از شما عزیزان به خاطر دعوت از من!\r\n\nمن یک ربات هستم.";
 					$answer = ['text' => $msg ];
 				}
 			}
