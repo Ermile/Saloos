@@ -73,6 +73,8 @@ class tg
 		if(!\lib\utility\option::get('telegram', 'status'))
 			return 'telegram is off!';
 		self::$hook = json_decode(file_get_contents('php://input'), true);
+		self::saveLog(apache_response_headers());
+		self::saveLog(apache_request_headers());
 		// save log if allow
 		self::saveLog(self::$hook);
 		// detect cmd and save it in static value
