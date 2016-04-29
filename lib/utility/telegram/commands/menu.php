@@ -44,6 +44,22 @@ class menu
 				$response = self::list();
 				break;
 
+			case 'استاندارد':
+				$response = self::room_standard();
+				break;
+
+			case 'مدرن':
+				$response = self::room_modern();
+				break;
+
+			case 'خانواده':
+				$response = self::room_family();
+				break;
+
+			case 'مجلل':
+				$response = self::room_lux();
+				break;
+
 
 			case 'loc':
 			case 'موقعیت':
@@ -194,6 +210,51 @@ class menu
 	}
 
 
+	public static function room_standard()
+	{
+
+		$result['caption'] = "سوییت استاندارد";
+		// $result['photo']   = new \CURLFile(realpath("static/images/telegram/room-standard.jpg"));
+		$result['photo']   = 'AgADBAADu6cxG-eq1Qk6Y0Vf_YPNoMKBJBkABGYn-91Fgx5g3HcBAAEC';
+		$result['method']  = "sendPhoto";
+
+		return $result;
+	}
+
+	public static function room_modern()
+	{
+
+		$result['caption'] = "سوییت مدرن";
+		// $result['photo']   = new \CURLFile(realpath("static/images/telegram/room-modern.jpg"));
+		$result['photo']   = 'AgADBAADvKcxG-eq1QmH92pAF08T_xfCQRkABOErQh4z46YSY3YAAgI';
+		$result['method']  = "sendPhoto";
+
+		return $result;
+	}
+
+	public static function room_family()
+	{
+
+		$result['caption'] = "سوییت خانواده";
+		// $result['photo']   = new \CURLFile(realpath("static/images/telegram/room-family.jpg"));
+		$result['photo']   = 'AgADBAADvacxG-eq1Ql4XJOmaYcUE8xJQxkABBGnNrqILNvyInYAAgI';
+		$result['method']  = "sendPhoto";
+
+		return $result;
+	}
+
+	public static function room_lux()
+	{
+
+		$result['caption'] = "سوییت مجلل";
+		// $result['photo']   = new \CURLFile(realpath("static/images/telegram/room-lux.jpg"));
+		$result['photo']   = 'AgADBAADvqcxG-eq1Qm3eUf_PGzhYCDmKBkABMfq8W8TqeP1MnoBAAEC';
+		$result['method']  = "sendPhoto";
+
+		return $result;
+	}
+
+
 	/**
 	 * create mainmenu
 	 * @param  boolean $_onlyMenu [description]
@@ -206,10 +267,8 @@ class menu
 		[
 			'keyboard' =>
 			[
-				["دو تخته استاندارد"],
-				["دو تخته میهمان خارجی"],
-				["سوئیت جونیور"],
-				["سوئیت جونیور میهمان خارجی"],
+				["مدرن", "استاندارد"],
+				["مجلل", "خانواده"],
 				["بازگشت به منوی معرفی"],
 			],
 		];
@@ -222,7 +281,7 @@ class menu
 		$result =
 		[
 			[
-				'text'         => "*_fullName_*\r\n\n_list_",
+				'text'         => "_list_",
 				'reply_markup' => $menu,
 			],
 		];
