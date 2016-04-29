@@ -6,7 +6,7 @@ class tg
 {
 	/**
 	 * this library get and send telegram messages
-	 * v6.3
+	 * v6.4
 	 */
 	public static $api_key     = null;
 	public static $cmd         = null;
@@ -302,6 +302,16 @@ class tg
 			}
 		}
 
+		// replace all texts
+		if(isset($_data['caption']))
+		{
+			foreach (self::$fill as $search => $replace)
+			{
+				$search	= '_'.$search.'_';
+				$_data['caption'] = str_replace($search, $replace, $_data['caption']);
+			}
+		}
+
 		if(isset($_data['reply_markup']['keyboard']))
 		{
 			foreach ($_data['reply_markup']['keyboard'] as $itemRowKey => $itemRow)
@@ -490,8 +500,10 @@ class tg
 
 		if (!empty($_data))
 		{
-			curl_setopt( $ch, CURLOPT_POSTFIELDS, http_build_query($_data));
-			curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/x-www-form-urlencoded'));
+			curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: multipart/form-data'));
+			// curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/x-www-form-urlencoded'));
+			// curl_setopt( $ch, CURLOPT_POSTFIELDS, http_build_query($_data));
+			curl_setopt( $ch, CURLOPT_POSTFIELDS, $_data);
 		}
 		if(Tld === 'dev')
 		{

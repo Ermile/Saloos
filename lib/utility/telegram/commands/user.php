@@ -27,8 +27,8 @@ class user
 				$response = self::about();
 				break;
 
-			case '/contanct':
-			case 'contanct':
+			case '/contact':
+			case 'contact':
 			case 'تماس':
 				$response = self::contact();
 				break;
@@ -72,10 +72,7 @@ class user
 	public static function about()
 	{
 		$result['text'] = "_about_";
-		if(\lib\utility\option::get('telegram', 'meta', 'debug'))
-		{
-			$result['text'] .= "\r\n\n\n". 'Made by @Ermile';
-		}
+
 		return $result;
 	}
 
@@ -86,12 +83,9 @@ class user
 	 */
 	public static function contact()
 	{
-		$result['photo'] = "@http://ermile.com/static/images/favicon.png";
+		$result['method'] = "sendPhoto";
+		$result['photo']  = new \CURLFile(realpath("static/images/telegram/contact.jpg"));
 		$result['caption'] = "_contact_";
-		if(\lib\utility\option::get('telegram', 'meta', 'debug'))
-		{
-			$result['caption'] .= "\r\n\n\n". 'Made by @Ermile';
-		}
 
 		return $result;
 	}
