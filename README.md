@@ -54,7 +54,6 @@ Already we don't have good documentaion! We hope can complete this before die!
 Changelog
 ---------
  * Version 5.6.7: start adding changelog!
- * Comming soon!
 
 
 Author
