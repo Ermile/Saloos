@@ -6,7 +6,7 @@ class tg
 {
 	/**
 	 * this library get and send telegram messages
-	 * v7.0
+	 * v7.1
 	 */
 	public static $api_key     = null;
 	public static $name        = null;
@@ -173,12 +173,13 @@ class tg
 		// if we dont have answer text then use default text
 		if(!$answer)
 		{
-			if(self::response('chat', 'type') === 'public')
+			if(self::response('chat', 'type') === 'group')
 			{
 				// if saloos bot joied to group show thanks message
 				if(self::response('new_chat_member', 'username') === self::$name)
 				{
-					$answer = ['text' => "Thanks for using me!\r\n\nI'm ".ucfirst(self::$name)];
+					$msg = "Thanks for using me!\r\n\nI'm Bot.";
+					$answer = ['text' => $msg ];
 				}
 			}
 			elseif(\lib\utility\option::get('telegram', 'meta', 'debug'))
