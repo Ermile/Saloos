@@ -6,7 +6,7 @@ namespace lib;
 class saloos
 {
 	// @var saloos core current version
-	const version = '5.6.6';
+	const version = '5.6.7';
 
 	// @var saloos core current commit number
 	// now get it automatically from git commands
@@ -64,7 +64,10 @@ class saloos
 			{
 				chdir(core);
 			}
-			// $commitCount = exec('git rev-list --all --count');
+			if(self::command_exists('git'))
+			{
+				$commitCount = exec('git rev-list --all --count');
+			}
 		}
 		catch (Exception $e)
 		{
@@ -81,7 +84,10 @@ class saloos
 	 */
 	public static function getLastVersion()
 	{
-		// $commitCount = exec('git rev-list --all --count');
+		if(self::command_exists('git'))
+		{
+			$commitCount = exec('git rev-list --all --count');
+		}
 		return self::version;
 	}
 
@@ -98,8 +104,11 @@ class saloos
 			{
 				chdir(core);
 			}
-			// $commitDate = new \DateTime(trim(exec('git log -n1 --pretty=%ci HEAD')));
-			// $commitDate = $commitDate->format('Y-m-d');
+			if(self::command_exists('git'))
+			{
+				$commitDate = new \DateTime(trim(exec('git log -n1 --pretty=%ci HEAD')));
+				$commitDate = $commitDate->format('Y-m-d');
+			}
 		}
 		catch (Exception $e)
 		{
@@ -107,6 +116,16 @@ class saloos
 		}
 
 		return $commitDate;
+	}
+
+	public static function command_exists($_command)
+	{
+		// on windows use where other use which
+		$whereIsCommand = (PHP_OS == 'WINNT') ? 'where' : 'which';
+		// execute command
+		$returnVal      = shell_exec("$whereIsCommand $_command");
+		// return command exist or not
+		return (empty($returnVal) ? false : true);
 	}
 }
 ?>
