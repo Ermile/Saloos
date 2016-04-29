@@ -71,7 +71,11 @@ class user
 	 */
 	public static function about()
 	{
-		$result['text'] = "_about_";
+		$result['method']  = "sendPhoto";
+		// $result['photo']   = new \CURLFile(realpath("static/images/telegram/about.jpg"));
+		$result['photo']   = 'AgADBAADtqcxG-eq1QnHfgOD-d-edTTxQhkABMMyWG58No_62ncAAgI';
+		$result['caption'] = "_about_";
+
 
 		return $result;
 	}
@@ -83,9 +87,22 @@ class user
 	 */
 	public static function contact()
 	{
-		$result['method'] = "sendPhoto";
-		$result['photo']  = new \CURLFile(realpath("static/images/telegram/contact.jpg"));
-		$result['caption'] = "_contact_";
+		// get location address from http://www.gps-coordinates.net/
+		$result =
+		[
+			[
+				'method'    => "sendVenue",
+				'latitude'  => '34.6349668',
+				'longitude' => '50.87914999999998',
+				'title'     => 'Ermile | ارمایل',
+				'address'   => '#83, Moallem 10, Moallem, Qom, Iran',
+			],
+		];
+
+		$result[] =
+		[
+			'text' => "_contact_",
+		];
 
 		return $result;
 	}
