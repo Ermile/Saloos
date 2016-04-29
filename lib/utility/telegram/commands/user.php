@@ -55,7 +55,7 @@ class user
 		$result =
 		[
 			[
-				'text'         => "به *_fullName_* خوش آمدید."."\help",
+				'text'         => "به *_fullName_* خوش آمدید."." /help",
 				'reply_markup' => menu::main(true),
 			],
 		];

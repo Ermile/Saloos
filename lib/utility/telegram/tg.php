@@ -6,10 +6,11 @@ class tg
 {
 	/**
 	 * this library get and send telegram messages
-	 * v7.2
+	 * v7.3
 	 */
 	public static $api_key     = null;
 	public static $name        = null;
+	public static $botan       = null;
 	public static $cmd         = null;
 	public static $cmdFolder   = null;
 	public static $saveLog     = true;
@@ -76,6 +77,8 @@ class tg
 		self::saveLog(self::$hook);
 		// detect cmd and save it in static value
 		self::cmd(self::response('text'));
+		// if botan is set then save analytics with botan.io
+		self::botan();
 	}
 
 
@@ -374,6 +377,17 @@ class tg
 				}
 				break;
 
+			case 'message':
+				if(isset(self::$hook['message']))
+				{
+					$data = self::$hook['message'];
+				}
+				elseif(isset(self::$hook['callback_query']['message']))
+				{
+					$data = self::$hook['callback_query']['message'];
+				}
+				break;
+
 			case 'callback_query_id':
 				if(isset(self::$hook['callback_query']['id']))
 				{
@@ -433,6 +447,23 @@ class tg
 		}
 
 		return $data;
+	}
+
+
+
+	public static function botan()
+	{
+		if(!isset(self::$botan))
+		{
+			return false;
+		}
+		$botan  = new Botan(self::$botan);
+		if(!self::response('message'))
+		{
+			return 'message is not correct!';
+		}
+		$result = $botan->track(self::response('message'), self::response('text'));
+		return $result;
 	}
 
 
