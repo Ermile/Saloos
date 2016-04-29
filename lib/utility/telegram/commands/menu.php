@@ -31,7 +31,7 @@ class menu
 
 			case 'امکانات':
 			case 'امکانات هتل':
-				$response = self::features();
+				$response = self::feature();
 				break;
 
 			case 'مشخصات':
@@ -167,9 +167,13 @@ class menu
 	 * show features message
 	 * @return [type] [description]
 	 */
-	public static function features()
+	public static function feature()
 	{
-		$result['text'] = "*_fullName_*\r\n\n_features_";
+		$result['caption'] = "_feature_";
+		// $result['photo']   = new \CURLFile(realpath("static/images/telegram/features.jpg"));
+		$result['photo']   = 'AgADBAADt6cxG-eq1QmndQ_2kwo3PXstQxkABG-c3dnLJoA0QncAAgI';
+		$result['method']  = "sendPhoto";
+
 		return $result;
 	}
 
@@ -180,7 +184,12 @@ class menu
 	 */
 	public static function global()
 	{
-		$result['text'] = "*_fullName_*\r\n\n_globals_";
+
+		$result['caption'] = "_global_";
+		// $result['photo']   = new \CURLFile(realpath("static/images/telegram/global.jpg"));
+		$result['photo']   = 'AgADBAADuqcxG-eq1Ql_FJNHU8eJL6xEKRkABM3ZsAhFwe5jk3YBAAEC';
+		$result['method']  = "sendPhoto";
+
 		return $result;
 	}
 
