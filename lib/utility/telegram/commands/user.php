@@ -33,6 +33,12 @@ class user
 				$response = self::contact();
 				break;
 
+			case '/help':
+			case 'help':
+			case 'کمک':
+				$response = self::help();
+				break;
+
 			default:
 				break;
 		}
@@ -49,7 +55,7 @@ class user
 		$result =
 		[
 			[
-				'text'         => "به *_fullName_* خوش آمدید.",
+				'text'         => "به *_fullName_* خوش آمدید."."\help",
 				'reply_markup' => menu::main(true),
 			],
 		];
@@ -106,5 +112,38 @@ class user
 
 		return $result;
 	}
+
+
+	/**
+	 * show help message
+	 * @return [type] [description]
+	 */
+	public static function help()
+	{
+		$text = "*_fullName_*\r\n\n";
+		$text .= "You can control me by sending these commands:\r\n\n";
+		$text .= "/start start conversation\n";
+		$text .= "/about about\n";
+		$text .= "/contact contact us\n";
+		$text .= "/menu show main menu\n";
+		$text .= "/intro show intro menu\n";
+		$text .= "/feature know more about favorite feature\n";
+		$text .= "/global read about out global features\n";
+		$text .= "/list show list of rooms menu\n";
+		$text .= "/standard readmore about standard room\n";
+		$text .= "/modern readmore about modern room\n";
+		$text .= "/family readmore about family room\n";
+		$text .= "/lux readmore about lux room\n";
+		// $text .= "/contact contact us\n";
+		$result =
+		[
+			[
+				'text'         => $text,
+			],
+		];
+
+		return $result;
+	}
+
 }
 ?>

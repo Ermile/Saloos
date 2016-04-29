@@ -13,6 +13,8 @@ class menu
 		switch ($_cmd['command'])
 		{
 			case '/menu':
+			case '/cancel':
+			case '/stop':
 			case 'menu':
 			case 'main':
 			case 'mainmenu':
@@ -29,33 +31,47 @@ class menu
 				break;
 
 
+			case '/feature':
+			case 'feature':
 			case 'امکانات':
 			case 'امکانات هتل':
 				$response = self::feature();
 				break;
 
+			case '/global':
+			case 'global':
 			case 'مشخصات':
 			case 'مشخصات عمومی':
 				$response = self::global();
 				break;
 
+			case '/list':
+			case 'list':
 			case 'لیست':
 			case 'لیست اتاق‌ها':
 				$response = self::list();
 				break;
 
+			case '/standard':
+			case 'standard':
 			case 'استاندارد':
 				$response = self::room_standard();
 				break;
 
+			case '/modern':
+			case 'modern':
 			case 'مدرن':
 				$response = self::room_modern();
 				break;
 
+			case '/family':
+			case 'family':
 			case 'خانواده':
 				$response = self::room_family();
 				break;
 
+			case '/lux':
+			case 'lux':
 			case 'مجلل':
 				$response = self::room_lux();
 				break;
