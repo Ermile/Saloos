@@ -6,7 +6,7 @@ class tg
 {
 	/**
 	 * this library get and send telegram messages
-	 * v7.1
+	 * v7.2
 	 */
 	public static $api_key     = null;
 	public static $name        = null;
@@ -421,7 +421,10 @@ class tg
 				{
 					$data = 'cb_'.self::$hook['callback_query']['data'];
 				}
-				$data = str_replace('@'.self::$name.' ', '', $data);
+				// remove @bot_name
+				$data = str_replace('@'.self::$name, '', $data);
+				// trim text
+				$data = trim($data);
 				break;
 
 			default:
