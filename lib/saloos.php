@@ -64,7 +64,7 @@ class saloos
 			{
 				chdir(core);
 			}
-			$commitCount = exec('git rev-list --all --count');
+			// $commitCount = exec('git rev-list --all --count');
 		}
 		catch (Exception $e)
 		{
@@ -98,8 +98,8 @@ class saloos
 			{
 				chdir(core);
 			}
-			$commitDate = new \DateTime(trim(exec('git log -n1 --pretty=%ci HEAD')));
-			$commitDate = $commitDate->format('Y-m-d');
+			// $commitDate = new \DateTime(trim(exec('git log -n1 --pretty=%ci HEAD')));
+			// $commitDate = $commitDate->format('Y-m-d');
 		}
 		catch (Exception $e)
 		{
