@@ -49,6 +49,13 @@ class conversation
 				break;
 
 			case 'چه خبرا':
+			case 'چه خبرا?':
+			case 'چخبر':
+			case 'چخبر?':
+			case 'چه خبر':
+			case 'چه خبر?':
+			case 'che khabar':
+			case 'che khabar?':
 				$text = 'سلامتی';
 				break;
 
@@ -99,6 +106,13 @@ class conversation
 				$text = 'خر خودتی'."\r\n";
 				$text .= 'باباته'."\r\n";
 				$text .= 'بی تربیت'."\r\n";
+				break;
+
+			case 'سگ تو روحت':
+			case 'sag to rohet':
+			case 'sag to ruhet':
+				$text = 'بله!'."\r\n";
+				$text .= 'من روح ندارم!'."\r\n";
 				break;
 
 			case 'نفهم':
