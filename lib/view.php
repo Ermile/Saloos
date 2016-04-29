@@ -38,16 +38,9 @@ class view
 		$this->data->display['cp']        = "content_cp/home/layout.html";
 		$this->data->display['account']   = "content_account/home/layout.html";
 
-
 		$this->data->template['header']   = 'content/template/header.html';
 		$this->data->template['sidebar']  = 'content/template/sidebar.html';
 		$this->data->template['footer']   = 'content/template/footer.html';
-
-		$this->data->saloos['version']    = \lib\saloos::getLastVersion();
-		$this->data->saloos['lastUpdate'] = \lib\saloos::getLastUpdate();
-		$this->data->saloos['langlist']   = ['fa_IR' => 'Persian - فارسی',
-											 'en_US' => 'English',
-											 'ar_SU' => 'Arabic - العربية'];
 
 		$myurl = router::get_protocol().'://'.router::get_domain().$_SERVER['REQUEST_URI'];
 		if( isset($_SERVER['HTTP_REFERER']) && isset($_SESSION['debug'][md5($_SERVER['HTTP_REFERER'])]) )
