@@ -6,7 +6,7 @@ class tg
 {
 	/**
 	 * this library get and send telegram messages
-	 * v7.4
+	 * v7.5
 	 */
 	public static $api_key     = null;
 	public static $name        = null;
@@ -244,6 +244,8 @@ class tg
 
 
 			case 'editMessageText':
+			case 'editMessageCaption':
+			case 'editMessageReplyMarkup':
 				$_prop['chat_id']    = self::response('chat');
 				$_prop['message_id'] = self::response('message_id');
 				break;
