@@ -6,7 +6,7 @@ class tg
 {
 	/**
 	 * this library get and send telegram messages
-	 * v8.0
+	 * v8.1
 	 */
 	public static $api_key     = null;
 	public static $name        = null;
@@ -19,6 +19,7 @@ class tg
 	public static $defaultText = 'Undefined';
 	public static $priority    =
 	[
+		'handle',
 		'callback',
 		'user',
 		'menu',
