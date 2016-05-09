@@ -49,7 +49,7 @@ class menu
 			case 'list':
 			case 'لیست':
 			case 'لیست اتاق‌ها':
-				$response = self::list();
+				$response = self::room_list();
 				break;
 
 			case '/standard':
@@ -276,7 +276,7 @@ class menu
 	 * @param  boolean $_onlyMenu [description]
 	 * @return [type]             [description]
 	 */
-	public static function list($_onlyMenu = false)
+	public static function room_list($_onlyMenu = false)
 	{
 		// define
 		$menu =
