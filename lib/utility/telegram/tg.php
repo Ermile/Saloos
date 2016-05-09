@@ -6,7 +6,7 @@ class tg
 {
 	/**
 	 * this library get and send telegram messages
-	 * v8.1
+	 * v8.2
 	 */
 	public static $api_key     = null;
 	public static $name        = null;
@@ -75,7 +75,7 @@ class tg
 			return 'telegram is off!';
 		self::$hook = json_decode(file_get_contents('php://input'), true);
 		// save log if allow
-		self::saveLog(self::$hook);
+		self::saveLog(self::$hook, true);
 		// detect cmd and save it in static value
 		self::cmd(self::response('text'));
 		// if botan is set then save analytics with botan.io
@@ -88,20 +88,31 @@ class tg
 	 * @param  [type] $_data [description]
 	 * @return [type]        [description]
 	 */
-	private static function saveLog($_data)
+	private static function saveLog($_data, $_hook = false)
 	{
 		if(self::$saveLog)
 		{
 			file_put_contents('tg.json', json_encode($_data). "\r\n", FILE_APPEND);
 			// define user detail array
-			if(isset($_data['message']['from']) && $user_id = self::response('from'))
+			if($_hook && isset($_data['message']['from']) && $user_id = self::response('from'))
 			{
+				$meta = $_data['message']['from'];
+				if($contact = self::response('contact'))
+				{
+					$meta = array_merge($meta, $contact);
+				}
+				if($location = self::response('location'))
+				{
+					$meta = array_merge($meta, $location);
+				}
+
+
 				$userDetail =
 				[
 					'cat'    => 'telegram',
 					'key'    => 'user',
 					'value'  => $user_id,
-					'meta'   => $_data['message']['from'],
+					'meta'   => $meta,
 					'status' => 'disable'
 				];
 				// save in options table
