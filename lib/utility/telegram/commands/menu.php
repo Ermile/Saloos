@@ -38,11 +38,11 @@ class menu
 				$response = self::feature();
 				break;
 
-			case '/global':
-			case 'global':
+			case '/general':
+			case 'general':
 			case 'مشخصات':
 			case 'مشخصات عمومی':
-				$response = self::global();
+				$response = self::general();
 				break;
 
 			case '/list':
@@ -211,14 +211,14 @@ class menu
 
 
 	/**
-	 * show global message
+	 * show general message
 	 * @return [type] [description]
 	 */
-	public static function global()
+	public static function general()
 	{
 
-		$result['caption'] = "_global_";
-		// $result['photo']   = new \CURLFile(realpath("static/images/telegram/global.jpg"));
+		$result['caption'] = "_general_";
+		// $result['photo']   = new \CURLFile(realpath("static/images/telegram/general.jpg"));
 		$result['photo']   = 'AgADBAADuqcxG-eq1Ql_FJNHU8eJL6xEKRkABM3ZsAhFwe5jk3YBAAEC';
 		$result['method']  = "sendPhoto";
 
