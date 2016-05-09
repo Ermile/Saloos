@@ -6,7 +6,7 @@ class tg
 {
 	/**
 	 * this library get and send telegram messages
-	 * v7.5
+	 * v7.6
 	 */
 	public static $api_key     = null;
 	public static $name        = null;
@@ -291,7 +291,6 @@ class tg
 			unset($_prop['callback']);
 		}
 
-
 		// replace values of text and markup
 		$_prop = self::replaceFill($_prop);
 		// decode markup if exist
@@ -351,11 +350,15 @@ class tg
 			{
 				foreach ($itemRow as $key => $itemValue)
 				{
-					foreach (self::$fill as $search => $replace)
+					if(!is_array($itemValue))
 					{
-						$search	= '_'.$search.'_';
-						$newValue = str_replace($search, $replace, $itemValue);
-						$_data['reply_markup']['keyboard'][$itemRowKey][$key] = $newValue;
+						foreach (self::$fill as $search => $replace)
+						{
+							$search	= '_'.$search.'_';
+							$newValue = str_replace($search, $replace, $itemValue);
+
+							$_data['reply_markup']['keyboard'][$itemRowKey][$key] = $newValue;
+						}
 					}
 				}
 			}
@@ -564,7 +567,6 @@ class tg
 			CURLOPT_SSL_VERIFYPEER => false,
 		];
 		curl_setopt_array($ch, $curlConfig);
-
 		if (!empty($_data))
 		{
 			curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: multipart/form-data'));
