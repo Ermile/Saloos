@@ -6,7 +6,7 @@ class tg
 {
 	/**
 	 * this library get and send telegram messages
-	 * v7.6
+	 * v8.0
 	 */
 	public static $api_key     = null;
 	public static $name        = null;
@@ -455,10 +455,49 @@ class tg
 				{
 					$data = 'cb_'.self::$hook['callback_query']['data'];
 				}
+				elseif(isset(self::$hook['message']['contact'])
+					&& isset(self::$hook['message']['contact']['phone_number'])
+				)
+				{
+					$data = 'type_phone_number '. self::$hook['message']['contact']['phone_number'];
+				}
+				elseif(isset(self::$hook['message']['location'])
+					&& isset(self::$hook['message']['location']['longitude'])
+					&& isset(self::$hook['message']['location']['latitude'])
+				)
+				{
+					$data = 'type_location ';
+					$data .= self::$hook['message']['location']['longitude']. ' ';
+					$data .= self::$hook['message']['location']['latitude'];
+				}
+
+
 				// remove @bot_name
 				$data = str_replace('@'.self::$name, '', $data);
 				// trim text
 				$data = trim($data);
+				break;
+
+			case 'contact':
+				if(isset(self::$hook['message']['contact']))
+				{
+					$data = self::$hook['message']['contact'];
+				}
+				if($_arg && isset($data[$_arg]))
+				{
+					$data = $data[$_arg];
+				}
+				break;
+
+			case 'location':
+				if(isset(self::$hook['message']['location']))
+				{
+					$data = self::$hook['message']['location'];
+				}
+				if($_arg && isset($data[$_arg]))
+				{
+					$data = $data[$_arg];
+				}
 				break;
 
 			default:
