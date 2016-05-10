@@ -16,6 +16,7 @@ class tg
 	public static $saveLog     = true;
 	public static $hook        = null;
 	public static $fill        = null;
+	public static $user_id     = null;
 	public static $defaultText = 'Undefined';
 	public static $priority    =
 	[
@@ -94,14 +95,25 @@ class tg
 		{
 			file_put_contents('tg.json', json_encode($_data). "\r\n", FILE_APPEND);
 			// define user detail array
-			if($_hook && isset($_data['message']['from']) && $user_id = self::response('from'))
+			if($_hook && isset($_data['message']['from']) && $from_id = self::response('from'))
 			{
 				$meta = $_data['message']['from'];
 				if($contact = self::response('contact'))
 				{
 					$meta = array_merge($meta, $contact);
+					// if user send contact detail save as normal user
+					if(isset($contact['phone_number']))
+					{
+						$fullname = $contact['first_name'];
+						if($contact['last_name'])
+						{
+							$fullname .= ' '. $contact['last_name'];
+						}
+						\lib\utility\account::signup($contact['phone_number'], 'telegram', true, $fullname);
+						self::$user_id = \lib\utility\account::$user_id;
+					}
 				}
-				if($location = self::response('location'))
+				elseif($location = self::response('location'))
 				{
 					$meta = array_merge($meta, $location);
 				}
@@ -111,10 +123,14 @@ class tg
 				[
 					'cat'    => 'telegram',
 					'key'    => 'user',
-					'value'  => $user_id,
+					'value'  => $from_id,
 					'meta'   => $meta,
 					'status' => 'disable'
 				];
+				if(isset(self::$user_id))
+				{
+					$userDetail['user'] = self::$user_id;
+				}
 				// save in options table
 				\lib\utility\option::set($userDetail, true);
 			}
