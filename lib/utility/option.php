@@ -322,7 +322,7 @@ class option
 				$op_user = \lib\utility\visitor::user_id(false);
 				if(!$op_user)
 				{
-					return false;
+					$op_user = 'NULL';
 				}
 			}
 			if($op_user)
