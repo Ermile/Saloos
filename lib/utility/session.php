@@ -14,12 +14,12 @@ class session
 	 * save session in options table
 	 * @return [type] [description]
 	 */
-	public static function save()
+	public static function save($_userid = true)
 	{
 		// define session array
 		$session =
 		[
-			'user'  => true,
+			'user'  => $_userid,
 			'cat'   => 'sessions',
 			'key'   => session_name().'__USER_',
 			'value' => session_id(),
