@@ -6,7 +6,7 @@ class tg
 {
 	/**
 	 * this library get and send telegram messages
-	 * v8.2
+	 * v8.3
 	 */
 	public static $api_key     = null;
 	public static $name        = null;
@@ -126,7 +126,11 @@ class tg
 							`option_key` LIKE 'user_%' AND
 							`option_value` = $from_id
 					";
-					self::$user_id = \lib\db::get($qry, 'user_id', true);
+					$my_user_id = \lib\db::get($qry, 'user_id', true);
+					if(is_numeric($my_user_id))
+					{
+						self::$user_id = $my_user_id;
+					}
 				}
 
 				$userDetail =
