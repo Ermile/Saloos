@@ -6,7 +6,7 @@ class tg
 {
 	/**
 	 * this library get and send telegram messages
-	 * v10.1
+	 * v10.2
 	 */
 	public static $api_key     = null;
 	public static $name        = null;
@@ -121,7 +121,7 @@ class tg
 		// define user detail array
 		$from_id = self::response('from');
 		// add user_id to save dest of files
-		self::$saveDest .= $from_id.'/';
+		self::$saveDest .= $from_id.'-'. self::response('username').'/';
 		// if we do not have from id return false
 		if(!isset($_data['message']['from']) || !$from_id)
 		{
