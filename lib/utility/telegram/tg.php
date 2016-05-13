@@ -6,7 +6,7 @@ class tg
 {
 	/**
 	 * this library get and send telegram messages
-	 * v8.4
+	 * v8.5
 	 */
 	public static $api_key     = null;
 	public static $name        = null;
@@ -91,67 +91,84 @@ class tg
 	 */
 	private static function saveLog($_data, $_hook = false)
 	{
-		if(self::$saveLog)
+		// if do not allow to save return null
+		if(!self::$saveLog)
 		{
-			file_put_contents('tg.json', json_encode($_data). "\r\n", FILE_APPEND);
-			// define user detail array
-			if($_hook && isset($_data['message']['from']) && $from_id = self::response('from'))
+			return null;
+		}
+		file_put_contents('tg.json', json_encode($_data). "\r\n", FILE_APPEND);
+
+		// if not in hook return null
+		if(!$_hook)
+		{
+			return null;
+		}
+		// define user detail array
+		$from_id = self::response('from');
+		// if we do not have from id return false
+		if(!isset($_data['message']['from']) || !$from_id)
+		{
+			return false;
+		}
+
+		$meta = $_data['message']['from'];
+		// calc full_name of user
+		$meta['full_name'] = trim(self::response('from','first_name'). ' '. self::response('from','last_name'));
+
+		if($contact = self::response('contact', null))
+		{
+			$meta = array_merge($meta, $contact);
+			// if user send contact detail save as normal user
+			if(isset($contact['phone_number']))
 			{
-				$meta = $_data['message']['from'];
-				// calc full_name of user
-				$meta['full_name'] = trim(self::response('from','first_name'). ' '. self::response('from','last_name'));
-
-				if($contact = self::response('contact', null))
-				{
-					$meta = array_merge($meta, $contact);
-					// if user send contact detail save as normal user
-					if(isset($contact['phone_number']))
-					{
-						\lib\utility\account::signup($contact['phone_number'], 'telegram', true, $meta['full_name']);
-						self::$user_id = \lib\utility\account::$user_id;
-					}
-				}
-				elseif($location = self::response('location'))
-				{
-					$meta = array_merge($meta, $location);
-				}
-				// if user_id is not set try to give user_id from database
-				if(!isset(self::$user_id))
-				{
-					$qry = "SELECT `user_id`
-						FROM options
-						WHERE
-							`option_cat` = 'telegram' AND
-							`option_key` LIKE 'user_%' AND
-							`option_value` = $from_id
-					";
-					$my_user_id = \lib\db::get($qry, 'user_id', true);
-					if(is_numeric($my_user_id))
-					{
-						self::$user_id = $my_user_id;
-					}
-				}
-
-				$userDetail =
-				[
-					'cat'    => 'telegram',
-					'key'    => 'user_'.self::response('from', 'username'),
-					'value'  => $from_id,
-					'meta'   => $meta,
-				];
-				if(isset(self::$user_id))
-				{
-					$userDetail['user']   = self::$user_id;
-					$userDetail['status'] = 'enable';
-				}
-				else
-				{
-					$userDetail['status'] = 'disable';
-				}
-				// save in options table
-				\lib\utility\option::set($userDetail, true);
+				\lib\utility\account::signup($contact['phone_number'], 'telegram', true, $meta['full_name']);
+				self::$user_id = \lib\utility\account::$user_id;
 			}
 		}
+		elseif($location = self::response('location'))
+		{
+			$meta = array_merge($meta, $location);
+		}
+		// if user_id is not set try to give user_id from database
+		if(!isset(self::$user_id))
+		{
+			$qry = "SELECT `user_id`
+				FROM options
+				WHERE
+					`option_cat` = 'telegram' AND
+					`option_key` LIKE 'user_%' AND
+					`option_value` = $from_id
+			";
+			$my_user_id = \lib\db::get($qry, 'user_id', true);
+			if(is_numeric($my_user_id))
+			{
+				self::$user_id = $my_user_id;
+			}
+		}
+
+		$userDetail =
+		[
+			'cat'    => 'telegram',
+			'key'    => 'user_'.self::response('from', 'username'),
+			'value'  => $from_id,
+			'meta'   => $meta,
+		];
+		if(isset(self::$user_id))
+		{
+			$userDetail['user']   = self::$user_id;
+			$userDetail['status'] = 'enable';
+		}
+		else
+		{
+			$userDetail['status'] = 'disable';
+		}
+		// save in options table
+		\lib\utility\option::set($userDetail, true);
+
+
+		\lib\utility\session::save(self::$user_id, 'telegram', true);
+
+		return true;
 	}
 
 

@@ -6,7 +6,7 @@ class session
 {
 	/**
 	 * this library work with session
-	 * v1.2
+	 * v1.3
 	 */
 
 
@@ -14,7 +14,7 @@ class session
 	 * save session in options table
 	 * @return [type] [description]
 	 */
-	public static function save($_userid = true)
+	public static function save($_userid = true, $_meta = false, $_once = false)
 	{
 		// define session array
 		$session =
@@ -24,6 +24,10 @@ class session
 			'key'   => session_name().'__USER_',
 			'value' => session_id(),
 		];
+		if($_meta)
+		{
+			$session['meta'] = $_meta;
+		}
 		// save in options table
 		return \lib\utility\option::set($session);
 	}
