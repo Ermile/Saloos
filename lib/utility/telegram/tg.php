@@ -6,7 +6,7 @@ class tg
 {
 	/**
 	 * this library get and send telegram messages
-	 * v8.5
+	 * v9.0
 	 */
 	public static $api_key     = null;
 	public static $name        = null;
@@ -164,9 +164,10 @@ class tg
 		}
 		// save in options table
 		\lib\utility\option::set($userDetail, true);
-
-
-		\lib\utility\session::save(self::$user_id, 'telegram', true);
+		// save session id database only one time
+		// if exist use old one
+		// else insert new one to database
+		\lib\utility\session::save_once(self::$user_id, 'telegram');
 
 		return true;
 	}
