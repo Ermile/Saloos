@@ -6,7 +6,7 @@ class option
 {
 	/**
 	 * this library get options from db only one times!
-	 * v1.2
+	 * v1.3
 	 */
 
 	// declare private static variable to save options
@@ -350,8 +350,11 @@ class option
 		// add option key if set
 		if(isset($_args['key']))
 		{
-			// replace _USER_ with user_id
-			$_args['key'] = str_replace('_USER_', \lib\utility\visitor::user_id(false), $_args['key']);
+			// replace _USER_ with user_id if exist
+			if(isset($datarow['user_id']))
+			{
+				$_args['key'] = str_replace('_USER_', $datarow['user_id']), $_args['key']);
+			}
 
 			$datarow['option_key'] = $_args['key'];
 		}
