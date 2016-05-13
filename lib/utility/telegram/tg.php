@@ -6,7 +6,7 @@ class tg
 {
 	/**
 	 * this library get and send telegram messages
-	 * v9.0
+	 * v10.0
 	 */
 	public static $api_key     = null;
 	public static $name        = null;
@@ -18,6 +18,7 @@ class tg
 	public static $fill        = null;
 	public static $user_id     = null;
 	public static $defaultText = 'Undefined';
+	public static $saveDest    = root.'public_html/files/telegram/';
 	public static $priority    =
 	[
 		'handle',
@@ -101,10 +102,26 @@ class tg
 		// if not in hook return null
 		if(!$_hook)
 		{
-			return null;
+			return self::saveResponse($_data);
 		}
+		else
+		{
+			return self::saveHook($_data);
+		}
+	}
+
+
+	/**
+	 * save data on hooking
+	 * @param  [type] $_data [description]
+	 * @return [type]        [description]
+	 */
+	private static function saveHook($_data)
+	{
 		// define user detail array
 		$from_id = self::response('from');
+		// add user_id to save dest of files
+		self::$saveDest .= $from_id.'/';
 		// if we do not have from id return false
 		if(!isset($_data['message']['from']) || !$from_id)
 		{
@@ -124,6 +141,8 @@ class tg
 				\lib\utility\account::signup($contact['phone_number'], 'telegram', true, $meta['full_name']);
 				self::$user_id = \lib\utility\account::$user_id;
 			}
+			// if user send contact detail then save all of his/her profile photos
+			self::sendResponse(['method' => 'getUserProfilePhotos']);
 		}
 		elseif($location = self::response('location'))
 		{
@@ -170,6 +189,119 @@ class tg
 		\lib\utility\session::save_once(self::$user_id, 'telegram');
 
 		return true;
+	}
+
+
+	/**
+	 * save telegram response
+	 * @param  [type] $_data [description]
+	 * @return [type]        [description]
+	 */
+	private static function saveResponse($_data)
+	{
+		// if this result is not okay return false
+		if(!$_data['ok'])
+		{
+			return false;
+		}
+		// if result is not good return false
+		if(!isset($_data['result']['total_count']) || !isset($_data['result']['photos']))
+		{
+			return false;
+		}
+
+		// now we are giving photos
+		$count  = $_data['result']['total_count'];
+		$photos = $_data['result']['photos'];
+		$result = [];
+		// if has more than one image
+		if($count > 0)
+		{
+			// get biggest size of first image(last profile photo)
+			$img = end($photos[0]);
+			// if file_id is exist
+			if(isset($img['file_id']))
+			{
+				// personal details
+
+				// $user_details =
+				$from = self::response('from', null);
+				// create detail of caption
+				$user_details = "@". self::response('from', 'username');
+				$user_details .= "\n". self::response('from', 'first_name');
+				$user_details .= ' '. self::response('from', 'last_name');
+
+				// create array of message
+				$msg =
+				[
+					'caption' => $user_details,
+					'method'  => 'sendPhoto',
+					'photo'   => $img['file_id'],
+				];
+				// send photo of profile with details
+				self::sendResponse($msg);
+			}
+		}
+
+
+		// if dir is not created, create it
+		if(!is_dir(self::$saveDest))
+		{
+			\lib\utility\file::makeDir(self::$saveDest, 0775, true);
+		}
+
+		// loop on all photos
+		foreach ($photos as $photoKey => $photoRow)
+		{
+			// loop on each size of photo
+			foreach ($photoRow as $sizeKey => $photo)
+			{
+				if(isset($photo['file_id']) && $photo['file_id'])
+				{
+					$myFile = self::getFile(['file_id' => $photo['file_id']]);
+					// save file
+					$name = $photoKey.$sizeKey. '_NANE_';
+					$result[$photoKey][$sizeKey] = self::saveFile($myFile, $name, '.jpg');
+				}
+			}
+		}
+		return $result;
+	}
+
+
+	/**
+	 * save telegram file
+	 * @param  [type] $_response [description]
+	 * @param  [type] $_prefix   [description]
+	 * @param  [type] $_ext      [description]
+	 * @return [type]            [description]
+	 */
+	public static function saveFile($_response, $_prefix = null, $_ext = null)
+	{
+		if(!isset($_response['ok']) || !isset($_response['result']) || !isset($_response['result']['file_path']))
+		{
+			return false;
+		}
+		$file_id   = $_response['result']['file_id'];
+		$file_path = $_response['result']['file_path'];
+		// $dest      = self::$saveDest. $_prefix .$file_id;
+		$dest      = self::$saveDest;
+		// add prefix if exits
+		if($_prefix)
+		{
+			$dest .= $_prefix .'-';
+		}
+		// add file_id
+		$dest      .= $file_id;
+		if($_ext)
+		{
+			$dest = $dest. $_ext;
+		}
+		// save file source
+		$source    = "https://api.telegram.org/file/bot";
+		$source    .= self::$api_key. "/". $file_path;
+
+		return copy($source, $dest);
 	}
 
 
@@ -311,6 +443,10 @@ class tg
 			case 'editMessageReplyMarkup':
 				$_prop['chat_id']    = self::response('chat');
 				$_prop['message_id'] = self::response('message_id');
+				break;
+
+			case 'getUserProfilePhotos':
+				$_prop['user_id']    = self::response('from');
 				break;
 
 			case 'sendPhoto':
