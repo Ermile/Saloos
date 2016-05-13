@@ -6,7 +6,7 @@ class tg
 {
 	/**
 	 * this library get and send telegram messages
-	 * v8.3
+	 * v8.4
 	 */
 	public static $api_key     = null;
 	public static $name        = null;
@@ -101,7 +101,7 @@ class tg
 				// calc full_name of user
 				$meta['full_name'] = trim(self::response('from','first_name'). ' '. self::response('from','last_name'));
 
-				if($contact = self::response('contact'))
+				if($contact = self::response('contact', null))
 				{
 					$meta = array_merge($meta, $contact);
 					// if user send contact detail save as normal user
@@ -115,7 +115,6 @@ class tg
 				{
 					$meta = array_merge($meta, $location);
 				}
-
 				// if user_id is not set try to give user_id from database
 				if(!isset(self::$user_id))
 				{
@@ -139,11 +138,15 @@ class tg
 					'key'    => 'user_'.self::response('from', 'username'),
 					'value'  => $from_id,
 					'meta'   => $meta,
-					'status' => 'disable'
 				];
 				if(isset(self::$user_id))
 				{
-					$userDetail['user'] = self::$user_id;
+					$userDetail['user']   = self::$user_id;
+					$userDetail['status'] = 'enable';
+				}
+				else
+				{
+					$userDetail['status'] = 'disable';
 				}
 				// save in options table
 				\lib\utility\option::set($userDetail, true);
@@ -471,8 +474,10 @@ class tg
 					{
 						$data = $data[$_arg];
 					}
-					else
+					elseif($_arg !== null)
+					{
 						$data = null;
+					}
 				}
 				break;
 
@@ -493,8 +498,10 @@ class tg
 					{
 						$data = $data[$_arg];
 					}
-					else
+					elseif($_arg !== null)
+					{
 						$data = null;
+					}
 				}
 				break;
 
@@ -541,8 +548,10 @@ class tg
 					{
 						$data = $data[$_arg];
 					}
-					else
+					elseif($_arg !== null)
+					{
 						$data = null;
+					}
 				}
 				break;
 
@@ -557,8 +566,10 @@ class tg
 					{
 						$data = $data[$_arg];
 					}
-					else
+					elseif($_arg !== null)
+					{
 						$data = null;
+					}
 				}
 				break;
 
