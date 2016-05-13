@@ -6,7 +6,7 @@ class session
 {
 	/**
 	 * this library work with session
-	 * v2.1
+	 * v2.2
 	 */
 
 
@@ -125,7 +125,7 @@ class session
 
 
 	/**
-	 * delete sessions file with given perm name
+	 * delete session file with given perm name
 	 * @param  [type]  $_permName [description]
 	 * @param  boolean $_exceptMe [description]
 	 * @return [type]             [description]
@@ -146,7 +146,7 @@ class session
 			"SELECT `options`.option_value
 				FROM users
 				INNER JOIN `options` ON `options`.user_id = `users`.id
-				WHERE `options`.option_cat = 'sessions' AND
+				WHERE `options`.option_cat = 'session' AND
 					user_permission = $perm_id;";
 			// run query and give result
 			$result = @mysqli_query(\lib\db::$link, $qry);
@@ -161,7 +161,7 @@ class session
 					// if file is deleted
 					if($value === true)
 					{
-						$qry = "DELETE FROM options WHERE option_cat = 'sessions' AND option_value = '$key';";
+						$qry = "DELETE FROM options WHERE option_cat = 'session' AND option_value = '$key';";
 						@mysqli_query(\lib\db::$link, $qry);
 					}
 				}
