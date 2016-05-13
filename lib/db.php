@@ -6,7 +6,7 @@ class db
 {
 	/**
 	 * this library doing useful db actions
-	 * v2.2
+	 * v3.0
 	 */
 
 	// save link to database
@@ -32,6 +32,7 @@ class db
 		self::$db_name = $_db_name? $_db_name: self::$db_name ? self::$db_name : db_name;
 
 	}
+
 
 	/**
 	 * connect to related database
@@ -367,6 +368,7 @@ class db
 		return $result;
 	}
 
+
 	/**
 	 * find db name by giving folder location
 	 * @param  [type] $_loc [description]
@@ -419,6 +421,7 @@ class db
 
 		return false;
 	}
+
 
 	/**
 	 * this function delete older backup file from db backup folder
@@ -495,26 +498,32 @@ class db
 	}
 
 
-	public static function backup($_period = null, $tables = '*')
+	/**
+	 * create backup from database
+	 * @param  [type] $_period [description]
+	 * @param  string $_tables [description]
+	 * @return [type]          [description]
+	 */
+	public static function backup($_period = null, $_tables = '*')
 	{
 		self::connect(true, false);
 		mysqli_select_db(self::$link, self::$db_name);
 
 		//get all of the tables
-		if($tables == '*')
+		if($_tables == '*')
 		{
-			$tables   = [];
+			$_tables   = [];
 			$result   = mysqli_query(self::$link, 'SHOW TABLES');
-			$tables = self::fetch_all($result, 'Tables_in_'. db_name);
+			$_tables = self::fetch_all($result, 'Tables_in_'. db_name);
 		}
 		else
 		{
-			$tables = is_array($tables) ? $tables : explode(',',$tables);
+			$_tables = is_array($_tables) ? $_tables : explode(',',$_tables);
 		}
 		$return = null;
 
 		//cycle through
-		foreach($tables as $table)
+		foreach($_tables as $table)
 		{
 			$result     = mysqli_query(self::$link, 'SELECT * FROM '.$table);
 			$num_fields = mysqli_num_fields($result);
@@ -566,7 +575,7 @@ class db
 		if(!is_dir($dest_dir))
 			mkdir($dest_dir, 0755, true);
 
-		// $dest_file = 'db-backup-'.time().'-'.(md5(implode(',',$tables))).'.sql';
+		// $dest_file = 'db-backup-'.time().'-'.(md5(implode(',',$_tables))).'.sql';
 		$handle = fopen($dest_dir. $dest_file, 'w+');
 		if(fwrite($handle, $return) === FALSE)
 		{
@@ -579,6 +588,137 @@ class db
 		echo "Location:  $dest_dir<br />";
 		echo "File name: $dest_file<hr />";
 		return true;
+	}
+
+
+	/**
+	 * run query and get result of this query
+	 * @param  [type]  $_qry          [description]
+	 * @param  [type]  $_column       [description]
+	 * @param  boolean $_onlyOneValue [description]
+	 * @return [type]                 [description]
+	 */
+	public static function get($_qry, $_column = null, $_onlyOneValue = false)
+	{
+		// generate query and get result
+		$result = self::query($_qry);
+		// fetch datatable by result
+		$result = self::fetch_all($result, $_column);
+		// if we have only one row of result only return this row
+		if($_onlyOneValue && count($result) === 1 && isset($result[0]))
+		{
+			$result = $result[0];
+		}
+
+		return $result;
+	}
+
+
+	/**
+	 * run query string and return result
+	 * now you don't need to check result
+	 * @param  [type] $_qry [description]
+	 * @return [type]       [description]
+	 */
+	public static function query($_qry)
+	{
+		// connect to main database
+		self::connect(true);
+
+		$result   = mysqli_query(self::$link, $_qry);
+
+		if(!is_a($result, 'mysqli_result'))
+		{
+			// no result exist
+			return '#NA';
+		}
+		// return query run result
+		return $result;
+	}
+
+
+	/**
+	 * create select query if you can't create manually!
+	 * @param  string $_table [description]
+	 * @param  array  $_field [description]
+	 * @param  array  $_where [description]
+	 * @param  array  $_arg   [description]
+	 * @return [type]         [description]
+	 */
+	public static function select($_table = 'options', $_field = [], $_where = [], $_arg = [])
+	{
+		// calc fields
+		$myfield = "*";
+		if(is_array($_field) & $_field)
+		{
+			$myfield = implode(", ", $_field);
+			$myfield = substr($myfield, 0, -2);
+		}
+		elseif(isset($_field))
+		{
+			$myfield = "`$_field`";
+		}
+
+		// calc where
+		$mywhere = "";
+		if(is_array($_where) & $_where)
+		{
+			foreach ($_where as $key => $value)
+			{
+				// in all condition except first loop
+				if($mywhere)
+				{
+					$opr = 'AND';
+					// if opr isset use it
+					if(isset($value['opr']))
+					{
+						$opr = $value['opr'];
+						if(isset($value['value']))
+						{
+							$value = $value['value'];
+						}
+						else
+						{
+							// if value is not set use null
+							$value = "NULL";
+						}
+					}
+					$mywhere .= " $opr ";
+				}
+
+				if(is_array($value))
+				{
+					$value = implode(", ", $value);
+					$value = substr($value, 0, -2);
+					$mywhere .= "$key IN ($value)";
+				}
+				elseif(substr($value, 0, 4) === 'LIKE')
+				{
+					$mywhere .= "`$key` $value";
+				}
+				elseif(is_string($value))
+				{
+					$mywhere .= "`$key` = '$value'";
+				}
+				else
+				{
+					$mywhere .= "`$key` = $value";
+				}
+			}
+		}
+		else
+		{
+			$mywhere = "";
+		}
+
+
+		$qry = "SELECT $myfield FROM $_table";
+		if($mywhere)
+		{
+			$qry .= " WHERE $mywhere";
+		}
+
+		return $qry;
 	}
 }
 ?>

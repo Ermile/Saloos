@@ -115,14 +115,19 @@ class tg
 				{
 					$meta = array_merge($meta, $location);
 				}
+
 				// if user_id is not set try to give user_id from database
 				if(!isset(self::$user_id))
 				{
-					// $a     = \lib\utility\option::get('telegram');
-					// var_dump($a);
+					$qry = "SELECT `user_id`
+						FROM options
+						WHERE
+							`option_cat` = 'telegram' AND
+							`option_key` LIKE 'user_%' AND
+							`option_value` = $from_id
+					";
+					self::$user_id = \lib\db::get($qry, 'user_id', true);
 				}
-
-
 
 				$userDetail =
 				[
