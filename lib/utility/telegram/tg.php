@@ -98,18 +98,16 @@ class tg
 			if($_hook && isset($_data['message']['from']) && $from_id = self::response('from'))
 			{
 				$meta = $_data['message']['from'];
+				// calc full_name of user
+				$meta['full_name'] = trim(self::response('from','first_name'). ' '. self::response('from','last_name'));
+
 				if($contact = self::response('contact'))
 				{
 					$meta = array_merge($meta, $contact);
 					// if user send contact detail save as normal user
 					if(isset($contact['phone_number']))
 					{
-						$fullname = $contact['first_name'];
-						if($contact['last_name'])
-						{
-							$fullname .= ' '. $contact['last_name'];
-						}
-						\lib\utility\account::signup($contact['phone_number'], 'telegram', true, $fullname);
+						\lib\utility\account::signup($contact['phone_number'], 'telegram', true, $meta['full_name']);
 						self::$user_id = \lib\utility\account::$user_id;
 					}
 				}
@@ -117,12 +115,19 @@ class tg
 				{
 					$meta = array_merge($meta, $location);
 				}
+				// if user_id is not set try to give user_id from database
+				if(!isset(self::$user_id))
+				{
+					// $a     = \lib\utility\option::get('telegram');
+					// var_dump($a);
+				}
+
 
 
 				$userDetail =
 				[
 					'cat'    => 'telegram',
-					'key'    => 'user',
+					'key'    => 'user_'.self::response('from', 'username'),
 					'value'  => $from_id,
 					'meta'   => $meta,
 					'status' => 'disable'
@@ -453,7 +458,12 @@ class tg
 				}
 				if($_arg)
 				{
-					$data = $data[$_arg];
+					if(isset($data[$_arg]))
+					{
+						$data = $data[$_arg];
+					}
+					else
+						$data = null;
 				}
 				break;
 
@@ -470,7 +480,12 @@ class tg
 				}
 				if($_arg)
 				{
-					$data = $data[$_arg];
+					if(isset($data[$_arg]))
+					{
+						$data = $data[$_arg];
+					}
+					else
+						$data = null;
 				}
 				break;
 
@@ -511,9 +526,14 @@ class tg
 				{
 					$data = self::$hook['message']['contact'];
 				}
-				if($_arg && isset($data[$_arg]))
+				if($_arg)
 				{
-					$data = $data[$_arg];
+					if(isset($data[$_arg]))
+					{
+						$data = $data[$_arg];
+					}
+					else
+						$data = null;
 				}
 				break;
 
@@ -522,9 +542,14 @@ class tg
 				{
 					$data = self::$hook['message']['location'];
 				}
-				if($_arg && isset($data[$_arg]))
+				if($_arg)
 				{
-					$data = $data[$_arg];
+					if(isset($data[$_arg]))
+					{
+						$data = $data[$_arg];
+					}
+					else
+						$data = null;
 				}
 				break;
 
