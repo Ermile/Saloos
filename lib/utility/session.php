@@ -6,7 +6,7 @@ class session
 {
 	/**
 	 * this library work with session
-	 * v2.0
+	 * v2.1
 	 */
 
 
@@ -66,16 +66,31 @@ class session
 		}
 		// run query and get result
 		$session_id = \lib\db::get($qry, 'option_value', true);
-		// if session is not exist for this condition
+		// if session exist restart session with new id
 		if($session_id)
 		{
-			session_id($session_id);
+			self::restart($session_id);
 		}
+		// else if session is not exist for this condition
 		else
 		{
 			$session_id = self::save($_userid, $_meta);
 		}
 		return $session_id;
+	}
+
+
+	public static function restart($_session_id)
+	{
+		// if a session is currently opened, close it
+		if (session_id() != '')
+		{
+			session_write_close();
+		}
+		// use new id
+		session_id($_session_id);
+		// start new session
+		session_start();
 	}
 
 
