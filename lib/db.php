@@ -6,7 +6,7 @@ class db
 {
 	/**
 	 * this library doing useful db actions
-	 * v3.0
+	 * v3.1
 	 */
 
 	// save link to database
@@ -164,7 +164,7 @@ class db
 			}
 		}
 		// give only one column of result
-		if($_field !== null && !is_array($_field))
+		if($result && $_field !== null && !is_array($_field))
 		{
 			$result = array_column($result, $_field);
 		}
