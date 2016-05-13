@@ -24,18 +24,47 @@ class user
 			case '/about':
 			case 'about':
 			case 'درباره':
+			case 'درباره ی':
+			case 'درباره‌ی':
 				$response = self::about();
+				break;
+
+			case '/me':
+			case 'me':
+			case 'من کیم':
+			case 'من کیم؟':
+			case 'بگیر':
+			case 'پروفایل':
+			case 'من':
+				$response = self::me();
 				break;
 
 			case '/contact':
 			case 'contact':
 			case 'تماس':
+			case 'آدرس':
+			case 'ادرس':
+			case 'نشانی':
 				$response = self::contact();
 				break;
 
+			case 'type_phone_number':
+				$response = self::register('شماره موبایل');
+				break;
+
+			case 'type_location':
+				$response = self::register('آدرس');
+				break;
+
+
 			case '/help':
 			case 'help':
+			case '؟':
+			case '?':
 			case 'کمک':
+			case 'راهنمایی':
+			case '/?':
+			case '/؟':
 				$response = self::help();
 				break;
 
@@ -145,5 +174,40 @@ class user
 		return $result;
 	}
 
+
+	/**
+	 * get phone number from user contact
+	 * @return [type] [description]
+	 */
+	public static function register($_type = null)
+	{
+		if(!$_type)
+			return false;
+		$result =
+		[
+			[
+				'text'  => $_type. ' شما با موفقیت ثبت شد.',
+			],
+		];
+
+		return $result;
+	}
+
+
+	/**
+	 * show user details!
+	 * @return [type] [description]
+	 */
+	public static function me()
+	{
+		$result =
+		[
+			[
+				'method'      => 'getUserProfilePhotos',
+			],
+		];
+
+		return $result;
+	}
 }
 ?>
