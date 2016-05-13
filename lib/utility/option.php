@@ -6,7 +6,7 @@ class option
 {
 	/**
 	 * this library get options from db only one times!
-	 * v1.4
+	 * v1.5
 	 */
 
 	// declare private static variable to save options
@@ -351,11 +351,13 @@ class option
 		if(isset($_args['key']))
 		{
 			// replace _USER_ with user_id if exist
+			$replace = "";
 			if(isset($datarow['user_id']))
 			{
-				$_args['key'] = str_replace('_USER_', $datarow['user_id'], $_args['key']);
+				$replace = $datarow['user_id'];
 			}
 
+			$_args['key']          = str_replace('_USER_', $replace, $_args['key']);
 			$datarow['option_key'] = $_args['key'];
 		}
 		else
