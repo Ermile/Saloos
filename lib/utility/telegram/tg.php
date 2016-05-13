@@ -6,7 +6,7 @@ class tg
 {
 	/**
 	 * this library get and send telegram messages
-	 * v10.0
+	 * v10.1
 	 */
 	public static $api_key     = null;
 	public static $name        = null;
@@ -215,31 +215,18 @@ class tg
 		$photos = $_data['result']['photos'];
 		$result = [];
 		// if has more than one image
-		if($count > 0)
+		if($count === 0)
+		{
+			self::user_detail($img['file_id']);
+		}
+		elseif($count > 0)
 		{
 			// get biggest size of first image(last profile photo)
 			$img = end($photos[0]);
 			// if file_id is exist
 			if(isset($img['file_id']))
 			{
-				// personal details
-
-				// $user_details =
-				$from = self::response('from', null);
-				// create detail of caption
-				$user_details = "@". self::response('from', 'username');
-				$user_details .= "\n". self::response('from', 'first_name');
-				$user_details .= ' '. self::response('from', 'last_name');
-
-				// create array of message
-				$msg =
-				[
-					'caption' => $user_details,
-					'method'  => 'sendPhoto',
-					'photo'   => $img['file_id'],
-				];
-				// send photo of profile with details
-				self::sendResponse($msg);
+				self::user_detail($img['file_id']);
 			}
 		}
 
@@ -260,7 +247,7 @@ class tg
 				{
 					$myFile = self::getFile(['file_id' => $photo['file_id']]);
 					// save file
-					$name = $photoKey.$sizeKey. '_NANE_';
+					$name = $photoKey.$sizeKey;
 					$result[$photoKey][$sizeKey] = self::saveFile($myFile, $name, '.jpg');
 				}
 			}
@@ -302,6 +289,44 @@ class tg
 		$source    .= self::$api_key. "/". $file_path;
 
 		return copy($source, $dest);
+	}
+
+
+	/**
+	 * generate user details
+	 * @return [type] [description]
+	 */
+	public static function user_detail($_photo = null, $_createArray = true, $_sendMsg = true)
+	{
+		// create detail of caption
+		$user_details = "@". self::response('from', 'username');
+		$user_details .= "\n". self::response('from', 'first_name');
+		$user_details .= ' '. self::response('from', 'last_name');
+		if($_createArray)
+		{
+			// create array of message
+			if($_photo)
+			{
+				$user_details =
+				[
+					'caption' => $user_details,
+					'method'  => 'sendPhoto',
+					'photo'   => $_photo,
+				];
+			}
+			else
+			{
+				$user_details =
+				[
+					'text' => $user_details,
+				];
+			}
+			if($_sendMsg)
+			{
+				$user_details = self::sendResponse($user_details);
+			}
+		}
+		return $user_details;
 	}
 
 
