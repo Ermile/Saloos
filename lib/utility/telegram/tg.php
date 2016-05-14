@@ -6,7 +6,7 @@ class tg
 {
 	/**
 	 * this library get and send telegram messages
-	 * v10.4
+	 * v10.5
 	 */
 	public static $api_key     = null;
 	public static $name        = null;
@@ -238,18 +238,14 @@ class tg
 		}
 
 		// loop on all photos
-		foreach ($photos as $photoKey => $photoRow)
+		foreach ($photos as $photoKey => $photo)
 		{
-			// loop on each size of photo
-			foreach ($photoRow as $sizeKey => $photo)
+			$photo = end($photo);
+			if(isset($photo['file_id']) && $photo['file_id'])
 			{
-				if(isset($photo['file_id']) && $photo['file_id'])
-				{
-					$myFile = self::getFile(['file_id' => $photo['file_id']]);
-					// save file
-					$name = $photoKey.$sizeKey;
-					$result[$photoKey][$sizeKey] = self::saveFile($myFile, $name, '.jpg');
-				}
+				$myFile = self::getFile(['file_id' => $photo['file_id']]);
+				// save file
+				$result[$photoKey] = self::saveFile($myFile, $photoKey, '.jpg');
 			}
 		}
 		return $result;
