@@ -6,7 +6,7 @@ class tg
 {
 	/**
 	 * this library get and send telegram messages
-	 * v10.6
+	 * v10.7
 	 */
 	public static $api_key     = null;
 	public static $name        = null;
@@ -100,13 +100,32 @@ class tg
 		file_put_contents('tg.json', json_encode($_data). "\r\n", FILE_APPEND);
 
 		// if not in hook return null
-		if(!$_hook)
+		if($_hook)
 		{
-			return self::saveResponse($_data);
+			self::saveHistory(self::response('text'));
+			return self::saveHook($_data);
 		}
 		else
 		{
-			return self::saveHook($_data);
+			return self::saveResponse($_data);
+		}
+	}
+
+
+	/**
+	 * save history of messages into session of this user
+	 * @param  [type] $_text [description]
+	 * @return [type]        [description]
+	 */
+	private static function saveHistory($_text, $_maxSize = 20)
+	{
+		// Prepend text to the beginning of an session array
+		array_unshift($_SESSION['tg']['history'], $_text);
+		// if count of messages is more than maxSize, remove old one
+		if(count($_SESSION['tg']['history']) > $_maxSize)
+		{
+			// Pop the text off the end of array
+			array_pop($_SESSION['tg']['history']);
 		}
 	}
 
