@@ -6,7 +6,7 @@ class tg
 {
 	/**
 	 * this library get and send telegram messages
-	 * v11.1
+	 * v11.2
 	 */
 	public static $api_key     = null;
 	public static $name        = null;
@@ -30,7 +30,6 @@ class tg
 	];
 
 
-
 	/**
 	 * handle tg requests
 	 * @return [type] [description]
@@ -41,11 +40,11 @@ class tg
 		self::hook();
 
 		// generate response from defined commands
-		$ans    = self::generateResponse();
+		$ans    = generate::answer();
 		$result = [];
 		if(!$ans && $_allowSample)
 		{
-			$ans = self::generateResponse(true);
+			$ans = generate::answer(true);
 		}
 		// if we have some answer send each answer seperated
 		if(isset($ans[0]))
@@ -128,60 +127,6 @@ class tg
 		self::$cmd = $cmd;
 		// return analysed text given from user
 		return $cmd;
-	}
-
-
-	/**
-	 * default action to handle message texts
-	 * @param  [type] [description]
-	 * @return [type]       [description]
-	 */
-	private static function generateResponse($forceSample = null)
-	{
-		$answer  = null;
-		// read from saloos command template
-		$cmdFolder = __NAMESPACE__ .'\commands\\';
-
-		// use user defined command
-		if(!$forceSample && self::$cmdFolder)
-		{
-			$cmdFolder = self::$cmdFolder;
-		}
-		foreach (self::$priority as $class)
-		{
-			$funcName = $cmdFolder. $class.'::exec';
-			// generate func name
-			if(is_callable($funcName))
-			{
-				// get response
-				$answer = call_user_func($funcName, self::$cmd);
-				// if has response break loop
-				if($answer)
-				{
-					break;
-				}
-			}
-		}
-		// if we dont have answer text then use default text
-		if(!$answer)
-		{
-			if(self::response('chat', 'type') === 'group')
-			{
-				// if saloos bot joied to group show thanks message
-				if(self::response('new_chat_member', 'username') === self::$name)
-				{
-					$msg = "Thanks for using me!\r\n\nI'm Bot.";
-					$msg = "با تشکر از شما عزیزان به خاطر دعوت از من!\r\n\nمن یک ربات هستم.";
-					$answer = ['text' => $msg ];
-				}
-			}
-			elseif(\lib\utility\option::get('telegram', 'meta', 'debug'))
-			{
-				// then if not exist set default text
-				$answer = ['text' => self::$defaultText];
-			}
-		}
-		return $answer;
 	}
 
 
