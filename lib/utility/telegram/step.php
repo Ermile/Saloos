@@ -6,7 +6,7 @@ class step extends tg
 {
 	/**
 	 * this library help create step by step messages
-	 * v2.1
+	 * v3.0
 	 */
 
 	/**
@@ -53,12 +53,12 @@ class step extends tg
 			case 'text':
 				$_SESSION['tg']['step'][$_key][]   = $_value;
 				$_SESSION['tg']['step']['last']    = $_value;
-				// $_SESSION['tg']['step']['counter'] += $_value;
-				self::plus('counter');
+				$_SESSION['tg']['step']['counter'] = $_SESSION['tg']['step']['counter'] + $_value;
 				break;
 
 			case 'pointer':
-				self::plus('counter');
+				$_SESSION['tg']['step']['counter'] = $_SESSION['tg']['step']['counter'] + $_value;
+
 			default:
 				$_SESSION['tg']['step'][$_key] = $_value;
 				// return that value was set!
@@ -117,6 +117,19 @@ class step extends tg
 
 		return self::set($_key, $_num);
 	}
+
+
+	/**
+	 * goto specefic step directly
+	 * @param  integer $_step [description]
+	 * @param  string  $_key  [description]
+	 * @return [type]         result of jump
+	 */
+	public static function goto($_step = 1, $_key = 'pointer')
+	{
+		return self::set($_key, $_step);
+	}
+
 
 
 	/**
