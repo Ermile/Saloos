@@ -6,7 +6,7 @@ class db
 {
 	/**
 	 * this library doing useful db actions
-	 * v3.1
+	 * v3.2
 	 */
 
 	// save link to database
@@ -91,7 +91,6 @@ class db
 					{
 						// connect to mysql database for creating new one
 						$link = @mysqli_connect(self::$db_host, self::$db_user, self::$db_pass, 'mysql');
-						@mysqli_set_charset($link, "utf8");
 						// if can connect to mysql database
 						if($link)
 						{
@@ -134,6 +133,9 @@ class db
 		// check if link is exist set it as global variable
 		if($link)
 		{
+			// set charset for link
+			@mysqli_set_charset($link, self::$db_charset);
+			// save link as global variable
 			self::$link = $link;
 			return true;
 		}

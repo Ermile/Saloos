@@ -6,7 +6,7 @@ class option
 {
 	/**
 	 * this library get options from db only one times!
-	 * v1.5
+	 * v1.6
 	 */
 
 	// declare private static variable to save options
@@ -407,7 +407,7 @@ class option
 		}
 		$qry_values = implode(', ', $datarow);
 		// connect to database
-		\lib\db::connect(true);
+
 		if($_ifExistUpdate)
 		{
 			// start creating query data
@@ -425,7 +425,7 @@ class option
 					`option_key`   =". $datarow['option_key']." AND
 					`option_value` =". $datarow['option_value'];
 
-			$result = @mysqli_query(\lib\db::$link, $qry);
+			$result = \lib\db::query($qry);
 			// if row is match then return true
 			// this means row is same and data is duplicate or not
 			// affecting row is not important in this condition
@@ -438,7 +438,7 @@ class option
 		// create query string
 		$qry = "INSERT INTO options ( $qry_fields ) VALUES ( $qry_values );";
 		// execute query
-		$result = @mysqli_query(\lib\db::$link, $qry);
+		$result = \lib\db::query($qry);
 		// give last insert id
 		$last_id = @mysqli_insert_id(\lib\db::$link);
 		// if have last insert it return it
