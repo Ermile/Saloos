@@ -6,7 +6,7 @@ class tg
 {
 	/**
 	 * this library get and send telegram messages
-	 * v10.3
+	 * v10.4
 	 */
 	public static $api_key     = null;
 	public static $name        = null;
@@ -271,8 +271,13 @@ class tg
 		}
 		$file_id   = $_response['result']['file_id'];
 		$file_path = $_response['result']['file_path'];
-		// $dest      = self::$saveDest. $_prefix .$file_id;
 		$dest      = self::$saveDest;
+		$exist     = glob($dest.'/*'.$file_id.$_ext);
+		// if file exist then don't need to get it from server, return
+		if(count($exist))
+		{
+			return null;
+		}
 		// add prefix if exits
 		if($_prefix)
 		{
