@@ -6,7 +6,7 @@ class log extends tg
 {
 	/**
 	 * this library help to save something on telegram
-	 * v1.0
+	 * v1.1
 	 */
 
 
@@ -44,6 +44,10 @@ class log extends tg
 	 */
 	private static function saveHistory($_text, $_maxSize = 20)
 	{
+		if(!isset($_SESSION['tg']['history']))
+		{
+			$_SESSION['tg']['history'] = [];
+		}
 		// Prepend text to the beginning of an session array
 		array_unshift($_SESSION['tg']['history'], $_text);
 		// if count of messages is more than maxSize, remove old one
