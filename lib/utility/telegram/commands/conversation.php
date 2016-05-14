@@ -48,6 +48,15 @@ class conversation
 				$text = 'ممنون، خوبم';
 				break;
 
+			case 'خوبم':
+			case 'خوبم?':
+			case '/khobam?':
+			case 'khobam?':
+			case '/khobam':
+			case 'khobam':
+				$text = 'احتمالا خوب هستنید!';
+				break;
+
 			case 'چه خبرا':
 			case 'چه خبرا?':
 			case 'چخبر':
@@ -170,11 +179,22 @@ class conversation
 				break;
 
 			case 'good':
+			case '/howami':
+			case 'howami':
+			case 'ls':
+			case 'ls-la':
+			case 'ls-a':
 				$text = ':)';
 				break;
 
 			case 'bad':
 				$text = ':(';
+				break;
+
+			case '/fuck':
+			case 'fuck':
+			case 'f*ck':
+				$text = "YOU ARE A PROGRAMMER🍆";
 				break;
 
 			case 'how are you':
