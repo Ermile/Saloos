@@ -6,7 +6,7 @@ class step extends tg
 {
 	/**
 	 * this library help create step by step messages
-	 * v2.0
+	 * v2.1
 	 */
 
 	/**
@@ -108,7 +108,7 @@ class step extends tg
 	 * @param  integer  $_num number of jumping
 	 * @return function       result of jump
 	 */
-	public static function plus($_key = 'pointer', $_num = 1, $_relative = true)
+	public static function plus($_num = 1, $_key = 'pointer', $_relative = true)
 	{
 		if($_relative)
 		{

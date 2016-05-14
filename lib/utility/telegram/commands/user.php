@@ -61,6 +61,8 @@ class user
 
 			case '/help':
 			case 'help':
+			case '/ls':
+			case 'ls':
 			case '؟':
 			case '?':
 			case 'کمک':
