@@ -6,7 +6,7 @@ class tg
 {
 	/**
 	 * this library get and send telegram messages
-	 * v10.5
+	 * v10.6
 	 */
 	public static $api_key     = null;
 	public static $name        = null;
@@ -300,9 +300,10 @@ class tg
 	public static function user_detail($_photo = null, $_createArray = true, $_sendMsg = true)
 	{
 		// create detail of caption
-		$user_details = "@". self::response('from', 'username');
-		$user_details .= "\n". self::response('from', 'first_name');
+		$user_details = "Your Id: ". self::response('from');
+		$user_details .= "\nName: ". self::response('from', 'first_name');
 		$user_details .= ' '. self::response('from', 'last_name');
+		$user_details .= "\nUsername: @". self::response('from', 'username');
 		if($_createArray)
 		{
 			// create array of message
@@ -322,6 +323,7 @@ class tg
 					'text' => $user_details,
 				];
 			}
+			$user_details['reply_to_message_id'] = self::response('message_id');
 			if($_sendMsg)
 			{
 				$user_details = self::sendResponse($user_details);

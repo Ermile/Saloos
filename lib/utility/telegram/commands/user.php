@@ -31,6 +31,8 @@ class user
 
 			case '/me':
 			case 'me':
+			case '/whoami':
+			case 'whoami':
 			case 'من کیم':
 			case 'من کیم؟':
 			case 'بگیر':
