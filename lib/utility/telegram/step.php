@@ -6,7 +6,7 @@ class step extends tg
 {
 	/**
 	 * this library help create step by step messages
-	 * v3.2
+	 * v3.3
 	 */
 
 	/**
@@ -201,6 +201,11 @@ class step extends tg
 			}
 			// save text afrer reading current step function
 			self::set('text', $_text);
+			// if want to stop at the end call stop func
+			if($currentStep === 'stop')
+			{
+				self::stop();
+			}
 			// after saving text return result
 			return $result;
 		}
