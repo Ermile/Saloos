@@ -6,7 +6,7 @@ class slugify
 {
 	/**
 	 * Slugify
-	 * v2.2
+	 * v2.3
 	 * https://github.com/cocur/slugify
 	 *
 	 * @package   org.cocur.slugify
@@ -671,7 +671,7 @@ class slugify
 			'که'			=>'ke',
 			'را'			=>'ra',
 			'کنید'		=>'be',
-			'تسلیت'	=>'tasliat',
+			'تسلیت'		=>'tasliat',
 			'حجت'		=>'hojat',
 			'اسلام'		=>'islam',
 			'فیس'		=>'face',
@@ -702,7 +702,7 @@ class slugify
 			'انسان'		=>'ensan',
 			'شرکت'		=>'sherkat',
 			'بیت'		=>'beyt',
-			'درگذشت'	=>'dargozasht',
+			'درگذشت'		=>'dargozasht',
 			'گفتگو'		=>'goftogo',
 			'نشست'		=>'neshast',
 			'برای'		=>'baraye',
@@ -718,16 +718,16 @@ class slugify
 			'منتظر'		=>'montazer',
 			'رانی'		=>'rani',
 			'دکتر'		=>'Dr',
-			'درخواست'	=>'darkhast',
+			'درخواست'		=>'darkhast',
 			'نفر'		=>'nafar',
 			'علما'		=>'olama',
 			'علمای'		=>'olamaye',
 			'اعلام'		=>'elam',
 			'در'			=>'dar',
-			'خصوص'	=>'khosos',
+			'خصوص'		=>'khosos',
 			'بهره'		=>'bahre',
 			'برداری'		=>'bardari',
-			'بیشتر'	=>'bishtar',
+			'بیشتر'		=>'bishtar',
 			'آثار'		=>'asaar',
 			'گزارش'		=>'gozaresh',
 			'مراسم'		=>'marasem',
@@ -753,7 +753,7 @@ class slugify
 			'چه'			=>'che',
 			'یک'		=>'1',
 			'دو'			=>'2',
-			'سه'		=>'3',
+			'سه'			=>'3',
 			'چهار'		=>'4',
 			'ونج'		=>'5',
 			'شش'		=>'6',
@@ -781,20 +781,23 @@ class slugify
 			'هیچ'		=>'hich',
 			'نظر'		=>'nazar',
 			'سنجی'		=>'sanji',
-			'سرشمار'	=>'sarshomar',
-			'جیبرس'	=>'jibres',
+			'سرشمار'		=>'sarshomar',
+			'جیبرس'		=>'jibres',
 			'سالوس'		=>'saloos',
 			'ارمایل'		=>'ermile',
 			'تلمبار'		=>'talambar',
 			'ازویر'		=>'azvir',
 			'عمومی'		=>'omoomi',
-			'سرویس'	=>'service',
+			'سرویس'		=>'service',
+			'نوشته'		=>'neveshte',
+			'نظرسنجی'	=>'poll',
+			'نظر سنجی'	=>'poll',
 
 
 
 			'ج'		=> 'j',
 			'ذ'		=> 'z',
-			'ض'	=> 'z',
+			'ض'		=> 'z',
 			'ظ'		=> 'z',
 			'ق'		=> 'gh',
 			'و'		=> 'o',
