@@ -6,7 +6,7 @@ class db
 {
 	/**
 	 * this library doing useful db actions
-	 * v3.2
+	 * v3.3
 	 */
 
 	// save link to database
@@ -638,6 +638,12 @@ class db
 		return $result;
 	}
 
+
+	public static function insert_id()
+	{
+		$last_id = @mysqli_insert_id(self::$link);
+		return $last_id;
+	}
 
 	/**
 	 * create select query if you can't create manually!
