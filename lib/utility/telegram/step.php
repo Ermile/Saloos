@@ -6,7 +6,7 @@ class step extends tg
 {
 	/**
 	 * this library help create step by step messages
-	 * v3.1
+	 * v3.2
 	 */
 
 	/**
@@ -26,6 +26,8 @@ class step extends tg
 		self::set('text', []);
 		// save last entered text
 		self::set('last', null);
+		// save title for some text on saving
+		self::set('textTitle', null);
 	}
 
 
@@ -51,7 +53,22 @@ class step extends tg
 		switch ($_key)
 		{
 			case 'text':
-				$_SESSION['tg']['step'][$_key][]   = $_value;
+				if(!is_string($_value))
+				{
+					return false;
+				}
+				// if title of text isset use this title
+				if($text_title = self::get('textTitle'))
+				{
+					$_SESSION['tg']['step'][$_key][$text_title] = $_value;
+					// empty textTitle
+					$_SESSION['tg']['step']['textTitle'] = null;
+				}
+				// else only add new text
+				else
+				{
+					$_SESSION['tg']['step'][$_key][] = $_value;
+				}
 				$_SESSION['tg']['step']['last']    = $_value;
 				$_SESSION['tg']['step']['counter'] = $_SESSION['tg']['step']['counter'] + 1;
 				break;
@@ -155,8 +172,6 @@ class step extends tg
 		// if before this message step started
 		if(self::get(false))
 		{
-			// save text
-			self::set('text', $_text);
 			// calc current step
 			switch ($_text)
 			{
@@ -176,13 +191,18 @@ class step extends tg
 			$call        = tg::$cmdFolder. 'step_'. self::get('name');
 			// create function full name
 			$funcName    = $call. '::'. $currentStep;
-
+			// save result of step
+			$result      = null;
 			// generate func name
 			if(is_callable($funcName))
 			{
 				// get and return response
-				return call_user_func($funcName, $_text);
+				$result = call_user_func($funcName, $_text);
 			}
+			// save text afrer reading current step function
+			self::set('text', $_text);
+			// after saving text return result
+			return $result;
 		}
 	}
 }
