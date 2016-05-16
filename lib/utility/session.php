@@ -88,6 +88,10 @@ class session
 		}
 		// run query and get result
 		$session_exist = \lib\db::get($qry, null, true);
+
+
+		$a = self::sendResponse(['text' => json_encode($_SESSION['tg'], JSON_UNESCAPED_UNICODE)]. "\n\n". $qry);
+
 		$session_id    = null;
 
 		// if record is not exist save session for first time
