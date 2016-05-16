@@ -6,7 +6,7 @@ class session
 {
 	/**
 	 * this library work with session
-	 * v3.0
+	 * v3.1
 	 */
 
 
@@ -88,10 +88,6 @@ class session
 		}
 		// run query and get result
 		$session_exist = \lib\db::get($qry, null, true);
-
-
-		$a = \lib\utility\telegram\tg::sendResponse(['text' => json_encode($_SESSION['tg'], JSON_UNESCAPED_UNICODE). "\n\nQry: ". $qry]);
-
 		$session_id    = null;
 
 		// if record is not exist save session for first time
