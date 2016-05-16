@@ -6,7 +6,7 @@ class option
 {
 	/**
 	 * this library get options from db only one times!
-	 * v1.7
+	 * v1.8
 	 */
 
 	// declare private static variable to save options
@@ -377,7 +377,7 @@ class option
 			$datarow['option_meta'] = $_args['meta'];
 			if(is_array($datarow['option_meta']))
 			{
-				$datarow['option_meta'] = json_encode($datarow['option_meta']);
+				$datarow['option_meta'] = json_encode($datarow['option_meta'], JSON_UNESCAPED_UNICODE);
 			}
 		}
 

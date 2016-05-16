@@ -23,7 +23,7 @@ class log extends tg
 			return null;
 		}
 		$fileAddr = root.'public_html/files/telegram/tg_'. self::$name. '.json';
-		file_put_contents($fileAddr, json_encode($_data). "\r\n", FILE_APPEND);
+		file_put_contents($fileAddr, json_encode($_data, JSON_UNESCAPED_UNICODE). "\r\n", FILE_APPEND);
 
 		// if not in hook return null
 		if($_hook)
