@@ -6,7 +6,7 @@ class account
 {
 	/**
 	 * this library work with acoount
-	 * v1.0
+	 * v1.1
 	 */
 
 	public static $user_id;
@@ -18,14 +18,16 @@ class account
 	 */
 	public static function signup($_mobile, $_pass, $_perm = null, $_name = null)
 	{
-		if(!$_perm)
-		{
-			$_perm = 'NULL';
-		}
-		elseif($_perm === true)
+		// first if perm is true get default permission from db
+		if($_perm === true)
 		{
 			// if use true fill it with default value
 			$_perm     = \lib\utility\option::get('account');
+		}
+		// if permission is not set then set it null
+		if(!$_perm)
+		{
+			$_perm = 'NULL';
 		}
 		if(!$_name)
 		{

@@ -6,7 +6,7 @@ class tg
 {
 	/**
 	 * this library get and send telegram messages
-	 * v11.3
+	 * v11.4
 	 */
 	public static $api_key     = null;
 	public static $name        = null;
@@ -220,7 +220,7 @@ class tg
 		// decode markup if exist
 		if(isset($_prop['reply_markup']))
 		{
-			$_prop['reply_markup'] = json_encode($_prop['reply_markup']);
+			$_prop['reply_markup'] = json_encode($_prop['reply_markup'], JSON_UNESCAPED_UNICODE);
 			// self::$answer['force_reply'] = true;
 		}
 		// markdown is enable by default
