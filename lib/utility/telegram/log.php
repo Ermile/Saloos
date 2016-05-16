@@ -6,7 +6,7 @@ class log extends tg
 {
 	/**
 	 * this library help to save something on telegram
-	 * v1.4
+	 * v1.5
 	 */
 
 
@@ -135,7 +135,7 @@ class log extends tg
 		// save session id database only one time
 		// if exist use old one
 		// else insert new one to database
-		\lib\utility\session::save_once(self::$user_id, 'telegram_'.self::$user_id);
+		\lib\utility\session::save_once(self::$user_id, 'telegram_'.self::response('from', 'id'));
 
 		return true;
 	}
