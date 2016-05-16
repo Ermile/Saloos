@@ -6,7 +6,7 @@ class option
 {
 	/**
 	 * this library get options from db only one times!
-	 * v1.8
+	 * v2.0
 	 */
 
 	// declare private static variable to save options
@@ -428,12 +428,21 @@ class option
 			}
 			// remove last ,
 			$qry_data = substr($qry_data, 0, -2);
-			$qry = "UPDATE options
-				SET $qry_data
-				WHERE
-					`option_cat`   =". $datarow['option_cat']." AND
-					`option_key`   =". $datarow['option_key']." AND
-					`option_value` =". $datarow['option_value'];
+			if(isset($_args['id']) && is_numeric($_args['id']))
+			{
+				$qry = "UPDATE options SET $qry_data WHERE `id` = ". $_args['id'];
+				// var_dump($qry);
+			}
+			else
+			{
+				$qry = "UPDATE options
+					SET $qry_data
+					WHERE
+						`option_cat`   =". $datarow['option_cat']." AND
+						`option_key`   =". $datarow['option_key']." AND
+						`option_value` =". $datarow['option_value'];
+			}
+
 
 			$result = \lib\db::query($qry);
 			// if row is match then return true

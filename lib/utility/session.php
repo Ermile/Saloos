@@ -6,7 +6,7 @@ class session
 {
 	/**
 	 * this library work with session
-	 * v2.4
+	 * v3.0
 	 */
 
 
@@ -14,7 +14,7 @@ class session
 	 * save session in options table
 	 * @return [type] [description]
 	 */
-	public static function save($_userid = true, $_meta = false)
+	public static function save($_userid = true, $_meta = false, $_id = null)
 	{
 		$session_id = session_id();
 		// define session array
@@ -28,6 +28,10 @@ class session
 		if($_meta)
 		{
 			$session['meta'] = $_meta;
+		}
+		if($_id & is_numeric($_id))
+		{
+			$session['id'] = $_id;
 		}
 		// save in options table and if successful return session_id
 		if(\lib\utility\option::set($session, true))
@@ -47,23 +51,25 @@ class session
 	 * @param  boolean $_meta   [description]
 	 * @return [type]           [description]
 	 */
-	public static function save_once($_userid, $_meta = false, $_like = true)
+	public static function save_once($_userid, $_meta = false, $_like = false)
 	{
 		if(!$_userid)
 		{
-			$_userid = 'IS NULL';
+			$_userid = null;
+			$userStr = 'IS NULL';
 		}
 		else
 		{
-			$_userid = '='.$_userid;
+			$userStr = '= '.$_userid;
+			// `user_id` $_userid AND
 		}
 		// create key value
 		$op_key = session_name();
 		// create query string
-		$qry = "SELECT `option_value`
+		$qry = "SELECT *
 			FROM options
 			WHERE
-				`user_id` $_userid AND
+
 				`option_cat` = 'session' AND
 				`option_key` = '$op_key'
 		";
@@ -81,21 +87,47 @@ class session
 			$qry .= "AND `option_meta` $_like '$_meta'";
 		}
 		// run query and get result
-		$session_id = \lib\db::get($qry, 'option_value', true);
-		// if session exist restart session with new id
-		if($session_id)
-		{
-			self::restart($session_id);
-		}
-		// else if session is not exist for this condition
-		else
+		$session_exist = \lib\db::get($qry, null, true);
+		$session_id    = null;
+
+		// if record is not exist save session for first time
+		if(!isset($session_exist['option_value']))
 		{
 			$session_id = self::save($_userid, $_meta);
 		}
+		// for other time, except first time want to add session
+		else
+		{
+			// get variables from datarow
+			$session_id     = $session_exist['option_value'];
+			$option_id      = $session_exist['id'];
+			$option_user_id = $session_exist['user_id'];
+			// if session id is not true return false!
+			if(!$session_id)
+			{
+				return false;
+			}
+			// restart session to use our session id
+			self::restart($session_id);
+
+			// if user_id is not set for this user
+			// and this is first time we want to add to database
+			// call save to save existing session record
+			if($_userid && !$option_user_id)
+			{
+				$session_id = self::save($_userid, $_meta, $option_id);
+			}
+		}
+		// if successfully changed session return session id
 		return $session_id;
 	}
 
 
+	/**
+	 * restart session with new session id
+	 * @param  [type] $_session_id new session id
+	 * @return [type]              [description]
+	 */
 	public static function restart($_session_id)
 	{
 		// if a session is currently opened, close it
