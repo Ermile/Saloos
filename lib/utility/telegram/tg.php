@@ -6,7 +6,7 @@ class tg
 {
 	/**
 	 * this library get and send telegram messages
-	 * v11.4
+	 * v11.5
 	 */
 	public static $api_key     = null;
 	public static $name        = null;
@@ -156,9 +156,13 @@ class tg
 				// require chat id
 				$_prop['chat_id']    = self::response('chat');
 				// add reply message id
-				if(self::response('message_id'))
+				if(isset($_prop['reply_to_message_id']) && $_prop['reply_to_message_id'] === true)
 				{
-					$_prop['reply_to_message_id'] = self::response('message_id');
+					$_prop['reply_to_message_id'] = $rsp;
+					if(!$_prop['reply_to_message_id'])
+					{
+						unset($_prop['reply_to_message_id']);
+					}
 				}
 				break;
 
