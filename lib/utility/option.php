@@ -6,7 +6,7 @@ class option
 {
 	/**
 	 * this library get options from db only one times!
-	 * v1.6
+	 * v1.7
 	 */
 
 	// declare private static variable to save options
@@ -306,7 +306,7 @@ class option
 	 * set new record in options
 	 * @param [array] $_args contain key and value of new record
 	 */
-	public static function set($_args, $_ifExistUpdate = false)
+	public static function set($_args, $_ifExistUpdate = true)
 	{
 		$datarow =
 		[
@@ -403,7 +403,17 @@ class option
 		$qry_fields = implode(', ', array_keys($datarow));
 		foreach ($datarow as $key => $value)
 		{
-			$datarow[$key] = "'". $value. "'";
+			switch ($key)
+			{
+				case 'user_id':
+				case 'post_id':
+					$datarow[$key] = $value;
+					break;
+
+				default:
+					$datarow[$key] = "'". $value. "'";
+					break;
+			}
 		}
 		$qry_values = implode(', ', $datarow);
 		// connect to database

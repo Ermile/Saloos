@@ -6,7 +6,7 @@ class session
 {
 	/**
 	 * this library work with session
-	 * v2.2
+	 * v2.3
 	 */
 
 
@@ -22,7 +22,7 @@ class session
 		[
 			'user'  => $_userid,
 			'cat'   => 'session',
-			'key'   => session_name().'__USER_',
+			'key'   => session_name(),
 			'value' => $session_id,
 		];
 		if($_meta)
@@ -30,7 +30,7 @@ class session
 			$session['meta'] = $_meta;
 		}
 		// save in options table and if successful return session_id
-		if(\lib\utility\option::set($session))
+		if(\lib\utility\option::set($session, true))
 		{
 			return $session_id;
 		}
@@ -47,10 +47,14 @@ class session
 	 * @param  boolean $_meta   [description]
 	 * @return [type]           [description]
 	 */
-	public static function save_once($_userid, $_meta = false)
+	public static function save_once($_userid, $_meta = false, $_like = true)
 	{
+		if(!$_userid)
+		{
+			$_userid = 'NULL';
+		}
 		// create key value
-		$op_key = session_name().'_'. $_userid;
+		$op_key = session_name();
 		// create query string
 		$qry = "SELECT `option_value`
 			FROM options
@@ -62,7 +66,15 @@ class session
 		// if we have meta then add it to query
 		if($_meta)
 		{
-			$qry .= "AND `option_meta` = '$_meta'";
+			if($_like)
+			{
+				$_like = "LIKE";
+			}
+			else
+			{
+				$_like = '=';
+			}
+			$qry .= "AND `option_meta` $_like '$_meta'";
 		}
 		// run query and get result
 		$session_id = \lib\db::get($qry, 'option_value', true);
