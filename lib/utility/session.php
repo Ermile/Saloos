@@ -6,7 +6,7 @@ class session
 {
 	/**
 	 * this library work with session
-	 * v2.3
+	 * v2.4
 	 */
 
 
@@ -51,7 +51,11 @@ class session
 	{
 		if(!$_userid)
 		{
-			$_userid = 'NULL';
+			$_userid = 'IS NULL';
+		}
+		else
+		{
+			$_userid = '='.$_userid;
 		}
 		// create key value
 		$op_key = session_name();
@@ -59,7 +63,7 @@ class session
 		$qry = "SELECT `option_value`
 			FROM options
 			WHERE
-				`user_id` = $_userid AND
+				`user_id` $_userid AND
 				`option_cat` = 'session' AND
 				`option_key` = '$op_key'
 		";
