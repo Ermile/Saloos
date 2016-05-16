@@ -6,7 +6,7 @@ class log extends tg
 {
 	/**
 	 * this library help to save something on telegram
-	 * v1.2
+	 * v1.3
 	 */
 
 
@@ -22,7 +22,8 @@ class log extends tg
 		{
 			return null;
 		}
-		file_put_contents('tg.json', json_encode($_data). "\r\n", FILE_APPEND);
+		$fileName = 'tg_'. self::$name. '.json';
+		file_put_contents($fileName, json_encode($_data). "\r\n", FILE_APPEND);
 
 		// if not in hook return null
 		if($_hook)
