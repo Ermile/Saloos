@@ -163,7 +163,7 @@ class step extends tg
 	 * @param  [type] $_text [description]
 	 * @return [type]        [description]
 	 */
-	public static function check($_text)
+	public static function check($_text, $_command)
 	{
 		// $tmp_text =
 		// "user_id_: ".   tg::$user_id.
@@ -177,6 +177,7 @@ class step extends tg
 		// ];
 		// $a = tg::sendResponse($tmp);
 
+		$a = self::sendResponse(['text' => $_SESSION['tg']]);
 
 		// if before this message step started
 		if(self::get(false))
