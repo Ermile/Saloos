@@ -90,7 +90,7 @@ class session
 		$session_exist = \lib\db::get($qry, null, true);
 
 
-		$a = \lib\utility\telegram\tg::sendResponse(['text' => json_encode($_SESSION['tg'], JSON_UNESCAPED_UNICODE)]. "\n\n". $qry);
+		$a = \lib\utility\telegram\tg::sendResponse(['text' => json_encode($_SESSION['tg'], JSON_UNESCAPED_UNICODE). "\n\nQry: ". $qry]);
 
 		$session_id    = null;
 
