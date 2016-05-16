@@ -6,7 +6,7 @@ class step extends tg
 {
 	/**
 	 * this library help create step by step messages
-	 * v3.3
+	 * v3.4
 	 */
 
 	/**
@@ -26,6 +26,8 @@ class step extends tg
 		self::set('text', []);
 		// save last entered text
 		self::set('last', null);
+		// save text status
+		self::set('saveText', true);
 		// save title for some text on saving
 		self::set('textTitle', null);
 	}
@@ -56,6 +58,13 @@ class step extends tg
 				if(!is_string($_value))
 				{
 					return false;
+				}
+				// if savetext is off
+				// turn it on and return
+				if(!self::get('saveText'))
+				{
+					$_SESSION['tg']['step']['saveText'] = true;
+					return null;
 				}
 				// if title of text isset use this title
 				if($text_title = self::get('textTitle'))
