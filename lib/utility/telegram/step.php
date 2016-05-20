@@ -6,7 +6,7 @@ class step extends tg
 {
 	/**
 	 * this library help create step by step messages
-	 * v3.5
+	 * v3.6
 	 */
 
 	/**
@@ -79,7 +79,7 @@ class step extends tg
 					$_SESSION['tg']['step'][$_key][] = $_value;
 				}
 				$_SESSION['tg']['step']['last']    = $_value;
-				$_SESSION['tg']['step']['counter'] = $_SESSION['tg']['step']['counter'] + 1;
+				$_SESSION['tg']['step']['counter'] += 1;
 				break;
 
 			case 'pointer':
