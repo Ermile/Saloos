@@ -1,8 +1,8 @@
 <?php
-namespace lib\utility;
+namespace lib\db;
 
-/** account managing **/
-class account
+/** users account managing **/
+class users
 {
 	/**
 	 * this library work with acoount

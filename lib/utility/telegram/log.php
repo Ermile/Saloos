@@ -87,8 +87,8 @@ class log extends tg
 			// if user send contact detail save as normal user
 			if(isset($contact['phone_number']))
 			{
-				\lib\utility\account::signup($contact['phone_number'], 'telegram', true, $meta['full_name']);
-				self::$user_id = \lib\utility\account::$user_id;
+				\lib\db\users::signup($contact['phone_number'], 'telegram', true, $meta['full_name']);
+				self::$user_id = \lib\db\users::$user_id;
 			}
 			// if user send contact detail then save all of his/her profile photos
 			self::sendResponse(['method' => 'getUserProfilePhotos']);

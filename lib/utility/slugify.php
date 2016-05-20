@@ -6,7 +6,7 @@ class slugify
 {
 	/**
 	 * Slugify
-	 * v2.3
+	 * v2.4
 	 * https://github.com/cocur/slugify
 	 *
 	 * @package   org.cocur.slugify
@@ -792,6 +792,10 @@ class slugify
 			'نوشته'		=>'neveshte',
 			'نظرسنجی'	=>'poll',
 			'نظر سنجی'	=>'poll',
+			'شما'		=>'nazar',
+			'مورد'		=>'mored',
+			'کیفیت'		=>'keyfiat',
+			'اینترنت'	=>'internet',
 
 
 
