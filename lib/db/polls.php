@@ -6,7 +6,7 @@ class polls
 {
 	/**
 	 * this library work with acoount
-	 * v1.0
+	 * v1.1
 	 */
 
 
@@ -62,7 +62,7 @@ class polls
 	 * save poll into database
 	 * @return [type] [description]
 	 */
-	private static function save($_input, $_user_id)
+	public static function save($_input, $_user_id)
 	{
 		// return false if count of input value less than 3
 		// 1 question
@@ -155,8 +155,5 @@ class polls
 		// save in options table and if successful return session_id
 		return \lib\utility\option::set($option_data, true);
 	}
-
-
-
 }
 ?>
