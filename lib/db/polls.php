@@ -6,7 +6,7 @@ class polls
 {
 	/**
 	 * this library work with acoount
-	 * v1.1
+	 * v2.0
 	 */
 
 
@@ -22,7 +22,7 @@ class polls
 		// calc type if needed
 		if($_type === null)
 		{
-			$_type = "post_type LIKE 'poll_%'";
+			$_type = "post_type LIKE 'poll\_%'";
 		}
 		else
 		{
@@ -59,6 +59,93 @@ class polls
 
 
 	/**
+	 * return last question for this user
+	 * @param  [type] $_user_id [description]
+	 * @param  string $_type    [description]
+	 * @return [type]           [description]
+	 */
+	public static function getLast($_user_id, $_type = 'sarshomar')
+	{
+		// calc type if needed
+		if($_type === null)
+		{
+			$_type = "post_type LIKE 'poll\_%'";
+		}
+		else
+		{
+			$_type = "post_type = 'poll_". $_type. "'";
+		}
+
+		$qry ="SELECT
+				posts.id as id,
+				posts.post_title as question,
+				options.option_meta as answers
+			FROM posts
+			LEFT JOIN `options` ON `options`.post_id = posts.id
+			WHERE
+				$_type AND
+				post_status = 'publish' AND
+				posts.id NOT IN
+				(
+					SELECT post_id FROM options
+						WHERE
+						`options`.option_cat LIKE 'polls\_%' AND
+						`options`.option_key LIKE 'answer\_%'AND
+						`options`.user_id = $_user_id
+				)
+			GROUP BY posts.id
+			ORDER BY posts.id ASC
+			LIMIT 1
+		";
+
+		$result      = \lib\db::get($qry, null, true);
+		$returnValue = ['id' => null, 'question' => null, 'answers' => null];
+		if(isset($result['question']))
+		{
+			$returnValue['id']       = $result['id'];
+			$returnValue['question'] = $result['question'];
+		}
+		if(isset($result['answers']))
+		{
+			$returnValue['answers'] = json_decode($result['answers'], true);
+			$returnValue['answers'] = array_column($returnValue['answers'], 'txt', 'id');
+		}
+		return $returnValue;
+	}
+
+
+	/**
+	 * get list of questions that this user answered
+	 * @param  [type] $_user_id [description]
+	 * @param  string $_type    [description]
+	 * @return [type]           [description]
+	 */
+	public static function getAnweredList($_user_id, $_type = 'sarshomar', $_return = null)
+	{
+		// calc type if needed
+		if($_type === null)
+		{
+			$_type = "post_type LIKE 'poll\_%'";
+		}
+		else
+		{
+			$_type = "post_type = 'poll_". $_type. "'";
+		}
+
+		$qry ="SELECT * FROM posts
+			LEFT JOIN `options` ON `options`.post_id = posts.id
+
+			WHERE
+				$_type AND
+
+		";
+
+		$result = \lib\db::get($qry, $_return);
+		return $result;
+	}
+
+
+	/**
 	 * save poll into database
 	 * @return [type] [description]
 	 */
@@ -75,11 +162,9 @@ class polls
 		$question = $_input['question'];
 		unset($_input['question']);
 		// save question into post table
-		$saveQusStatus = self::saveQuestion($question, $_input, $_user_id);
-		// save answers into options table
-		$saveAnsStatus = self::saveAnswers($_input, $saveQusStatus);
+		$saveResult = self::saveQuestion($question, $_input, $_user_id);
 		// return final result
-		return $saveAnsStatus;
+		return $saveResult;
 	}
 
 
@@ -93,7 +178,7 @@ class polls
 	{
 		$slug         = \lib\utility\filter::slug($_question);
 		$url          = 'civility/'.$_user_id.'/'.$slug;
-		$_answersList = json_encode($_answersList, JSON_UNESCAPED_UNICODE);
+		$myAnswersList = json_encode($_answersList, JSON_UNESCAPED_UNICODE);
 		$pubDate      = date('Y-m-d H:i:s');
 		// create query string
 		$qry = "INSERT INTO posts
@@ -114,16 +199,19 @@ class polls
 			'$_question',
 			'$slug',
 			'$url',
-			'$_answersList',
+			'$myAnswersList',
 			'poll',
 			'draft',
 			'$pubDate',
 			$_user_id
 		)";
 		// run query
-		$result  = \lib\db::query($qry);
+		$result        = \lib\db::query($qry);
 		// return last insert id
-		return \lib\db::insert_id();
+		$questionId    = \lib\db::insert_id();
+		// save answers into options table
+		$saveAnsStatus = self::saveAnswersList($_answersList, $questionId);
+		return $saveAnsStatus;
 	}
 
 
@@ -132,7 +220,7 @@ class polls
 	 * @param  [type] $_answersList raw answer list
 	 * @return [type]               [description]
 	 */
-	public static function saveAnswers($_answersList, $_post_id)
+	public static function saveAnswersList($_answersList, $_post_id)
 	{
 		$answers = [];
 		$max_ans = 10;
@@ -150,6 +238,37 @@ class polls
 			'key'    => 'answers_'.$_post_id,
 			'value'  => "",
 			'meta'   => $answers,
+			'status' => 'enable',
+		];
+		// save in options table and if successful return session_id
+		return \lib\utility\option::set($option_data, true);
+	}
+
+
+	/**
+	 * save user answer into options table
+	 * @param  [type] $_user_id [description]
+	 * @param  [type] $_post_id [description]
+	 * @param  [type] $_answer  [description]
+	 * @return [type]           [description]
+	 */
+	public static function saveAnswer($_user_id, $_post_id, $_answer, $_answer_txt = null)
+	{
+		$meta =
+		[
+			'question'   => $_post_id,
+			'answer'     => $_answer,
+			'answer_txt' => $_answer_txt,
+			'date'       => date('Y-m-d H:i:s')
+		];
+		$option_data =
+		[
+			'user'   => $_user_id,
+			'post'   => $_post_id,
+			'cat'    => 'polls_'. $_user_id,
+			'key'    => 'answer_'.$_post_id,
+			'value'  => $_answer,
+			'meta'   => $meta,
 			'status' => 'enable',
 		];
 		// save in options table and if successful return session_id
