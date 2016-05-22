@@ -6,7 +6,7 @@ class polls
 {
 	/**
 	 * this library work with acoount
-	 * v2.0
+	 * v2.1
 	 */
 
 
@@ -273,6 +273,24 @@ class polls
 		];
 		// save in options table and if successful return session_id
 		return \lib\utility\option::set($option_data, true);
+	}
+
+
+	/**
+	 * delete answers of specefic user
+	 * @param  [type] $_user_id [description]
+	 * @return [type]           [description]
+	 */
+	public static function removeUserAnswers($_user_id)
+	{
+		$qry = "DELETE FROM options
+			WHERE
+				user_id = $_user_id AND
+				option_cat = 'poll_$_user_id' AND
+				option_key LIKE 'answer\_%'
+			";
+		$result = \lib\db::query($qry);
+		return $result;
 	}
 }
 ?>
