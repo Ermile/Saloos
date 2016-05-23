@@ -79,7 +79,12 @@ class step extends tg
 					$_SESSION['tg']['step'][$_key][] = $_value;
 				}
 				$_SESSION['tg']['step']['last']    = $_value;
-				$_SESSION['tg']['step']['counter'] += 1;
+				$increase = 1;
+				if(isset($_SESSION['tg']['step']['counter']))
+				{
+					$increase += $_SESSION['tg']['step']['counter'];
+				}
+				$_SESSION['tg']['step']['counter'] = $increase;
 				break;
 
 			case 'pointer':

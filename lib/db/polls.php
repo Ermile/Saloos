@@ -93,7 +93,6 @@ class polls
 						`options`.option_key LIKE 'answer\_%'AND
 						`options`.user_id = $_user_id
 				)
-			GROUP BY posts.id
 			ORDER BY posts.id ASC
 			LIMIT 1
 		";

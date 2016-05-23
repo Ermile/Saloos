@@ -796,6 +796,9 @@ class slugify
 			'مورد'		=>'mored',
 			'کیفیت'		=>'keyfiat',
 			'اینترنت'	=>'internet',
+			'تامنون'		=>'takonon',
+			'روش'		=>'ravesh',
+			'استفاده'		=>'estefade',
 
 
 
