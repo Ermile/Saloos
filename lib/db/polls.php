@@ -6,7 +6,7 @@ class polls
 {
 	/**
 	 * this library work with acoount
-	 * v2.3
+	 * v2.4
 	 */
 
 
@@ -112,6 +112,7 @@ class polls
 			$tagList                 = \lib\db\tags::usage($returnValue['id']);
 			foreach ($tagList as $key => $value)
 			{
+				$value = str_replace(' ', '_', $value);
 				$returnValue['tags'] .= "#". $value.' ';
 			}
 			var_dump($returnValue['tags']);
