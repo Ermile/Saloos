@@ -6,7 +6,7 @@ class log extends tg
 {
 	/**
 	 * this library help to save something on telegram
-	 * v1.5
+	 * v2.0
 	 */
 
 
@@ -83,15 +83,46 @@ class log extends tg
 
 		if($contact = self::response('contact', null))
 		{
-			$meta = array_merge($meta, $contact);
-			// if user send contact detail save as normal user
+			$from            = self::response('from', null);
+			$mobile          = null;
+			// set like contact
+			$from['user_id'] = $from['id'];
+			// remove from values to being like contact array
+			unset($from['id']);
+			unset($from['username']);
+			// if mobile isset, use it
 			if(isset($contact['phone_number']))
 			{
-				\lib\db\users::signup($contact['phone_number'], 'telegram', true, $meta['full_name']);
-				self::$user_id = \lib\db\users::$user_id;
+				$mobile = $contact['phone_number'];
+				unset($contact['phone_number']);
 			}
-			// if user send contact detail then save all of his/her profile photos
-			self::sendResponse(['method' => 'getUserProfilePhotos']);
+			// if user send contact detail save as normal user
+			if($mobile)
+			{
+				// save user, not important this is correct or not!
+				\lib\db\users::signup($mobile, 'telegram', true, $meta['full_name']);
+				// if this is for current user
+				if($from == $contact)
+				{
+					self::$user_id = \lib\db\users::$user_id;
+					$meta          = array_merge($meta, $contact);
+					// if user send contact detail then save all of his/her profile photos
+					self::sendResponse(['method' => 'getUserProfilePhotos']);
+				}
+				// else ask real contact detail
+				else
+				{
+					// set fake value for this contact
+					self::$hook['message']['contact']['fake'] = true;
+					// do nothing!
+				}
+			}
+			else
+			{
+				self::$hook['message']['contact']['fake'] = true;
+				self::$hook['message']['contact']['phone_number'] = false;
+				// self::sendResponse(['text' => T_('We need mobile number!')]);
+			}
 		}
 		elseif($location = self::response('location'))
 		{

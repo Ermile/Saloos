@@ -6,7 +6,7 @@ class tg
 {
 	/**
 	 * this library get and send telegram messages
-	 * v11.5
+	 * v12.0
 	 */
 	public static $api_key     = null;
 	public static $name        = null;
@@ -346,7 +346,14 @@ class tg
 					&& isset(self::$hook['message']['contact']['phone_number'])
 				)
 				{
-					$data = 'type_phone_number '. self::$hook['message']['contact']['phone_number'];
+					if(isset(self::$hook['message']['contact']['fake']))
+					{
+						$data = 'type_phone_number '. self::$hook['message']['contact']['phone_number'] .' fake';
+					}
+					else
+					{
+						$data = 'type_phone_number '. self::$hook['message']['contact']['phone_number'];
+					}
 				}
 				elseif(isset(self::$hook['message']['location'])
 					&& isset(self::$hook['message']['location']['longitude'])

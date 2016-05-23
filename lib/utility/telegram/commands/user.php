@@ -51,7 +51,7 @@ class user
 				break;
 
 			case 'type_phone_number':
-				$response = self::register('شماره موبایل');
+				$response = self::register('شماره موبایل', $_cmd);
 				break;
 
 			case 'type_location':
@@ -183,14 +183,30 @@ class user
 	 * get phone number from user contact
 	 * @return [type] [description]
 	 */
-	public static function register($_type = null)
+	public static function register($_type = null, $_cmd = null)
 	{
+		// output text
+		$text = $_type. ' شما با موفقیت ثبت شد.';
+		// if is fake return false;
+		if($_cmd['argument'] === 'fake')
+		{
+			if($_cmd['optional'])
+			{
+				$text = 'ما به اطلاعات مخاطب شما نیاز داریم، نه سایر کاربران!';
+			}
+			else
+			{
+				$text = 'ما برای ثبت‌نام به شماره موبایل احتیاج داریم!';
+			}
+		}
 		if(!$_type)
+		{
 			return false;
+		}
 		$result =
 		[
 			[
-				'text'  => $_type. ' شما با موفقیت ثبت شد.',
+				'text'  => $text,
 			],
 		];
 
