@@ -218,6 +218,18 @@ class user
 				break;
 
 			case 'type_audio':
+					$text = 'من فرصت آهنگ گوش کردن ندارم!';
+				break;
+
+			case 'type_sticker':
+					$text = 'ممنون از ابراز لطف شما';
+				break;
+
+			case 'type_video':
+					$text = 'حسابی سرم شلوفه، فکر نکنم وقت فیلم دیدن باشه!';
+				break;
+
+			case 'type_voice':
 					$text = 'خیلی مونده تا بخوام صدا رو تشخیص بدم!';
 				break;
 
