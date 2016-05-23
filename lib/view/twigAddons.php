@@ -95,44 +95,43 @@ trait twigAddons{
 		});
 	}
 
-    public function twig_function_breadcrumb()
-    {
+	public function twig_function_breadcrumb()
+	{
 		return new \Twig_SimpleFunction('breadcrumb', function ($_path = null)
 		{
-	        // if user dont pass a path give it from controller
-	        if(!$_path)
-	        {
+			// if user dont pass a path give it from controller
+			if(!$_path)
+			{
 				$myurl = $this->model()->breadcrumb();
 				$_path = $this->url('breadcrumb');
-	        }
-	        $currentUrl = null;
-	        $result = '<a href="/" tabindex="-1"><i class="fa fa-home"></i> '.T_('Home').'</a>';
+			}
+			$currentUrl = null;
+			$result = '<a href="/" tabindex="-1"><i class="fa fa-home"></i> '.T_('Home').'</a>';
 
-	        foreach ($myurl as $key => $part)
-	        {
-	        	if($part != '$')
-	        	{
-                    $currentUrl .= '/' . $_path[$key];
-                    $location = T_(ucfirst($part));
-                    if(end($myurl) === $part)
-                    {
-            		$result .= "<a>$location</a>";
-                    }
-                    else
-                    {
-            		$result .= "<a href='".Protocol."://".
-            			(SubDomain? SubDomain.'.': '').Domain.'.'.Tld.
-            			"$currentUrl' tabindex='-1'>$location</a>";
-                    }
-	        	}
-	        }
+			foreach ($myurl as $key => $part)
+			{
+				if($part != '$')
+				{
+					$currentUrl .= $_path[$key];
+					$location   = T_(ucfirst($part));
+					if(end($myurl) === $part)
+					{
+						$result .= "<a>$location</a>";
+					}
+					else
+					{
+						$baseURL = $this->data->url->base;
+						$result .= "<a href='$baseURL$currentUrl' tabindex='-1'>$location</a>";
+					}
+				}
+			}
 
-	        echo $result;
+			echo $result;
 		});
-    }
+	}
 
-    public function twig_function_posts()
-    {
+	public function twig_function_posts()
+	{
 		return new \Twig_SimpleFunction('posts', function ()
 		{
 			$posts  = $this->model()->posts(...func_get_args());
@@ -165,6 +164,6 @@ trait twigAddons{
 			}
 
 		});
-    }
+	}
 }
 ?>
