@@ -6,7 +6,7 @@ class polls
 {
 	/**
 	 * this library work with acoount
-	 * v2.1
+	 * v2.2
 	 */
 
 
@@ -286,7 +286,7 @@ class polls
 		$qry = "DELETE FROM options
 			WHERE
 				user_id = $_user_id AND
-				option_cat = 'poll_$_user_id' AND
+				option_cat = 'polls_$_user_id' AND
 				option_key LIKE 'answer\_%'
 			";
 		$result = \lib\db::query($qry);
