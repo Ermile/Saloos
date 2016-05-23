@@ -233,19 +233,43 @@ trait config
 		$mydomain = self::get_domain(-1);
 		// if another domain language is not exist then set com
 		if($_arg=='tld')
+		{
 			return $mydomain[count($mydomain)-1];
+		}
 		// if arg has a any value return domain name without tld
 		elseif($_arg)
+		{
 			return $mydomain[count($mydomain)-2];
+		}
 
 		// if user don't pass a parameter and count of current domain allow set domain name
 		if(count($mydomain) > 1)
+		{
 			$myvalue = $mydomain[count($mydomain)-2].'.';
+		}
 
 		// add com for sample.com to myvalue name
 		$myvalue .= $mydomain[count($mydomain)-1];
 
 		return $myvalue;
+	}
+
+
+	public static function get_real_domain()
+	{
+		$domain = self::get_domain(-1);
+		$result = $domain;
+		if(count($domain) === 3)
+		{
+			$sub = $domain[0];
+			// remove subdomain
+			array_shift($domain);
+			// add subdomain as part of url
+			array_push($domain, $sub);
+			$result = $domain[0].'.'. $domain[1].'/'.$domain[2];
+		}
+
+		return $result;
 	}
 
 	public static function get_domain($search = null){

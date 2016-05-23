@@ -31,7 +31,7 @@ class redirector
 		else
 		{
 			$newLocation = $this->get_protocol() . '://';
-			$newLocation .= $this->get_domain() . '/';
+			$newLocation .= $this->get_real_domain() . '/';
 			$newLocation .= $this->get_url();
 		}
 
