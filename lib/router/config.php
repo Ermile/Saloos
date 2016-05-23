@@ -268,6 +268,10 @@ trait config
 			array_push($domain, $sub);
 			$result = $domain[0].'.'. $domain[1].'/'.$domain[2];
 		}
+		else
+		{
+			$result = self::get_domain();
+		}
 
 		return $result;
 	}
