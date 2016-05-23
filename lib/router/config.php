@@ -408,6 +408,10 @@ trait config
 				return $myurl;
 				break;
 
+			// return full url of referrer
+			case 'full':
+				$myurl = $_url;
+				break;
 
 			default:
 				$myurl = null;
