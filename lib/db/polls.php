@@ -6,7 +6,7 @@ class polls
 {
 	/**
 	 * this library work with acoount
-	 * v2.2
+	 * v2.3
 	 */
 
 
@@ -98,17 +98,30 @@ class polls
 		";
 
 		$result      = \lib\db::get($qry, null, true);
-		$returnValue = ['id' => null, 'question' => null, 'answers' => null];
+		$returnValue =
+		[
+			'id'       => null,
+			'question' => null,
+			'answers'  => null,
+			'tags'     => null,
+		];
 		if(isset($result['question']))
 		{
 			$returnValue['id']       = $result['id'];
 			$returnValue['question'] = $result['question'];
+			$tagList                 = \lib\db\tags::usage($returnValue['id']);
+			foreach ($tagList as $key => $value)
+			{
+				$returnValue['tags'] .= "#". $value.' ';
+			}
+			var_dump($returnValue['tags']);
 		}
 		if(isset($result['answers']))
 		{
 			$returnValue['answers'] = json_decode($result['answers'], true);
 			$returnValue['answers'] = array_column($returnValue['answers'], 'txt', 'id');
 		}
+
 		return $returnValue;
 	}
 

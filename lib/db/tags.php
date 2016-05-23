@@ -6,7 +6,7 @@ class tags
 {
 	/**
 	 * this library work with tags
-	 * v1.0
+	 * v1.1
 	 */
 
 
@@ -21,13 +21,20 @@ class tags
 	public static function usage($_post_id, $_return = null, $_foreign = null, $_seperator = false)
 	{
 		$result = terms::usage($_post_id, $_return, $_foreign, 'tag');
-		if($_seperator && $result)
+		if($_seperator)
 		{
-			if($_seperator === true)
+			if(is_array($result) && $result)
 			{
-				$_seperator = ', ';
+				if($_seperator === true)
+				{
+					$_seperator = ', ';
+				}
+				$result = implode($result, $_seperator);
 			}
-			$result = implode($result, $_seperator);
+			else
+			{
+				$result = "";
+			}
 		}
 		return $result;
 	}
