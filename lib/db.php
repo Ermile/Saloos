@@ -6,7 +6,7 @@ class db
 {
 	/**
 	 * this library doing useful db actions
-	 * v3.4
+	 * v4.0
 	 */
 
 	// save link to database
@@ -166,9 +166,31 @@ class db
 			}
 		}
 		// give only one column of result
-		if($result && $_field !== null && !is_array($_field))
+		if($result && $_field !== null)
 		{
-			$result = array_column($result, $_field);
+			if(is_array($_field))
+			{
+				// if pass 2 field use one as key and another as value of result
+				if(count($_field) === 2 && isset($_field[0]) && isset($_field[1]))
+				{
+					$result_key   = array_column($result, $_field[0]);
+					$result_value = array_column($result, $_field[1]);
+					if($result_key && $result_value)
+					{
+						// for two field use array_combine
+						$result = array_combine($result_key, $result_value);
+					}
+				}
+				else
+				{
+					// need more than 2 field
+				}
+
+			}
+			else
+			{
+				$result = array_column($result, $_field);
+			}
 		}
 		// return result
 		return $result;
