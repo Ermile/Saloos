@@ -50,7 +50,7 @@ class user
 				$response = self::contact();
 				break;
 
-			case 'type_phone_number':
+			case 'type_contact':
 				$response = self::register('شماره موبایل', $_cmd);
 				break;
 
@@ -58,6 +58,15 @@ class user
 				$response = self::register('آدرس');
 				break;
 
+			case 'type_audio':
+			case 'type_document':
+			case 'type_photo':
+			case 'type_sticker':
+			case 'type_video':
+			case 'type_voice':
+			case 'type_venue':
+				$response = self::register($_cmd['command'], $_cmd);
+				break;
 
 			case '/help':
 			case 'help':
@@ -185,23 +194,36 @@ class user
 	 */
 	public static function register($_type = null, $_cmd = null)
 	{
-		// output text
-		$text = $_type. ' شما با موفقیت ثبت شد.';
-		// if is fake return false;
-		if($_cmd['argument'] === 'fake')
-		{
-			if($_cmd['optional'])
-			{
-				$text = 'ما به اطلاعات مخاطب شما نیاز داریم، نه سایر کاربران!';
-			}
-			else
-			{
-				$text = 'ما برای ثبت‌نام به شماره موبایل احتیاج داریم!';
-			}
-		}
 		if(!$_type)
 		{
 			return false;
+		}
+		// output text
+		$text = $_type. ' شما با موفقیت ثبت شد.';
+		// if is fake return false;
+		switch ($_cmd['command'])
+		{
+			case 'type_contact':
+				if($_cmd['argument'] === 'fake')
+				{
+					if($_cmd['optional'])
+					{
+						$text = 'ما به اطلاعات مخاطب شما نیاز داریم، نه سایر کاربران!';
+					}
+					else
+					{
+						$text = 'ما برای ثبت‌نام به شماره موبایل احتیاج داریم!';
+					}
+				}
+				break;
+
+			case 'type_audio':
+					$text = 'خیلی مونده تا بخوام صدا رو تشخیص بدم!';
+				break;
+
+			default:
+					$text = 'من هنوز اونقدر پیشرفته نشدم!';
+				break;
 		}
 		$result =
 		[

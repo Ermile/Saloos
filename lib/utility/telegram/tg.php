@@ -6,7 +6,7 @@ class tg
 {
 	/**
 	 * this library get and send telegram messages
-	 * v12.0
+	 * v12.1
 	 */
 	public static $api_key     = null;
 	public static $name        = null;
@@ -348,11 +348,11 @@ class tg
 				{
 					if(isset(self::$hook['message']['contact']['fake']))
 					{
-						$data = 'type_phone_number '. self::$hook['message']['contact']['phone_number'] .' fake';
+						$data = 'type_contact '. self::$hook['message']['contact']['phone_number'] .' fake';
 					}
 					else
 					{
-						$data = 'type_phone_number '. self::$hook['message']['contact']['phone_number'];
+						$data = 'type_contact '. self::$hook['message']['contact']['phone_number'];
 					}
 				}
 				elseif(isset(self::$hook['message']['location'])
@@ -364,7 +364,34 @@ class tg
 					$data .= self::$hook['message']['location']['longitude']. ' ';
 					$data .= self::$hook['message']['location']['latitude'];
 				}
-
+				elseif(isset(self::$hook['message']['audio']))
+				{
+					$data = 'type_audio ';
+				}
+				elseif(isset(self::$hook['message']['document']))
+				{
+					$data = 'type_document ';
+				}
+				elseif(isset(self::$hook['message']['photo']))
+				{
+					$data = 'type_photo ';
+				}
+				elseif(isset(self::$hook['message']['sticker']))
+				{
+					$data = 'type_sticker ';
+				}
+				elseif(isset(self::$hook['message']['video']))
+				{
+					$data = 'type_video ';
+				}
+				elseif(isset(self::$hook['message']['voice']))
+				{
+					$data = 'type_voice ';
+				}
+				elseif(isset(self::$hook['message']['venue']))
+				{
+					$data = 'type_venue ';
+				}
 
 				// remove @bot_name
 				$data = str_replace('@'.self::$name, '', $data);
