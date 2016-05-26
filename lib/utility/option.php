@@ -6,7 +6,7 @@ class option
 {
 	/**
 	 * this library get options from db only one times!
-	 * v2.0
+	 * v2.1
 	 */
 
 	// declare private static variable to save options
@@ -370,6 +370,10 @@ class option
 		{
 			$datarow['option_value'] = $_args['value'];
 		}
+		else
+		{
+			$datarow['option_value'] = null;
+		}
 
 		// add option meta if set
 		if(isset($_args['meta']))
@@ -399,6 +403,12 @@ class option
 			$datarow['option_status'] = $_args['status'];
 		}
 
+		// add date modified manually
+		if(isset($_args['modify']) && $_args['modify'] === 'now')
+		{
+			$datarow['date_modified'] = 'now()';
+		}
+
 		// create query string
 		$qry_fields = implode(', ', array_keys($datarow));
 		foreach ($datarow as $key => $value)
@@ -407,6 +417,7 @@ class option
 			{
 				case 'user_id':
 				case 'post_id':
+				case 'date_modified':
 					$datarow[$key] = $value;
 					break;
 
