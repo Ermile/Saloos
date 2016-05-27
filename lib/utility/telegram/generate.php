@@ -58,6 +58,10 @@ class generate extends tg
 			{
 				// then if not exist set default text
 				$answer = ['text' => self::$defaultText];
+				if(self::$defaultMenu)
+				{
+					$answer['reply_markup'] = self::$defaultMenu;
+				}
 			}
 		}
 		return $answer;

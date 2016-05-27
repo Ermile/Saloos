@@ -6,7 +6,7 @@ class tg
 {
 	/**
 	 * this library get and send telegram messages
-	 * v12.1
+	 * v12.2
 	 */
 	public static $api_key     = null;
 	public static $name        = null;
@@ -18,6 +18,7 @@ class tg
 	public static $fill        = null;
 	public static $user_id     = null;
 	public static $defaultText = 'Undefined';
+	public static $defaultMenu = null;
 	public static $saveDest    = root.'public_html/files/telegram/';
 	public static $priority    =
 	[
