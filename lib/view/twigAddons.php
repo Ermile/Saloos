@@ -105,6 +105,7 @@ trait twigAddons{
 				$myurl = $this->model()->breadcrumb();
 				$_path = $this->url('breadcrumb');
 			}
+			$direct = null;
 			if($_direct === true)
 			{
 				$direct = "data-direct";
