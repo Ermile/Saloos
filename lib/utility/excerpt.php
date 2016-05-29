@@ -75,6 +75,7 @@ class excerpt
 	{
 		if($_strip)
 		{
+			$_fulltext = str_replace('<br>', "\n", $_fulltext);
 			$_fulltext = strip_tags($_fulltext);
 			$_fulltext = str_replace(array("\n", "\r", "\t"), ' ', $_fulltext);
 			$_fulltext = preg_replace('/\s+/', ' ', $_fulltext);
