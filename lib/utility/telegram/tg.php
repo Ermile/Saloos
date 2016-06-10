@@ -6,7 +6,7 @@ class tg
 {
 	/**
 	 * this library get and send telegram messages
-	 * v12.2
+	 * v12.3
 	 */
 	public static $api_key     = null;
 	public static $name        = null;
@@ -101,7 +101,7 @@ class tg
 			'argument' => null,
 		];
 		// if debug mode is enable give text from get parameter
-		if(!$_input && \lib\utility\option::get('telegram', 'meta', 'debug'))
+		if(!$_input && \lib\utility\option::get('telegram', 'meta', 'debug') && \lib\utility::get('text'))
 		{
 			$_input = \lib\utility::get('text');
 		}
