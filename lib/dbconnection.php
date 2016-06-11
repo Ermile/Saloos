@@ -68,9 +68,18 @@ class dbconnection
 			{
 				// database does not exist, go to install page
 				// echo( "<p>".T_("We can't connect to correct database!")." " .T_("Please contact administrator!")."</p>" );
-				$redirector = new \lib\redirector();
-				$redirector->set_domain()->set_url('cp/install?time=first_time')->redirect();
-				// \lib\main::$controller->_processor(['force_stop' => true, 'force_json' => true]);
+				// if method exist, used for forms
+				if(method_exists(\lib\main::$controller, 'redirector'))
+				{
+					\lib\main::$controller->redirector()->set_domain()->set_url('cp/install?time=first_time');
+					\lib\main::$controller->_processor(['force_stop' => true, 'force_json' => true]);
+				}
+				// on normal pages
+				else
+				{
+					$redirector = new \lib\redirector();
+					$redirector->set_domain()->set_url('cp/install?time=first_time')->redirect();
+				}
 			}
 			else{
 				$this->error(self::$connection->connect_error, self::$connection->connect_errno);
