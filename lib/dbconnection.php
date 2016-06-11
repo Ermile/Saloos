@@ -62,14 +62,15 @@ class dbconnection
 			{
 				echo( "<p>".T_("We can't connect to database service!")." "
 							  .T_("Please contact administrator!")."</p>" );
-				\lib\main::$controller->_processor(array('force_stop' => true));
+				\lib\main::$controller->_processor(['force_stop' => true]);
 			}
 			else if(self::$connection->connect_errno == 1049 )
 			{
 				// database does not exist, go to install page
 				// echo( "<p>".T_("We can't connect to correct database!")." " .T_("Please contact administrator!")."</p>" );
-				\lib\main::$controller->redirector()->set_domain()->set_url('cp/install?time=first_time');
-				\lib\main::$controller->_processor(['force_stop' => true, 'force_json' => true]);
+				$redirector = new \lib\redirector();
+				$redirector->set_domain()->set_url('cp/install?time=first_time')->redirect();
+				// \lib\main::$controller->_processor(['force_stop' => true, 'force_json' => true]);
 			}
 			else{
 				$this->error(self::$connection->connect_error, self::$connection->connect_errno);
