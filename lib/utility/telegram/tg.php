@@ -6,7 +6,7 @@ class tg
 {
 	/**
 	 * this library get and send telegram messages
-	 * v12.3
+	 * v12.4
 	 */
 	public static $api_key     = null;
 	public static $name        = null;
@@ -154,8 +154,12 @@ class tg
 		{
 			// create send message format
 			case 'sendMessage':
-				// require chat id
-				$_prop['chat_id']    = self::response('chat');
+				// if chat id is not set then set it
+				if(!isset($_prop['chat_id']))
+				{
+					// require chat id
+					$_prop['chat_id']    = self::response('chat');
+				}
 				// add reply message id
 				if(isset($_prop['reply_to_message_id']) && $_prop['reply_to_message_id'] === true)
 				{
@@ -190,8 +194,11 @@ class tg
 			case 'sendContact':
 			case 'sendChatAction':
 			default:
-				// require chat id
-				$_prop['chat_id']    = self::response('chat');
+				if(!isset($_prop['chat_id']))
+				{
+					// require chat id
+					$_prop['chat_id']    = self::response('chat');
+				}
 				break;
 		}
 		// if array key exist but is null
