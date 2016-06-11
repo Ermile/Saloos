@@ -6,7 +6,7 @@ class db
 {
 	/**
 	 * this library doing useful db actions
-	 * v4.0
+	 * v4.1
 	 */
 
 	// save link to database
@@ -648,6 +648,10 @@ class db
 	{
 		// connect to main database
 		self::connect(true);
+		if(!self::$link)
+		{
+			return null;
+		}
 
 		$result   = mysqli_query(self::$link, $_qry);
 		if(!is_a($result, 'mysqli_result') && !$result)
