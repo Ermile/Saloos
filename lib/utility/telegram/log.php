@@ -6,7 +6,7 @@ class log extends tg
 {
 	/**
 	 * this library help to save something on telegram
-	 * v2.0
+	 * v2.1
 	 */
 
 
@@ -180,7 +180,7 @@ class log extends tg
 	private static function saveResponse($_data)
 	{
 		// if this result is not okay return false
-		if(!$_data['ok'])
+		if(!isset($_data['ok']))
 		{
 			return false;
 		}
