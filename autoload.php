@@ -121,14 +121,19 @@ class autoload
 	}
 }
 
-if(stream_resolve_include_path('iautoload.php')){
+if(stream_resolve_include_path('iautoload.php'))
+{
 	require_once ("iautoload.php");
 }
 // register autoload
 if(class_exists('iautoload'))
+{
 	spl_autoload_register("\iautoload::load");
+}
 else
+{
 	spl_autoload_register("\autoload::load");
+}
 
 
 /**
