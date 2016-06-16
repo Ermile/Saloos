@@ -21,8 +21,6 @@ if(!defined("lib"))
 	define("lib", "lib/");
 
 // set include path for lib
-set_include_path(get_include_path() . PATH_SEPARATOR . core.'saloos-addons/');
-set_include_path(get_include_path() . PATH_SEPARATOR . core);
 
 // Saloos plugin
 if(!defined("addons"))
@@ -40,6 +38,10 @@ if(!defined("root"))
 // Project include folder
 if(!defined("dir_includes"))
 	define("dir_includes", root.'includes/');
+
+set_include_path(get_include_path() . PATH_SEPARATOR . dir_includes);
+set_include_path(get_include_path() . PATH_SEPARATOR . core.'saloos-addons/');
+set_include_path(get_include_path() . PATH_SEPARATOR . core);
 
 // Project library
 if(!defined("ilib"))
