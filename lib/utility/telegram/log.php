@@ -6,7 +6,7 @@ class log extends tg
 {
 	/**
 	 * this library help to save something on telegram
-	 * v2.1
+	 * v2.2
 	 */
 
 
@@ -22,7 +22,11 @@ class log extends tg
 		{
 			return null;
 		}
-		$fileAddr = root.'public_html/files/telegram/tg_'. self::$name. '.json';
+		$fileAddr = root.'public_html/files/telegram/';
+		// if dir doesn't exist, make it
+		\lib\utility\file::makeDir($fileAddr, null, true);
+		// set file address
+		$fileAddr .= 'tg_'. self::$name. '.json';
 		file_put_contents($fileAddr, json_encode($_data, JSON_UNESCAPED_UNICODE). "\r\n", FILE_APPEND);
 
 		// if not in hook return null

@@ -78,16 +78,20 @@ class file
     /**
      * Creates a new directory
      *
-     * @param string $dirpath	Path of the new dir
-     * @param int $mode			Change the mode of the dir
-     * @param bool $recursive	Creates the dir recursively
+     * @param string $_dirpath	Path of the new dir
+     * @param int $_mode			Change the mode of the dir
+     * @param bool $_recursive	Creates the dir recursively
      * @return bool	True on success, false on failure
      */
-    public static function makeDir( $dirpath, $mode = 0775, $recursive = false )
+    public static function makeDir($_dirpath, $_mode = 0775, $_recursive = false )
     {
-        if(!file_exists($dirpath))
+        if(!$_mode)
         {
-            return mkdir( $dirpath, $mode, $recursive );
+            $_mode = 0775;
+        }
+        if(!file_exists($_dirpath))
+        {
+            return mkdir( $_dirpath, $_mode, $_recursive );
         }
         return null;
     }
