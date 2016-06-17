@@ -6,10 +6,11 @@ class tg
 {
 	/**
 	 * this library get and send telegram messages
-	 * v12.4
+	 * v12.5
 	 */
 	public static $api_key     = null;
 	public static $name        = null;
+	public static $language    = 'en_US';
 	public static $botan       = null;
 	public static $cmd         = null;
 	public static $cmdFolder   = null;

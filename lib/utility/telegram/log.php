@@ -6,7 +6,7 @@ class log extends tg
 {
 	/**
 	 * this library help to save something on telegram
-	 * v2.2
+	 * v3.0
 	 */
 
 
@@ -172,6 +172,19 @@ class log extends tg
 		// else insert new one to database
 		\lib\utility\session::save_once(self::$user_id, 'telegram_'.self::response('from', 'id'));
 
+		// change language if needede
+		if(\lib\router::get_storage('language') !== self::$language)
+		{
+			\lib\router::set_storage('language', self::$language );
+			// use saloos php gettext function
+			require_once(lib.'utility/gettext/gettext.inc');
+			// gettext setup
+			T_setlocale(LC_MESSAGES, \lib\router::get_storage('language'));
+			// Set the text domain as 'messages'
+			T_bindtextdomain('messages', root.'includes/languages');
+			T_bind_textdomain_codeset('messages', 'UTF-8');
+			T_textdomain('messages');
+		}
 		return true;
 	}
 
