@@ -11,12 +11,13 @@ class step_register
 	 * @param  boolean $_onlyMenu [description]
 	 * @return [type]             [description]
 	 */
-	public static function start($_caller, $_lastStep = 'start')
+	public static function start($_caller, $_lastStep = 'start', $_defaultMenu = null)
 	{
 		step::start('register');
 		// set caller name and step
 		step::set('call_from', $_caller);
 		step::set('call_from_step', $_lastStep);
+		step::set('call_default_menu', $_defaultMenu);
 
 		if(bot::$user_id)
 		{
@@ -157,13 +158,13 @@ class step_register
 	private static function successful()
 	{
 		// generate caller function to continue last step
-		$funcName = step::get('call_from'). "::". step::get('call_from_step');
+		$funcName = '\\'.step::get('call_from'). "::". step::get('call_from_step');
 		// stop registration after use variables
 		step::stop();
 		if(is_callable($funcName))
 		{
 			// get and return response
-			$result = call_user_func($funcName, null, true);
+			$result = call_user_func($funcName, true, true);
 		}
 		// else show main menu
 		else
@@ -172,7 +173,9 @@ class step_register
 			$result =
 			[
 				'text'         => $txt,
-				'reply_markup' => menu::main(true),
+				// 'reply_markup' => menu::main(true),
+				'reply_markup' => step::get('call_default_menu'),
+
 			];
 			// show main menu
 		}
