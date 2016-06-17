@@ -6,7 +6,7 @@ class log extends tg
 {
 	/**
 	 * this library help to save something on telegram
-	 * v3.0
+	 * v3.1
 	 */
 
 
@@ -52,6 +52,14 @@ class log extends tg
 		if(!isset($_SESSION['tg']['history']))
 		{
 			$_SESSION['tg']['history'] = [];
+		}
+		// if last commit is repeated
+		elseif(isset($_SESSION['tg']['history'][0]) && 
+			$_SESSION['tg']['history'][0] === $_text
+		)
+		{
+			self::$skipText = true;
+			return false;
 		}
 		// Prepend text to the beginning of an session array
 		array_unshift($_SESSION['tg']['history'], $_text);

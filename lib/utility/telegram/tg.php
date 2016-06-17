@@ -6,7 +6,7 @@ class tg
 {
 	/**
 	 * this library get and send telegram messages
-	 * v12.5
+	 * v12.6
 	 */
 	public static $api_key     = null;
 	public static $name        = null;
@@ -20,6 +20,7 @@ class tg
 	public static $user_id     = null;
 	public static $defaultText = 'Undefined';
 	public static $defaultMenu = null;
+	public static $skipText    = null;
 	public static $saveDest    = root.'public_html/files/telegram/';
 	public static $priority    =
 	[
@@ -138,6 +139,10 @@ class tg
 	 */
 	public static function sendResponse($_prop)
 	{
+		if(self::$skipText)
+		{
+			return false;
+		}
 		// if method is not set user sendmessage method
 		if(!isset($_prop['method']))
 		{
