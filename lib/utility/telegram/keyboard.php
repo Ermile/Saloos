@@ -6,7 +6,7 @@ class keyboard extends tg
 {
 	/**
 	 * this library create best keyboard for input list
-	 * v1.1
+	 * v1.2
 	 */
 
 
@@ -38,7 +38,10 @@ class keyboard extends tg
 		if($_onlyArray === 'public')
 		{
 			$menu['selective'] = false;
-
+		}
+		if($_onlyArray === 'fixed')
+		{
+			$menu['resize_keyboard'] = false;
 		}
 
 		// calculate number of item in each row
