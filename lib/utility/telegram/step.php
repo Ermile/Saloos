@@ -6,7 +6,7 @@ class step extends tg
 {
 	/**
 	 * this library help create step by step messages
-	 * v3.6
+	 * v3.7
 	 */
 
 	/**
@@ -156,7 +156,7 @@ class step extends tg
 	 * @param  string  $_key  [description]
 	 * @return [type]         result of jump
 	 */
-	public static function goto($_step = 1, $_key = 'pointer')
+	public static function goingto($_step = 1, $_key = 'pointer')
 	{
 		return self::set($_key, $_step);
 	}
