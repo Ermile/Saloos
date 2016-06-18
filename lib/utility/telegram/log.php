@@ -6,7 +6,7 @@ class log extends tg
 {
 	/**
 	 * this library help to save something on telegram
-	 * v3.4
+	 * v3.5
 	 */
 
 
@@ -29,7 +29,7 @@ class log extends tg
 		$fileAddr .= 'tg_'. self::$name. '.json';
 		file_put_contents($fileAddr, json_encode($_data, JSON_UNESCAPED_UNICODE). "\r\n", FILE_APPEND);
 		// add new line for debug
-		$debug = "DEBUG: (". self::response('text') .") ". json_encode($_SESSION['tg'], JSON_UNESCAPED_UNICODE). "\r\n";
+		$debug = "DEBUG: $_hook (". self::response('text') .") ". json_encode($_SESSION, JSON_UNESCAPED_UNICODE). "\r\n";
 		file_put_contents($fileAddr, $debug, FILE_APPEND);
 
 		// if not in hook return null
@@ -57,13 +57,13 @@ class log extends tg
 			$_SESSION['tg']['history'] = [];
 		}
 		// if last commit is repeated
-		elseif(isset($_SESSION['tg']['history'][0]) &&
-			$_SESSION['tg']['history'][0] === $_text
-		)
-		{
-			self::$skipText = true;
-			return false;
-		}
+		// elseif(isset($_SESSION['tg']['history'][0]) &&
+		// 	$_SESSION['tg']['history'][0] === $_text
+		// )
+		// {
+		// 	self::$skipText = true;
+		// 	return false;
+		// }
 		// Prepend text to the beginning of an session array
 		array_unshift($_SESSION['tg']['history'], $_text);
 		// if count of messages is more than maxSize, remove old one
