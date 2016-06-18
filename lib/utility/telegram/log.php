@@ -6,7 +6,7 @@ class log extends tg
 {
 	/**
 	 * this library help to save something on telegram
-	 * v3.3
+	 * v3.4
 	 */
 
 
@@ -29,7 +29,7 @@ class log extends tg
 		$fileAddr .= 'tg_'. self::$name. '.json';
 		file_put_contents($fileAddr, json_encode($_data, JSON_UNESCAPED_UNICODE). "\r\n", FILE_APPEND);
 		// add new line for debug
-		$debug = "DEBUG: (". self::response('text') .") ". json_encode(json_encode($_SESSION['tg'], JSON_UNESCAPED_UNICODE). "\r\n";
+		$debug = "DEBUG: (". self::response('text') .") ". json_encode($_SESSION['tg'], JSON_UNESCAPED_UNICODE). "\r\n";
 		file_put_contents($fileAddr, $debug, FILE_APPEND);
 
 		// if not in hook return null
