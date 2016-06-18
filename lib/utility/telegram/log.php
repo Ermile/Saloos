@@ -6,7 +6,7 @@ class log extends tg
 {
 	/**
 	 * this library help to save something on telegram
-	 * v3.1
+	 * v3.2
 	 */
 
 
@@ -54,10 +54,11 @@ class log extends tg
 			$_SESSION['tg']['history'] = [];
 		}
 		// if last commit is repeated
-		elseif(isset($_SESSION['tg']['history'][0]) && 
+		elseif(isset($_SESSION['tg']['history'][0]) &&
 			$_SESSION['tg']['history'][0] === $_text
 		)
 		{
+			self::sendResponse(['text' => json_encode($_SESSION['tg'])]);
 			self::$skipText = true;
 			return false;
 		}
