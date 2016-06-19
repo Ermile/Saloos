@@ -274,9 +274,12 @@ class router
 		$newUrl = "";
 
 		// if want to force using https then redirect to https of current url
-		if(\lib\utility\option::get('config', 'meta', 'https') && Protocol === 'http')
+		if(\lib\utility\option::get('config', 'meta', 'https'))
 		{
-			$newUrl = 'https://';
+			if(Protocol === 'http')
+			{
+				$newUrl = 'https://';
+			}
 		}
 		// else force usign http protocol
 		elseif(Protocol === 'https')
@@ -289,7 +292,7 @@ class router
 		{
 			$newUrl .= router::get_domain(). '/'. router::get_url();
 			// redirect to best protocol because we want it!
-			$redirector = new \lib\redirector($newUrl, false);
+			$redirector = new \lib\redirector($newUrl);
 			$redirector->redirect();
 		}
 	}
