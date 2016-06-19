@@ -12,8 +12,9 @@ class router
 		self::$repository = repository;
 		$path = preg_replace("/^\.\//","/",'/');
 		$clean_url = $_SERVER['REQUEST_URI'];
-		if(preg_match("#0x#", $clean_url)){
-			// var_dump("error");
+		if(preg_match("#0x#", $clean_url))
+		{
+			// error
 		}
 		$clean_url = preg_replace("#0x#Ui", "", $clean_url);
 		$clean_url = preg_replace("#^https?://{$_SERVER['HTTP_HOST']}\/#", '', $clean_url);
@@ -224,7 +225,9 @@ class router
 		}
 
 		if(count(explode('.', SubDomain)) > 1)
+		{
 			die("<p>Saloos only support one subdomain!</p>" );
+		}
 		elseif(SubDomain === 'www')
 		{
 			   header('Location: '.router::get_storage('url_site'), true, 301);
@@ -235,14 +238,24 @@ class router
 	{
 		// Check connection protocol and return related value
 		if( (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || $_SERVER['SERVER_PORT'] == 443 )
+		{
 			$this->set_protocol("https");
+		}
 		elseif(!empty($_SERVER['HTTP_X_FORWARDED_PROTO']))
+		{
 			$this->set_protocol($_SERVER['HTTP_X_FORWARDED_PROTO']);
+		}
 		else
+		{
 			$this->set_protocol('http');
+		}
 
 		if(!defined('Protocol'))
+		{
 			define('Protocol', $this->get_Protocol());
+		}
+		// check current protocol
+		self::check_protocol();
 
 
 		$this->check_property_router();
@@ -250,38 +263,90 @@ class router
 		$this->check_class_router();
 	}
 
-	public static function check_property_router(){
-		if(count(self::$url_array) < 2) return;
+
+	/**
+	 * check current protocol and if needed redirect to another!
+	 * @return [type] [description]
+	 */
+	private static function check_protocol()
+	{
+		// create new url for protocol checker
+		$newUrl = "";
+
+		// if want to force using https then redirect to https of current url
+		if(\lib\utility\option::get('config', 'meta', 'https') && Protocol === 'http')
+		{
+			$newUrl = 'https://';
+		}
+		// else force usign http protocol
+		elseif(Protocol === 'https')
+		{
+			$newUrl = 'http://';
+		}
+		// if newUrl is exist and we must to redirect
+		// then complete url and redirect to this address
+		if($newUrl && !\lib\utility::get('force'))
+		{
+			$newUrl .= router::get_domain(). '/'. router::get_url();
+			// redirect to best protocol because we want it!
+			$redirector = new \lib\redirector($newUrl, false);
+			$redirector->redirect();
+		}
+	}
+
+
+	public static function check_property_router()
+	{
+		if(count(self::$url_array) < 2)
+		{
+			return;
+		}
 		self::$url_array_property = $urls = array_slice(self::$url_array, 2);
 	}
 
-	public static function check_method_router(){
-		if(count(self::$url_array) >= 2 && !empty(self::$url_array[1])){
-			if(preg_match("[=]", self::$url_array[1])){
+
+	public static function check_method_router()
+	{
+		if(count(self::$url_array) >= 2 && !empty(self::$url_array[1]))
+		{
+			if(preg_match("[=]", self::$url_array[1]))
+			{
 				self::$method = 'home';
 				self::add_url_property(self::$url_array[1]);
-			}else{
+			}
+			else
+			{
 				self::$method = self::$url_array[1];
 			}
-		}else{
+		}
+		else
+		{
 			self::$method = 'home';
 		}
 	}
 
-	public static function check_class_router(){
-		if(count(self::$url_array) >= 1){
-			if(preg_match("[=]", self::$url_array[0])){
+	public static function check_class_router()
+	{
+		if(count(self::$url_array) >= 1)
+		{
+			if(preg_match("[=]", self::$url_array[0]))
+			{
 				self::$class = 'home';
-				if(self::$method != 'home'){
+				if(self::$method != 'home')
+				{
 					self::add_url_property(self::$method);
 					self::$method = 'home';
 				}
 				self::add_url_property(self::$url_array[0]);
-			}else{
+			}
+			else
+			{
 				self::$class = self::$url_array[0];
 
 			}
-		}else{
+		}
+		else
+		{
 			self::$class = 'home';
 		}
 	}
