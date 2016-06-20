@@ -271,26 +271,60 @@ class router
 	private static function check_protocol()
 	{
 		// create new url for protocol checker
-		$newUrl = "";
+		$newUrl      = "";
+		$currentPath = $_SERVER['REQUEST_URI'];
+		$mainSite    = \lib\utility\option::get('config', 'meta', 'mainSite');
 
-		// if want to force using https then redirect to https of current url
-		if(\lib\utility\option::get('config', 'meta', 'https'))
+		// if redirect to main site is enable and all thing is okay
+		// then redirect to the target url
+		if(
+			\lib\utility\option::get('config', 'meta', 'multiDomain') &&
+			\lib\utility\option::get('config', 'meta', 'redirectToMain') &&
+			$mainSite &&
+			Tld !== 'dev' &&
+			parse_url($mainSite, PHP_URL_HOST) != parse_url(\lib\router::get_root_domain(), PHP_URL_HOST)
+		)
 		{
-			if(Protocol === 'http')
+			// as soon as posible we create language detector library
+			switch (Tld)
 			{
-				$newUrl = 'https://';
+				case 'ir':
+					$newUrl = $mainSite. "fa";
+					break;
+
+				default:
+					break;
 			}
 		}
-		// else force usign http protocol
-		elseif(Protocol === 'https')
+		elseif($currentPath !== '/' && rtrim($currentPath, '/') !== $currentPath)
 		{
-			$newUrl = 'http://';
+			$newUrl = $mainSite. rtrim($currentPath, '/');
 		}
+		else
+		{
+			// if want to force using https then redirect to https of current url
+			if(\lib\utility\option::get('config', 'meta', 'https'))
+			{
+				if(Protocol === 'http')
+				{
+					$newUrl = 'https://';
+				}
+			}
+			// else force usign http protocol
+			elseif(Protocol === 'https')
+			{
+				$newUrl = 'http://';
+			}
+			if($newUrl)
+			{
+				$newUrl .= router::get_root_domain(). '/'. router::get_url();
+			}
+		}
+
 		// if newUrl is exist and we must to redirect
 		// then complete url and redirect to this address
 		if($newUrl && !\lib\utility::get('force'))
 		{
-			$newUrl .= router::get_domain(). '/'. router::get_url();
 			// redirect to best protocol because we want it!
 			$redirector = new \lib\redirector($newUrl);
 			$redirector->redirect();
