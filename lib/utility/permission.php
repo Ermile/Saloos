@@ -195,8 +195,8 @@ class permission
 					{
 						if(in_array($value, $permValue))
 						{
-							// $myList[$permLoc][$value] = 'show';
-							$myList[$permLoc][$value] = 'hide';
+							$myList[$permLoc][$value] = 'show';
+							// $myList[$permLoc][$value] = ;
 						}
 						else
 						{

@@ -102,7 +102,7 @@ class main
 
 		if(method_exists($controller, '_route'))
 		{
-			$controller->_route();
+			$controller->i_route();
 		}
 
 		if(router::get_controller() !== $controller_name)
@@ -112,18 +112,18 @@ class main
 		}
 		if(method_exists($controller, 'config'))
 		{
-			$controller->config();
+			$controller->iconfig();
 		}
 		if(method_exists($controller, 'options'))
 		{
-			$controller->options();
+			$controller->ioptions();
 		}
 
 		if(count(router::get_url_property(-1)) > 0 && $controller->route_check_true === false)
 		{
 			error::page('Unavailable');
 		}
-		$controller->_corridor();
+		$controller->i_corridor();
 	}
 }
 ?>

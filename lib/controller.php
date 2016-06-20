@@ -8,6 +8,7 @@ class controller
 	public $api, $model, $view, $method;
 	public $model_name, $view_name, $display_name;
 	public $debug = true;
+	public $methods = array();
 
 	/**
 	 * if display true && method get corridor run view display
@@ -22,6 +23,9 @@ class controller
 	 */
 	public function __construct()
 	{
+		if(file_exists(\lib\router::get_repository() . DIRECTORY_SEPARATOR . 'manifest.php')){
+			require_once \lib\router::get_repository() . DIRECTORY_SEPARATOR . 'manifest.php';
+		}
 		/**
 		 * register shutdown function
 		 * after ending code this function is called
@@ -320,8 +324,21 @@ class controller
 		elseif(method_exists('\lib\router', $name))
 		{
 			return call_user_func_array('\lib\router::'.$name, $args);
+		}elseif(preg_match("#^inject_(.*)$#Ui", $name, $inject)){
+			return $this->inject($inject[1], $args);
+		}elseif(preg_match("#^i(.*)$#Ui", $name, $icall)){
+			if(array_key_exists($icall[1], $this->methods)){
+				return $this->methods[$icall[1]](...$args);
+			}elseif(method_exists($this, $icall[1])){
+				return call_user_func_array(array($this, $icall[1]), $args);
+			}
 		}
 		\lib\error::page(get_called_class()."->$name()");
+	}
+
+	public function inject($name, $args){
+		$closure = $args[0];
+		$this->methods[$name] = $closure->bindTo($this);
 	}
 
 
