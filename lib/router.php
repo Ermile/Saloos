@@ -282,7 +282,7 @@ class router
 			\lib\utility\option::get('config', 'meta', 'redirectToMain') &&
 			$mainSite &&
 			Tld !== 'dev' &&
-			parse_url($mainSite, PHP_URL_HOST) != parse_url(\lib\router::get_root_domain(), PHP_URL_HOST)
+			parse_url($mainSite, PHP_URL_HOST) != \lib\router::get_root_domain()
 		)
 		{
 			// as soon as posible we create language detector library
