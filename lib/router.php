@@ -136,6 +136,11 @@ class router
 				$router->_before();
 			}
 		}
+
+		// like dev or com or ir or ...
+		if(!defined('Tld'))
+			define('Tld', router::get_root_domain('tld'));
+
 		$this->check_router();
 		/**
 		 * after router
@@ -148,9 +153,6 @@ class router
 
 		// Define Project Constants *******************************************************************
 		// declate some constant variable for better use in all part of app
-		// like dev or com or ir or ...
-		if(!defined('Tld'))
-			define('Tld', router::get_root_domain('tld'));
 
 		// like .dev or .com
 		if(!defined('MainTld'))
