@@ -291,7 +291,7 @@ class router
 			switch (Tld)
 			{
 				case 'ir':
-					$newUrl = $mainSite. "fa";
+					$newUrl = $mainSite. "/fa";
 					break;
 
 				default:
