@@ -172,9 +172,9 @@ class utility
 	public static function humanTiming($_time, $_max = 'ultimate', $_format = "Y/m/d", $_lang = 'en')
 	{
 		// auto convert with strtotime function
-		$_time = strtotime($_time);
-		$time_diff  = time() - $_time; // to get the time since that moment
-		$tokens = array (
+		$_time     = strtotime($_time);
+		$time_diff = time() - $_time; // to get the time since that moment
+		$tokens    = array (
 			31536000 => T_('year'),
 			2592000  => T_('month'),
 			604800   => T_('week'),
@@ -186,14 +186,14 @@ class utility
 		if($time_diff < 10)
 			return T_('A few seconds ago');
 
-		$_max = array_search(T_($_max), $tokens);
+		$type = array_search(T_($_max), $tokens);
 
 		foreach ($tokens as $unit => $text)
 		{
 			if ($time_diff < $unit)
 				continue;
 			// if time diff less than user request change it to humansizing
-			if($time_diff < $_max || $_max == T_('ultimate'))
+			if($time_diff < $type || $_max === 'ultimate')
 			{
 				$numberOfUnits = floor($time_diff / $unit);
 				return $numberOfUnits.' '.$text.(($numberOfUnits>1)? T_('s '):' ').T_('ago');
