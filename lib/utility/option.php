@@ -6,7 +6,7 @@ class option
 {
 	/**
 	 * this library get options from db only one times!
-	 * v2.1
+	 * v2.2
 	 */
 
 	// declare private static variable to save options
@@ -419,6 +419,17 @@ class option
 				case 'post_id':
 				case 'date_modified':
 					$datarow[$key] = $value;
+					break;
+
+				case 'option_meta':
+					if($value === '++')
+					{
+						$datarow[$key] = $key. '+1';
+					}
+					else
+					{
+						$datarow[$key] = "'". $value. "'";
+					}
 					break;
 
 				default:
