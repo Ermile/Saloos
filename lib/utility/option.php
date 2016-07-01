@@ -6,7 +6,7 @@ class option
 {
 	/**
 	 * this library get options from db only one times!
-	 * v2.2
+	 * v2.3
 	 */
 
 	// declare private static variable to save options
@@ -424,7 +424,7 @@ class option
 				case 'option_meta':
 					if($value === '++')
 					{
-						$datarow[$key] = $key. '+1';
+						$datarow[$key] = "coalesce($key, 0)". '+1';
 					}
 					else
 					{
