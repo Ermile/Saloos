@@ -146,25 +146,12 @@ trait twigAddons{
 			{
 				$result = null;
 				foreach ($posts as $item)
-					$result .= "<a href='/".$item['post_url']."'>".$item['post_title']."</a>";
+					$result .= "<a href='/".$item['url']."'>".$item['title']."</a>";
 
 				echo $result;
 			}
 			else
 			{
-				foreach ($posts as $id => $row)
-				{
-					foreach ($row as $key => $value)
-					{
-						$pos = strpos($key,'post_');
-						if ( $pos !== false)
-						{
-							$fieldName = substr($key, 5);
-							$posts[$id][$fieldName] = $value;
-							unset($posts[$id][$key]);
-						}
-					}
-				}
 				return $posts;
 			}
 
