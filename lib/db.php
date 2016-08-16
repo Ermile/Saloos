@@ -6,7 +6,7 @@ class db
 {
 	/**
 	 * this library doing useful db actions
-	 * v4.1
+	 * v4.2
 	 */
 
 	// save link to database
@@ -94,7 +94,7 @@ class db
 						// if can connect to mysql database
 						if($link)
 						{
-							$qry = "CREATE DATABASE if not exists ". self::$db_name;
+							$qry = "CREATE DATABASE if not exists ". self::$db_name . "DEFAULT CHARSET=utf8 COLLATE utf8_general_ci;";
 							// try to create database
 							if(!@mysqli_query($link, $qry))
 							{
