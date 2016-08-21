@@ -51,6 +51,7 @@ class file
         return file_get_contents( $filepath );
     }
 
+
     /**
      * Writes in a file
      *
@@ -63,6 +64,7 @@ class file
         return file_put_contents( $filepath, $content, LOCK_EX );
     }
 
+
     /**
      * Writes at the end of a file
      *
@@ -74,6 +76,7 @@ class file
     {
         return file_put_contents( $filepath, $content, FILE_APPEND | LOCK_EX );
     }
+
 
     /**
      * Creates a new directory
@@ -96,6 +99,7 @@ class file
         return null;
     }
 
+
     /**
      * Renames a file or a directory
      *
@@ -107,6 +111,7 @@ class file
     {
         return rename( $oldname, $newname );
     }
+
 
     /**
      * Moves a file or a directory
@@ -120,6 +125,7 @@ class file
         $newdir = rtrim( $newdir, '/' );
         return self::rename( $path, $newdir . '/' . basename( $path ) );
     }
+
 
     /**
      * Copies a file or a directory
@@ -165,6 +171,7 @@ class file
         return false;
     }
 
+
     /**
      * Checks whether a file or directory exists
      *
@@ -175,6 +182,51 @@ class file
     {
         return file_exists( $path );
     }
+
+
+    public static function existsComplete( $_path )
+    {
+        // check for simple files
+        if(file_exists($_path))
+        {
+            return true;
+        }
+        // else if the file is url and exist
+        elseif(!filter_var($_path, FILTER_VALIDATE_URL) === false)
+        {
+            // read header of file and if exist return true
+            $headers = get_headers($_path);
+            if(stripos($headers[0], "200 OK"))
+            {
+                return true;
+            }
+        }
+
+        // default return value if file is not exist
+        return false;
+    }
+
+
+    /**
+     * [alternative description]
+     * @param  [type] $_file        [description]
+     * @param  [type] $_alternative [description]
+     * @return [type]               [description]
+     */
+    public static function alternative($_file, $_alternative = null, $_default = null)
+    {
+        if(self::existsComplete($_file))
+        {
+            return $_file;
+        }
+        elseif($_alternative && self::existsComplete($_alternative))
+        {
+            return $_alternative;
+        }
+
+        return $_default;
+    }
+
 
     /**
      * Deletes file or a directory recursively
@@ -211,6 +263,7 @@ class file
         }
         return true;
     }
+
 
     /**
      * Recovers an uploaded file and store it in the tmp dir
@@ -256,6 +309,7 @@ class file
         return false;
     }
 
+
     /**
      * Returns the extension of a file
      *
@@ -268,6 +322,7 @@ class file
         return $pos === false ? '' : substr( $filename, $pos + 1 );
     }
 
+
     /**
      * Returns the name of a file
      *
@@ -278,6 +333,7 @@ class file
     {
         return basename( $filepath );
     }
+
 
     /**
      * Returns the directory of a file
@@ -290,6 +346,7 @@ class file
         return dirname( $filepath );
     }
 
+
     /**
      * Returns the size of a file
      *
@@ -300,6 +357,7 @@ class file
     {
         return filesize( $filepath );
     }
+
 
     /**
      * Returns a size readable by humans
@@ -320,6 +378,7 @@ class file
 
         return $_size . ' octets';
     }
+
 
     /**
      * force browser to download file
@@ -372,5 +431,4 @@ class file
         exit();
     }
 }
-
 ?>

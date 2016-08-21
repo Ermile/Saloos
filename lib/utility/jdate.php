@@ -17,7 +17,7 @@ namespace lib\utility;
  *
  * 1- The above copyright notice and this permission notice shall be included
  * in all copies or substantial portions of the Software.
- * 
+ *
  * 2- THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -110,10 +110,10 @@ class jdate
             return $obj->format($format);
         }
         else {
-            
+
             //Find what to replace
             $chars  = (preg_match_all('/([a-zA-Z]{1})/', $format, $chars)) ? $chars[0] : array();
-            
+
             //Intact Keys
             $intact = array('B','h','H','g','G','i','s','I','U','u','Z','O','P');
             $intact = self::filterArray($chars, $intact);
@@ -271,7 +271,7 @@ class jdate
     {
         return self::date($format, $stamp, false, false, $timezone);
     }
-    
+
     /**
      * jDateTime::Strftime
      *
@@ -300,7 +300,7 @@ class jdate
             '%c', '%D', '%F', '%s', '%x',
             '%n', '%t', '%%'
         );
-        
+
         $date_format_code = array(
             'D', 'l', 'd', 'j', 'z', 'N', 'w',
             'W', 'W', 'W',
@@ -317,7 +317,7 @@ class jdate
         //Convert to date
         return self::date($format, $stamp, $convert, $jalali, $timezone);
     }
-	
+
    /**
      * jDateTime::Mktime
      *
@@ -368,7 +368,7 @@ class jdate
         //Return
         return $obj->format('U');
     }
-    
+
     /**
      * jDateTime::Checkdate
      *
@@ -397,24 +397,24 @@ class jdate
         $month = (intval($month) == 0) ? self::date('n') : intval($month);
         $day   = (intval($day)   == 0) ? self::date('j') : intval($day);
         $year  = (intval($year)  == 0) ? self::date('Y') : intval($year);
-        
+
         //Check if its jalali date
         if ( $jalali === true || ($jalali === null && self::$jalali === true) )
         {
             $epoch = self::mktime(0, 0, 0, $month, $day, $year);
-            
+
             if( self::date('Y-n-j', $epoch,false) == "$year-$month-$day" ) {
                 $ret = true;
             }
             else{
-                $ret = false; 
+                $ret = false;
             }
         }
         else //Gregorian Date
-        { 
+        {
             $ret = checkdate($month, $day, $year);
         }
-        
+
         //Return
         return $ret;
     }
@@ -423,7 +423,7 @@ class jdate
      * System Helpers below
      * ------------------------------------------------------
      */
-    
+
     /**
      * Filters out an array
      */
@@ -431,7 +431,7 @@ class jdate
     {
         return array_intersect(array_merge($needle, $always), $heystack);
     }
-    
+
     /**
      * Returns correct names for week days
      */
@@ -471,7 +471,7 @@ class jdate
     /**
      * Converts latin numbers to farsi script
      */
-    private static function convertNumbers($matches)
+    public static function convertNumbers($matches)
     {
         $farsi_array   = array('۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹');
         $english_array = array('0', '1', '2', '3', '4', '5', '6', '7', '8', '9');
