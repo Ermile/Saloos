@@ -189,7 +189,7 @@ trait twigAddons
 			{
 				if($part != '$')
 				{
-					$currentUrl .= $_path[$key];
+					$currentUrl .= $_path[$key].'/';
 					$location   = T_(ucfirst($part));
 					if(end($myurl) === $part)
 					{
@@ -198,7 +198,8 @@ trait twigAddons
 					else
 					{
 						$baseURL = $this->data->url->base;
-						$result .= "<a href='$baseURL$currentUrl' tabindex='-1'>$location</a>";
+						$anchorUrl = trim($baseURL.$currentUrl, '/');
+						$result .= "<a href='$anchorUrl' tabindex='-1'>$location</a>";
 					}
 				}
 			}

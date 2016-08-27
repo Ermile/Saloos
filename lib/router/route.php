@@ -26,13 +26,15 @@ class route
 		}
 		else
 		{
-			if(!isset($route['max']) && isset($route['url']) && is_array($route['url']))
+			if(!isset($route['max']) && isset($route['url']))
 			{
-				$route['max'] = count($route['url']);
-			}
-			elseif(!isset($route['max']) && !(isset($route['url']) && is_string($route['url']) && preg_match("/^(\/.*\/|#.*#|[.*])[gui]{0,3}$/i", $route['url'])))
-			{
-				$route['max'] = 0;
+				if(is_string($route['url'])){
+					$route['max'] = 1;
+				}elseif(is_array($route['url'])){
+					$route['max'] = count($route['url']);
+				}elseif(is_string($route['url']) && preg_match("/^(\/.*\/|#.*#|[.*])[gui]{0,3}$/i", $route['url'])){
+					$route['max'] = 0;
+				}
 			}
 
 			foreach ($route as $key => $value)
@@ -113,7 +115,7 @@ class route
 	{
 		if(!is_array($parameters)){
 			$match = $this->check_parameters($parameters, join($array, $join));
-			if($match){
+			if($match !== false){
 				if(!isset($this->match->$name)) $this->match->$name = array();
 				array_push($this->match->$name, $match);
 			}
