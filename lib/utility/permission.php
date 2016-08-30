@@ -128,24 +128,24 @@ class permission
 				switch ($_type)
 				{
 					case 'view':
-						$msg = "You can't view this part of system";
-						break;
+					$msg = "You can't view this part of system";
+					break;
 
 					case 'add':
-						$msg = T_("You can't add new") .' '. T_($_loc);
-						break;
+					$msg = T_("You can't add new") .' '. T_($_loc);
+					break;
 
 					case 'edit':
-						$msg = T_("You can't edit") .' '. T_($_loc);
-						break;
+					$msg = T_("You can't edit") .' '. T_($_loc);
+					break;
 
 					case 'delete':
-						$msg = T_("You can't delete") .' '. T_($_loc);
-						break;
+					$msg = T_("You can't delete") .' '. T_($_loc);
+					break;
 
 					default:
-						$msg = "You can't access to this part of system";
-						break;
+					$msg = "You can't access to this part of system";
+					break;
 				}
 				$msg = $msg. "<br/> ". T_("Because of your permission");
 
@@ -174,15 +174,20 @@ class permission
 	public static function moduleList($_content)
 	{
 		$myList      = [];
-		$contentName = preg_replace("/content(_[^\/]*)?\//", "content" . $_content, get_class(\lib\main::$controller));
-
-		if(method_exists($contentName, 'permModules'))
-		{
-			$myList = $contentName::permModules();
-			if(!is_array($myList))
-			{
+		$contentName = preg_replace("/content_([^\\\]+)/", "content_" . $_content, get_class(\lib\main::$controller));
+		if(get_class(\lib\main::$controller) == $contentName){
+			if(!is_array($myList) || !method_exists($contentName, 'permModules')){
 				$myList = [];
+			}else{
+				$myList = $contentName::permModules();
 			}
+		}else{
+			$manifest_class = new \lib\controller\manifest('content_' . $_content);
+			$manifest = $manifest_class->get();
+			$myList = $manifest['modules']->modules_search('permissions');
+		}
+		if(count($myList))
+		{
 
 			// recheck return value from permission modules list func
 			foreach ($myList as $permLoc => $permValue)
