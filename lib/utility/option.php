@@ -100,7 +100,7 @@ class option
 		if(!is_a($result, 'mysqli_result'))
 		{
 			// no record exist
-			return '#NA';
+			return false;
 		}
 
 		// fetch all records

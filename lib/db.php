@@ -652,12 +652,15 @@ class db
 		{
 			return null;
 		}
-
+		// if debug mod is true save all string query
+		self::log($_qry);
 		$result   = mysqli_query(self::$link, $_qry);
 		if(!is_a($result, 'mysqli_result') && !$result)
 		{
 			// no result exist
-			return '#NA';
+			// save mysql error
+			self::log("MYSQL ERROR ". mysqli_error(self::$link));
+			return false;
 		}
 		// return query run result
 		return $result;
@@ -752,6 +755,18 @@ class db
 		}
 
 		return $qry;
+	}
+
+	private static function log($_text) {
+	$classes  = (array_column(debug_backtrace(), 'file'));
+		if(DEBUG){
+			$fileAddr = root.'public_html/files/';
+			\lib\utility\file::makeDir($fileAddr, null, true);
+			// set file address
+			$fileAddr .= 'db.log';
+			$_text = str_repeat("-", 70). urldecode($_SERVER['REQUEST_URI']). "\n". $_text. "\r\n";
+			file_put_contents($fileAddr, $_text, FILE_APPEND);
+		}
 	}
 }
 ?>
