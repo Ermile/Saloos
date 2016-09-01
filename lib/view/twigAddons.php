@@ -143,7 +143,7 @@ trait twigAddons
 	 */
 	public function twig_filter_decode()
 	{
-		return new \Twig_SimpleFilter('decode', function ($_array, $_key)
+		return new \Twig_SimpleFilter('decode', function ($_array, $_key = null)
 		{
 			$result = json_decode($_array, true);
 			if(is_array($result) && isset($result[$_key]))
