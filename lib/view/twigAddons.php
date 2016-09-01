@@ -132,7 +132,29 @@ trait twigAddons
 		return new \Twig_SimpleFilter('exist', function ($_file, $_alternative = null)
 		{
 			$result = \lib\utility\file::alternative($_file, $_alternative);
-			// var_dump($result);
+			return $result;
+		});
+	}
+
+
+	/**
+	 * [twig_filter_decode description]
+	 * @return [type] [description]
+	 */
+	public function twig_filter_decode()
+	{
+		return new \Twig_SimpleFilter('decode', function ($_array, $_key)
+		{
+			$result = json_decode($_array, true);
+			if(is_array($result) && isset($result[$_key]))
+			{
+				$result = $result[$_key];
+			}
+			else
+			{
+				$result = $_array;
+			}
+
 			return $result;
 		});
 	}

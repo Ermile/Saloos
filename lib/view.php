@@ -102,6 +102,7 @@ class view
 		$this->add_twig_filter('readableSize');
 		$this->add_twig_filter('persian');
 		$this->add_twig_filter('exist');
+		$this->add_twig_filter('decode');
 		$this->add_twig_function('breadcrumb');
 		$this->add_twig_function('posts');
 
