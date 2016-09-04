@@ -75,9 +75,9 @@ trait twigAddons
 	 */
 	public function twig_filter_jdate()
 	{
-		return new \Twig_SimpleFilter('jdate', function ($_string, $_format ="Y/m/d")
+		return new \Twig_SimpleFilter('jdate', function ($_string, $_format ="Y/m/d", $_convert = true)
 		{
-			return \lib\utility\jdate::date($_format, $_string);
+			return \lib\utility\jdate::date($_format, $_string, $_convert);
 		});
 	}
 
