@@ -79,7 +79,11 @@ class model
 	public function _call($name, $args, $parm){
 		$method = $args[0]->method;
 		$api_name = "{$method}_$parm[1]";
-		return $this->$api_name($args[0]);
+		$match = null;
+		if($args[0]->match){
+			$match = $args[0]->match;
+		}
+		return $this->$api_name($args[0], $match);
 	}
 }
 ?>

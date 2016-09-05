@@ -42,6 +42,8 @@ class route
 				$_max = $route['max'];
 				unset($route['max']);
 				$route['max'] = $_max;
+			}else{
+				$route['max'] = 0;
 			}
 			$this->route_rule = $route;
 			foreach ($route as $key => $value)
@@ -64,7 +66,14 @@ class route
 
 	function max($max)
 	{
-		if(count(\lib\router::$url_array) > $max){
+		$url = \lib\router::get_url(-1);
+		if(count($url) > 0 && \lib\router::get_class() == $url[0]){
+			array_shift($url);
+		}
+		if(count($url) > 0 && \lib\router::get_method() == $url[0]){
+			array_shift($url);
+		}
+		if(count($url) > $max){
 			$this->status = false;
 		}
 	}
@@ -145,9 +154,11 @@ class route
 				if(is_array($_value)){
 					$this->route_rule['max'] = array_key_exists('max', $this->route_rule) ? $this->route_rule['max'] + 1 : 1;
 				}
+				if(count($_value) > 2){
+					$this->match->{$_value[2]} = $match;
+				}
 				if(!isset($this->match->$name)) $this->match->$name = array();
 				array_push($this->match->$name, $match);
-
 			}
 		}
 	}
