@@ -4,6 +4,7 @@ class route
 {
 	public $status = true;
 	public $match;
+	public $route_rule = array();
 
 	public function __construct($run = true)
 	{
@@ -22,6 +23,7 @@ class route
 		$fn = isset($args[1])? $args[1] : false;
 		if(is_string($route))
 		{
+			$this->route_rule['url'] = $route;
 			$this->url($route);
 		}
 		else
@@ -36,12 +38,17 @@ class route
 					$route['max'] = 0;
 				}
 			}
-
+			if(isset($route['max'])){
+				$_max = $route['max'];
+				unset($route['max']);
+				$route['max'] = $_max;
+			}
+			$this->route_rule = $route;
 			foreach ($route as $key => $value)
 			{
 				if(method_exists($this, $key))
 				{
-					$this->$key($value);
+					$this->$key($this->route_rule[$key]);
 				}
 			}
 		}
@@ -121,15 +128,26 @@ class route
 			}
 			return;
 		}
-		foreach ($parameters as $key => $value) {
+		foreach ($parameters as $key => $_value) {
+			$value = $_value;
 			if(!isset($array[$key])){
-				$this->status = false;
-				break;
+				if(is_array($_value) && count($_value) > 1 && $_value[1] === true){
+					continue;
+				}else{
+					$this->status = false;
+					break;
+				}
+			}elseif(is_array($_value)){
+				$value = $_value[0];
 			}
 			$match = $this->check_parameters($value, $array[$key]);
 			if($match){
+				if(is_array($_value)){
+					$this->route_rule['max'] = array_key_exists('max', $this->route_rule) ? $this->route_rule['max'] + 1 : 1;
+				}
 				if(!isset($this->match->$name)) $this->match->$name = array();
 				array_push($this->match->$name, $match);
+
 			}
 		}
 	}
