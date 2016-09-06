@@ -6,7 +6,7 @@ class db
 {
 	/**
 	 * this library doing useful db actions
-	 * v4.3
+	 * v4.4
 	 */
 
 	// save link to database
@@ -757,6 +757,12 @@ class db
 		return $qry;
 	}
 
+
+	/**
+	 * save log of sql request into file for debug
+	 * @param  [type] $_text [description]
+	 * @return [type]        [description]
+	 */
 	private static function log($_text) {
 	$classes  = (array_column(debug_backtrace(), 'file'));
 		if(DEBUG){
@@ -767,6 +773,18 @@ class db
 			$_text = str_repeat("-", 70). urldecode($_SERVER['REQUEST_URI']). "\n". $_text. "\r\n";
 			file_put_contents($fileAddr, $_text, FILE_APPEND);
 		}
+	}
+
+
+	/**
+	 * return version of mysql used on server
+	 * @return [type] [description]
+	 */
+	public static function version()
+	{
+		// mysqli_get_client_info();
+		// mysqli_get_client_version();
+		return mysqli_get_server_version(self::$link);
 	}
 }
 ?>

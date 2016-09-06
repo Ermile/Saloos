@@ -212,5 +212,51 @@ class utility
 			}
 		}
 	}
+
+
+    /**
+     * check saloos language and if needed convert to persian date
+     * else show default date
+     * @param  [type] $_date [description]
+     * @return [type]        [description]
+     */
+    public static function date($_format, $_stamp = false, $_type = false, $_persianChar = true)
+    {
+        $result = null;
+
+        if(!is_string($_stamp) || strlen($_stamp) < 2)
+        {
+        	$_stamp = false;
+        }
+
+        // get target language
+        if($_type === 'default')
+        {
+            $_type = substr(\lib\router::get_storage('defaultLanguage'), 0, 2);
+        }
+        elseif($_type === 'current')
+        {
+            $_type = substr(\lib\router::get_storage('language'), 0, 2);
+        }
+
+        // if need persian use it else use default date function
+        if($_type === true || $_type === 'fa')
+        {
+            $result = \lib\utility\jdate::date($_format, $_stamp, $_persianChar);
+        }
+        else
+        {
+        	if($_stamp)
+        	{
+	            $result = date($_format, $_stamp);
+        	}
+        	else
+        	{
+	            $result = date($_format);
+        	}
+        }
+
+        return $result;
+    }
 }
 ?>

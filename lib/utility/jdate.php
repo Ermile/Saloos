@@ -602,5 +602,4 @@ class jdate
         return array($gy, $gm, $gd);
 
     }
-
 }
