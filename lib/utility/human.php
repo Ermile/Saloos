@@ -6,7 +6,7 @@ class human
 {
 	/**
 	 * this library allow to change values to human type!
-	 * v1.0
+	 * v1.1
 	 */
 
 
@@ -36,7 +36,7 @@ class human
 
 			case 'text':
 			default:
-				if($hour)
+				if(is_int($hour))
 				{
 					$result = $hour. T_('hour');
 				}
@@ -51,6 +51,19 @@ class human
 						$result = $min. T_('minute');
 					}
 				}
+				break;
+		}
+
+		// change numbers to selected language
+		switch ($_resultType)
+		{
+			case 'persian':
+			case 'english':
+			case 'arabic':
+				$result = self::number($result, $_resultType);
+				break;
+
+			default:
 				break;
 		}
 		// return final result
