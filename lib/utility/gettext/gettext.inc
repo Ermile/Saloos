@@ -425,6 +425,10 @@ function T_($msgid, $_replace = null)
 	{
 		$result = $msgid;
 	}
+	elseif(is_numeric($msgid))
+	{
+		$result = $msgid;
+	}
 
 	// if user pass arguments into translation function replace it
 	if(is_array($_replace) && $_replace)

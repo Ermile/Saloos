@@ -24,8 +24,8 @@ class human
 			$_time = floor($_time / 60);
 		}
 		$result = '';
-		$hour   = floor($_time / 60);
-		$min    = floor($_time % 60);
+		$hour   = (int) floor($_time / 60);
+		$min    = (int) floor($_time % 60);
 
 		// generate result by type of request
 		switch ($_resultType)
@@ -36,12 +36,12 @@ class human
 
 			case 'text':
 			default:
-				if(is_int($hour))
+				if(is_numeric($hour))
 				{
 					$result = $hour.' '. T_('hour');
 					if($min)
 					{
-						$result = ', '. $min.' '. T_('minute');
+						$result .= T_(', :min minute', ['min'=> $min]);
 					}
 				}
 				else
