@@ -224,7 +224,7 @@ class utility
     {
         $result = null;
 
-        if(!is_string($_stamp) || strlen($_stamp) < 2)
+        if(strlen($_stamp) < 2)
         {
         	$_stamp = false;
         }
