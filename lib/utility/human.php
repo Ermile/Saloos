@@ -58,8 +58,11 @@ class human
 		switch ($_resultType)
 		{
 			case 'persian':
+			case 'fa':
 			case 'english':
+			case 'en':
 			case 'arabic':
+			case 'ar':
 				$result = self::number($result, $_resultType);
 				break;
 

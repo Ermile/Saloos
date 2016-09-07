@@ -113,12 +113,7 @@ trait twigAddons
 	{
 		return new \Twig_SimpleFilter('persian', function ($_number)
 		{
-			if($this->data->site['currentlang'] === 'fa')
-			{
-				return \lib\utility\jdate::convertNumbers($_number);
-			}
-			// return raw number on normal condition
-			return $_number;
+			return \lib\utility\human::number($_number, $this->data->site['currentlang']);
 		});
 	}
 
@@ -132,6 +127,16 @@ trait twigAddons
 		return new \Twig_SimpleFilter('exist', function ($_file, $_alternative = null)
 		{
 			$result = \lib\utility\file::alternative($_file, $_alternative);
+			return $result;
+		});
+	}
+
+
+	public function twig_filter_humantime()
+	{
+		return new \Twig_SimpleFilter('humantime', function ()
+		{
+			$result = \lib\utility\human::time(...func_get_args());
 			return $result;
 		});
 	}
