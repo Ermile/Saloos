@@ -602,4 +602,65 @@ class jdate
         return array($gy, $gm, $gd);
 
     }
+
+
+    /**
+     * convert jalali date
+     *
+     * @param      <type>  $year   The year
+     * @param      <type>  $month  The month
+     * @example     jalali month (1395,6) => 2016-08-12, 2016-09-11
+     * @return     <type>
+     */
+    public static function jalali_month($year, $month){
+
+        $j_days_in_month = [
+                             '01'  => 31,
+                             '02'  => 31,
+                             '03'  => 31,
+                             '04'  => 31,
+                             '05'  => 31,
+                             '06'  => 31,
+                             '07'  => 30,
+                             '08'  => 30,
+                             '09'  => 30,
+                             '10' => 30,
+                             '11' => 30,
+                             '12' => 29
+                             ];
+
+        $start_day  = 1;
+        $end_day    = $j_days_in_month[$month];
+
+        $start_date = self::mktime(0, 0, 0, $month, $start_day, $year, true);
+        $end_date   = self::mktime(0, 0, 0, $month, $end_day, $year, true);
+
+        $start_date = date("Y-m-d",$start_date);
+        $end_date   = date("Y-m-d",$end_date);
+        return [$start_date, $end_date];
+
+    }
+
+
+    /**
+     * get jalali year and convert to two date (start , end)
+     *
+     * @param      <type>  $year   The year
+     * @example     jalali year (1395) => 2016-03-12, 2017-03-12
+     * @return     <type>  ( description_of_the_return_value )
+     */
+    public static function jalali_year($year){
+        $start_day   = 1;
+        $end_day     = 30;
+
+        $start_month = 1;
+        $end_month   = 12;
+
+        $start_date = self::mktime(0, 0, 0, $start_month, $start_day, $year, true);
+        $end_date   = self::mktime(0, 0, 0, $end_month, $end_day, $year, true);
+
+        $start_date = date("Y-m-d",$start_date);
+        $end_date   = date("Y-m-d",$end_date);
+        return [$start_date, $end_date];
+    }
 }
