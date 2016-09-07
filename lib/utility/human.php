@@ -6,7 +6,7 @@ class human
 {
 	/**
 	 * this library allow to change values to human type!
-	 * v1.1
+	 * v1.2
 	 */
 
 
@@ -38,18 +38,15 @@ class human
 			default:
 				if(is_int($hour))
 				{
-					$result = $hour. T_('hour');
+					$result = $hour.' '. T_('hour');
+					if($min)
+					{
+						$result = ', '. $min.' '. T_('minute');
+					}
 				}
-				if($min)
+				else
 				{
-					if($result)
-					{
-						$result = ', '. $min. T_('minute');
-					}
-					else
-					{
-						$result = $min. T_('minute');
-					}
+					$result = $min.' '. T_('minute');
 				}
 				break;
 		}
