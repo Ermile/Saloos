@@ -18,7 +18,12 @@ class safe
 	 * @param  string $_string unsafe string
 	 * @return string          safe string
 	 */
-	public static function safe($_string){
+	public static function safe($_string)
+	{
+		if(is_array($_string))
+		{
+			return self::array($_string);
+		}
 		$string = htmlspecialchars($_string, ENT_QUOTES | ENT_HTML5);
 		$string = addcslashes($string, '\\');
 		return $string;

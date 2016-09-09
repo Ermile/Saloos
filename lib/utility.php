@@ -2,7 +2,11 @@
 namespace lib;
 class utility
 {
-	public static $POST, $GET, $COOKIE;
+	public static $POST;
+	public static $GET;
+	public static $COOKIE;
+
+
 	/**
 	 * filter post and safe it
 	 * @param  [type] $_name [description]
@@ -12,12 +16,15 @@ class utility
 	 */
 	public static function post($_name = null, $_type = null, $_arg = null)
 	{
-		if(!self::$POST){
-			self::$POST = utility\safe::array($_POST);
+		if(!self::$POST)
+		{
+			self::$POST = utility\safe::safe($_POST);
 		}
 		$myvalue = null;
 		if(!$_name)
+		{
 			return self::$POST;
+		}
 		elseif(is_array($_name))
 		{
 			$_name = current($_name);
@@ -35,7 +42,7 @@ class utility
 			if(is_array(self::$POST[$_name]))
 				$myvalue = self::$POST[$_name];
 			else
-				$myvalue = htmlspecialchars(self::$POST[$_name], ENT_QUOTES | ENT_HTML5 , 'UTF-8');
+				$myvalue = self::$POST[$_name];
 
 
 			// if set filter use filter class to clear input value
@@ -76,8 +83,9 @@ class utility
 	 */
 	public static function get($_name = null, $_arg = null)
 	{
-		if(!self::$GET){
-			self::$GET = utility\safe::array($_GET);
+		if(!self::$GET)
+		{
+			self::$GET = utility\safe::safe($_GET);
 		}
 		$myget = array();
 		foreach (self::$GET as $key => &$value)
@@ -111,10 +119,17 @@ class utility
 		return null;
 	}
 
+
+	/**
+	 * filter cookie and safe it
+	 * @param  string $_name unsafe cookie key
+	 * @return string        safe cookie
+	 */
 	public static function cookie($_name = null)
 	{
-		if(!self::$COOKIE){
-			self::$COOKIE = utility\safe::array($_COOKIE);
+		if(!self::$COOKIE)
+		{
+			self::$COOKIE = utility\safe::safe($_COOKIE);
 		}
 		if($_name)
 		{
