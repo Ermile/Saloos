@@ -646,6 +646,12 @@ class db
 	 */
 	public static function query($_qry)
 	{
+		// check debug status
+		if(!\lib\debug::$status)
+		{
+			return false;
+		}
+
 		// connect to main database
 		self::connect(true);
 		if(!self::$link)
@@ -659,6 +665,7 @@ class db
 		{
 			// no result exist
 			// save mysql error
+			echo(mysqli_error(self::$link));
 			self::log("MYSQL ERROR ". mysqli_error(self::$link));
 			return false;
 		}
