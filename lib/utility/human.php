@@ -6,7 +6,7 @@ class human
 {
 	/**
 	 * this library allow to change values to human type!
-	 * v1.2
+	 * v1.3
 	 */
 
 
@@ -36,7 +36,7 @@ class human
 
 			case 'text':
 			default:
-				if(is_numeric($hour))
+				if(is_numeric($hour) && $hour)
 				{
 					$result = $hour.' '. T_('hour');
 					if($min)
@@ -44,9 +44,13 @@ class human
 						$result .= T_(', :min minute', ['min'=> $min]);
 					}
 				}
-				else
+				else if(is_numeric($min) && $min)
 				{
 					$result = $min.' '. T_('minute');
+				}
+				else
+				{
+					$result = 0;
 				}
 				break;
 		}
