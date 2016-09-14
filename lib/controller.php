@@ -4,11 +4,11 @@ use \lib\router\route;
 use \lib\api;
 class controller
 {
+	use mvc;
 
 	public $api, $model, $view, $method;
 	public $model_name, $view_name, $display_name;
 	public $debug = true;
-	public $methods = array();
 	public static $manifest;
 
 	/**
@@ -26,6 +26,7 @@ class controller
 	{
 		$manifest = new controller\manifest();
 		self::$manifest = $manifest->get();
+		$this->addons();
 		/**
 		 * register shutdown function
 		 * after ending code this function is called
@@ -191,6 +192,10 @@ class controller
 			$object = object();
 			$object->controller = $this;
 			$this->model = new $class_name($object);
+			$this->model->addons($this);
+			if(method_exists($this->model, 'config') || array_key_exists('config', $this->model->Methods)){
+				$this->model->iconfig();
+			}
 		}
 		return $this->model;
 	}
@@ -218,6 +223,10 @@ class controller
 			$object = object();
 			$object->controller = $this;
 			$this->view = new $class_name($object);
+			$this->view->addons($this);
+			if(method_exists($this->view, 'config') || array_key_exists('config', $this->view->Methods)){
+				$this->view->iconfig();
+			}
 		}
 		return $this->view;
 	}
@@ -310,35 +319,26 @@ class controller
 
 	/**
 	 * [__call description]
-	 * @param  [type] $name [description]
-	 * @param  [type] $args [description]
+	 * @param  [type] $_name [description]
+	 * @param  [type] $_args [description]
 	 * @return [type]       [description]
 	 */
-	public function __call($name, $args)
+	public function __call($_name, $_args)
 	{
-		if(preg_grep("/^$name$/", array('get', 'post', 'put', 'delete')))
+		if(preg_grep("/^$_name$/", array('get', 'post', 'put', 'delete')))
 		{
-			array_unshift($args, $name);
-			return call_user_func_array(array($this, 'check_api'), $args);
+			array_unshift($_args, $_name);
+			return call_user_func_array(array($this, 'check_api'), $_args);
 		}
-		elseif(method_exists('\lib\router', $name))
+		elseif(method_exists('\lib\router', $_name))
 		{
-			return call_user_func_array('\lib\router::'.$name, $args);
-		}elseif(preg_match("#^inject_(.*)$#Ui", $name, $inject)){
-			return $this->inject($inject[1], $args);
-		}elseif(preg_match("#^i(.*)$#Ui", $name, $icall)){
-			if(array_key_exists($icall[1], $this->methods)){
-				return $this->methods[$icall[1]](...$args);
-			}elseif(method_exists($this, $icall[1])){
-				return call_user_func_array(array($this, $icall[1]), $args);
-			}
+			return call_user_func_array('\lib\router::'.$_name, $_args);
+		}elseif(preg_match("#^inject_((after_|before_)?.+)$#Ui", $_name, $inject)){
+			return $this->inject($inject[1], $_args);
+		}elseif(preg_match("#^i(.*)$#Ui", $_name, $icall)){
+			return $this->mvc_inject_finder($_name, $_args, $icall[1]);
 		}
-		\lib\error::page(get_called_class()."->$name()");
-	}
-
-	public function inject($name, $args){
-		$closure = $args[0];
-		$this->methods[$name] = $closure->bindTo($this);
+		\lib\error::page(get_called_class()."->$_name()");
 	}
 
 	/**

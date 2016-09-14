@@ -110,7 +110,8 @@ class main
 			$this->controller_finder();
 			return;
 		}
-		if(method_exists($controller, 'config'))
+
+		if(method_exists($controller, 'config') || array_key_exists('config', $controller->Methods))
 		{
 			$controller->iconfig();
 		}

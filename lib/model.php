@@ -3,7 +3,7 @@ namespace lib;
 
 class model
 {
-	use mvm;
+	use mvc;
 	// query lists
 	public $querys;
 

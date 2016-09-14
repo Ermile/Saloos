@@ -3,7 +3,8 @@ namespace lib;
 
 class view
 {
-	use mvm;
+	use mvc;
+
 	use view\twigAddons;
 	use view\optimize;
 	/**
@@ -15,6 +16,9 @@ class view
 	 * constructor
 	 * @param boolean $object controller
 	 */
+
+	public $twig_include_path = array();
+
 	public function __construct($object = false)
 	{
 		if(!$object) return;
@@ -55,6 +59,8 @@ class view
 			// else
 				// $_SESSION['debug'][md5($myurl)]['show'] = true;
 		}
+
+		array_push($this->twig_include_path, root);
 
 		if(method_exists($this, 'mvc_construct'))
 		{
@@ -111,12 +117,7 @@ class view
 
 		require_once core.'Twig/lib/Twig/Autoloader.php';
 		\Twig_Autoloader::register();
-		$myLocs = [root];
-		if(file_exists(addons))
-		{
-			array_push($myLocs, addons);
-		}
-		$loader		  = new \Twig_Loader_Filesystem($myLocs);
+		$loader		  = new \Twig_Loader_Filesystem($this->twig_include_path);
 		$array_option = array();
 		if($this->controller()->debug())
 			$array_option['debug'] = true;

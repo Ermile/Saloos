@@ -193,5 +193,18 @@ trait optimize
 			}
 		}
 	}
+
+	public function twig_file_exists($_filename)
+	{
+		$filename = trim($_filename, '/');
+		foreach ($this->twig_include_path as $key => $value) {
+			$value = rtrim($value, '/');
+			$file = join('/', [$value, $filename]);
+			if(file_exists($file))
+			{
+				return $file;
+			}
+		}
+	}
 }
 ?>

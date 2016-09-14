@@ -14,12 +14,14 @@ class modules{
 					$arr_unsort[$key] = $value;
 			}
 			return array_merge($arr_sort, $arr_unsort);
-		}else{
-			if(!$name){
+		}elseif(array_key_exists($name, $this->modules_list)){
+			if(!$attr){
 				return $this->modules_list[$name];
 			}else{
 				return array_key_exists($attr, $this->modules_list[$name]) ? $this->modules_list[$name][$attr] : false;
 			}
+		}else{
+			return null;
 		}
 	}
 
@@ -38,31 +40,53 @@ class modules{
 			&& array_key_exists($_attr['parent'], $this->modules_list)
 			&& array_key_exists('disable', $this->modules_list[$_attr['parent']])
 			&& $this->modules_list[$_attr['parent']]['disable'] == true
-			){
+			)
+		{
 			$_attr['disable'] = true;
-	}
-		// var_dump($_name, $_attr);
-	$this->modules_list[$_name] = $_attr;
-}
-
-public function modules_search($attr){
-	$arr = array();
-	foreach ($this->get_modules() as $key => $value) {
-		if(array_key_exists($attr, $value)){
-			$arr[$key] = $value[$attr];
 		}
-	}
-	return $arr;
-}
-
-public function modules_hasnot($attr){
-	$arr = array();
-	foreach ($this->get_modules() as $key => $value) {
-		if(!array_key_exists($attr, $value)){
-			$arr[$key] = $value;
+		if(array_key_exists('addons', $_attr))
+		{
+			$_attr['addons'] = $this->add_addons($_attr['addons']);
 		}
+		$this->modules_list[$_name] = $_attr;
 	}
-	return $arr;
-}
+
+	public function modules_search($attr){
+		$arr = array();
+		foreach ($this->get_modules() as $key => $value) {
+			if(array_key_exists($attr, $value)){
+				$arr[$key] = $value[$attr];
+			}
+		}
+		return $arr;
+	}
+
+	public function modules_hasnot($attr){
+		$arr = array();
+		foreach ($this->get_modules() as $key => $value) {
+			if(!array_key_exists($attr, $value)){
+				$arr[$key] = $value;
+			}
+		}
+		return $arr;
+	}
+
+	private function add_addons($_addons)
+	{
+		foreach ($_addons as $key => $value)
+		{
+			if(is_array($value))
+			{
+				foreach ($value as $k => $v) {
+					if(is_int($k))
+					{
+						unset($_addons[$key][$k]);
+						$_addons[$key][$v] = true;
+					}
+				}
+			}
+		}
+		return $_addons;
+	}
 }
 ?>

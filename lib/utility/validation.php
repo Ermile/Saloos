@@ -43,8 +43,9 @@ class validation
 	 * @return True if the syntax matches, false otherwise
 	 */
 	public static function isEmail($email){
-		$reg = "/^[a-z0-9!#$%&'*+\/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+\/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+(?:".self::TLDS.")$/i";
-		return preg_match($reg, $email);
+		// $reg = "/^[a-z0-9!#$%&'*+\/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+\/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+(?:".self::TLDS.")$/i";
+		// return preg_match($reg, $email);
+		return filter_var($email, FILTER_SANITIZE_EMAIL) === false ? false : true;
 	}
 
 	/**
@@ -78,8 +79,9 @@ $/xi";
 	 * @return True if the syntax matches, false otherwise
 	 */
 	public static function isIP($ip){
-		$reg = "/^(?:\.(?:1?[0-9]{1,2}|2(?:[0-4][0-9]|5[0-5]))){4}$/";
-		return preg_match($reg, '.'.$ip);
+		// $reg = "/^(?:\.(?:1?[0-9]{1,2}|2(?:[0-4][0-9]|5[0-5]))){4}$/";
+		// return preg_match($reg, '.'.$ip);
+		return filter_var($email, FILTER_VALIDATE_IP) === false ? false : true;
 	}
 
 	/**
