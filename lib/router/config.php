@@ -144,6 +144,15 @@ trait config
 		}
 	}
 
+	public static function remove_url_property($_search)
+	{
+		$value = self::get_url_property($_search);
+		if($value !== null)
+		{
+			self::remove_url("$_search=$value");
+		}
+	}
+
 	public static function shift_url(){
 		$array = self::get_class_static('url_array');
 		array_shift($array);
