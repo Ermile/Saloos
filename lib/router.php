@@ -275,7 +275,7 @@ class router
 		// create new url for protocol checker
 		$newUrl      = "";
 		$currentPath = $_SERVER['REQUEST_URI'];
-		$mainSite    = \lib\utility\option::get('config', 'meta', 'mainSite');
+		$mainSite    = \lib\utility\option::get('config', 'meta', 'redirectURL');
 
 		// if redirect to main site is enable and all thing is okay
 		// then redirect to the target url
@@ -322,6 +322,7 @@ class router
 				$newUrl .= router::get_root_domain(). '/'. router::get_url();
 			}
 		}
+// var_dump($newUrl);exit();
 
 		// if newUrl is exist and we must to redirect
 		// then complete url and redirect to this address
