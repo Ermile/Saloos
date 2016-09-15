@@ -87,7 +87,7 @@ class config
 		if($route_callback->status)
 		{
 			$this->api->controller->method = $this->api_method;
-			$args_object = object(array(
+			$args_object = new args_callback(array(
 				'method' => $this->api_method,
 				'match' => $route_callback->match
 				));
