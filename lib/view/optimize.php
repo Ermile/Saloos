@@ -192,6 +192,8 @@ trait optimize
 				}
 			}
 		}
+		// add datarow to form for future use!
+		$_form->datarow = $_datarow;
 	}
 
 	public function twig_file_exists($_filename)
