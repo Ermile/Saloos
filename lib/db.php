@@ -793,5 +793,27 @@ class db
 		// mysqli_get_client_version();
 		return mysqli_get_server_version(self::$link);
 	}
+
+	/**
+	 * get pagenation
+	 *
+	 * @param      <type>  $_query   The query
+	 * @param      <type>  $_length  The length
+	 *
+	 * @return     <type>  array [startlimit, endlimit]
+	 */
+	public static function pagenation($_query, $_length, $_force = true)
+	{
+		if($_force)
+		{
+			$count_record = \lib\db::get($_query,'count', true);
+			\lib\main::$controller->pagenation_make($count_record, $_length);
+			$limit_start = \lib\main::$controller->pagenation_get('current');
+			$length = \lib\main::$controller->pagenation_get('length');
+			$limit_start = $limit_start - 1;
+			$limit_end = $length;
+			return [$limit_start, $limit_end];
+		}
+	}
 }
 ?>
