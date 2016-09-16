@@ -797,14 +797,14 @@ class db
 	}
 
 	/**
-	 * get pagenation
+	 * get pagnation
 	 *
 	 * @param      <type>  $_query   The query
 	 * @param      <type>  $_length  The length
 	 *
 	 * @return     <type>  array [startlimit, endlimit]
 	 */
-	public static function pagenation($_query, $_length, $_force = true)
+	public static function pagnation($_query, $_length, $_force = true)
 	{
 		if($_force)
 		{
@@ -817,10 +817,10 @@ class db
 				$count = self::query($_query);
 				$count = mysqli_num_rows($count);
 			}
-			\lib\main::$controller->pagenation_make($count, $_length);
-			$current = \lib\main::$controller->pagenation_get('current');
+			\lib\main::$controller->pagnation_make($count, $_length);
+			$current = \lib\main::$controller->pagnation_get('current');
 
-			$length = \lib\main::$controller->pagenation_get('length');
+			$length = \lib\main::$controller->pagnation_get('length');
 			$limit_start = ($current - 1) * $length ;
 			if($limit_start < 0)
 			{
