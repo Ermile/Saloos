@@ -632,8 +632,9 @@ class jdate
         $start_day  = 1;
         $end_day    = $j_days_in_month[$month];
 
-        $start_date = self::mktime(0, 0, 0, $month, $start_day, $year, true);
-        $end_date   = self::mktime(0, 0, 0, $month, $end_day, $year, true);
+        $start_date = (int)self::mktime(0, 0, 0, $month, $start_day, $year, true);
+        $end_date   = (int)self::mktime(0, 0, 0, $month, $end_day, $year, true);
+
 
         $start_date = date("Y-m-d",$start_date);
         $end_date   = date("Y-m-d",$end_date);
@@ -656,8 +657,8 @@ class jdate
         $start_month = 1;
         $end_month   = 12;
 
-        $start_date = self::mktime(0, 0, 0, $start_month, $start_day, $year, true);
-        $end_date   = self::mktime(0, 0, 0, $end_month, $end_day, $year, true);
+        $start_date = (int)self::mktime(0, 0, 0, $start_month, $start_day, $year, true);
+        $end_date   = (int)self::mktime(0, 0, 0, $end_month, $end_day, $year, true);
 
         $start_date = date("Y-m-d",$start_date);
         $end_date   = date("Y-m-d",$end_date);
