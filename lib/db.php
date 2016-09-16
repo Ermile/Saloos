@@ -807,10 +807,17 @@ class db
 		if($_force)
 		{
 			$count_record = \lib\db::get($_query,'count', true);
+
+			$current = \lib\main::$controller->pagenation_get('current');
+
 			\lib\main::$controller->pagenation_make($count_record, $_length);
-			$limit_start = \lib\main::$controller->pagenation_get('current');
+
 			$length = \lib\main::$controller->pagenation_get('length');
-			$limit_start = $limit_start - 1;
+			$limit_start = ($current - 1) * $length ;
+			if($limit_start < 0)
+			{
+				$limit_start = 0;
+			}
 			$limit_end = $length;
 			return [$limit_start, $limit_end];
 		}
