@@ -770,9 +770,11 @@ class db
 	 * @param  [type] $_text [description]
 	 * @return [type]        [description]
 	 */
-	private static function log($_text) {
-	$classes  = (array_column(debug_backtrace(), 'file'));
-		if(DEBUG){
+	private static function log($_text)
+	{
+		$classes  = (array_column(debug_backtrace(), 'file'));
+		if(DEBUG)
+		{
 			$fileAddr = root.'public_html/files/';
 			\lib\utility\file::makeDir($fileAddr, null, true);
 			// set file address
@@ -806,11 +808,17 @@ class db
 	{
 		if($_force)
 		{
-			$count_record = \lib\db::get($_query,'count', true);
-
+			if(is_int($_query))
+			{
+				$count = $_query;
+			}
+			else
+			{
+				$count = self::query($_query);
+				$count = mysqli_num_rows($count);
+			}
+			\lib\main::$controller->pagenation_make($count, $_length);
 			$current = \lib\main::$controller->pagenation_get('current');
-
-			\lib\main::$controller->pagenation_make($count_record, $_length);
 
 			$length = \lib\main::$controller->pagenation_get('length');
 			$limit_start = ($current - 1) * $length ;
@@ -821,6 +829,18 @@ class db
 			$limit_end = $length;
 			return [$limit_start, $limit_end];
 		}
+	}
+
+
+	/**
+	 * get num rows of query
+	 *
+	 * @return     <int>  ( description_of_the_return_value )
+	 */
+	public static function num()
+	{
+		$num = @mysqli_num_rows(self::$link);
+		return $num;
 	}
 }
 ?>
