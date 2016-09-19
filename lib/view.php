@@ -35,16 +35,9 @@ class view
 
 		// default data property
 		$this->data->macro['forms']       = 'includes/macro/forms.html';
-
+		// default display value
 		$this->data->display['mvc']       = "includes/mvc/display.html";
-		$this->data->display['main']      = "content/main/layout.html";
-		$this->data->display['home']      = "content/home/display.html";
-		$this->data->display['cp']        = "content_cp/home/layout.html";
-		$this->data->display['account']   = "content_account/home/layout.html";
 
-		$this->data->template['header']   = 'content/template/header.html';
-		$this->data->template['sidebar']  = 'content/template/sidebar.html';
-		$this->data->template['footer']   = 'content/template/footer.html';
 
 		$myurl = router::get_protocol().'://'.router::get_domain().$_SERVER['REQUEST_URI'];
 		if( isset($_SERVER['HTTP_REFERER']) && isset($_SESSION['debug'][md5($_SERVER['HTTP_REFERER'])]) )
