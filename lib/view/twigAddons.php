@@ -83,6 +83,25 @@ trait twigAddons
 
 
 	/**
+	 * twig custom filter for convert date to best type of showing on each language
+	 * tdate means translated date
+	 */
+	public function twig_filter_tdate()
+	{
+		return new \Twig_SimpleFilter('tdate', function ($_string, $_format ="Y/m/d", $_convert = true)
+		{
+			$result = $_string;
+			if($this->data->site['currentlang'] == 'fa')
+			{
+				$result = \lib\utility\jdate::date($_format, $_string, $_convert);
+			}
+
+			return $result;
+		});
+	}
+
+
+	/**
 	 * twig custom filter for convert date to best type of showing
 	 */
 	public function twig_filter_sdate()

@@ -97,6 +97,7 @@ class view
 		// twig method
 		$this->add_twig_filter('fcache');
 		$this->add_twig_filter('jdate');
+		$this->add_twig_filter('tdate');
 		$this->add_twig_filter('sdate');
 		$this->add_twig_filter('readableSize');
 		$this->add_twig_filter('persian');
