@@ -95,6 +95,10 @@ trait twigAddons
 			{
 				$result = \lib\utility\jdate::date($_format, $_string, $_convert);
 			}
+			else
+			{
+				$result = date($_format, strtotime($_string));
+			}
 
 			return $result;
 		});
