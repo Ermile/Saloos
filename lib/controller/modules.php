@@ -75,15 +75,10 @@ class modules{
 	{
 		foreach ($_addons as $key => $value)
 		{
-			if(is_array($value))
+			if(is_int($key))
 			{
-				foreach ($value as $k => $v) {
-					if(is_int($k))
-					{
-						unset($_addons[$key][$k]);
-						$_addons[$key][$v] = true;
-					}
-				}
+				unset($_addons[$key]);
+				$_addons[$value] = true;
 			}
 		}
 		return $_addons;

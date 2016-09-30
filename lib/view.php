@@ -80,8 +80,10 @@ class view
 			$this->data->display['cp']      = "content_cp/home/layout-xhr.html";
 			$this->data->display['account'] = "content_account/home/layout-xhr.html";
 
-			if(method_exists($this, "pushState"))
-				$this->pushState();
+			if($this->method_exists("pushState"))
+			{
+				$this->ipushState();
+			}
 		}
 		$module       = preg_replace("/^[^\/]*\/?content/", "content", get_class($this->controller));
 		$module       = preg_replace("/^content\\\\|(model|view|controller)$/", "", $module);

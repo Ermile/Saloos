@@ -94,10 +94,8 @@ class config
 			if($this->model_api_name)
 			{
 				$model_api_name = "api_".$this->model_api_name;
-				// $api_callback = $this->api->controller->model()->$model_api_name($args_object);
 
 				$this->api->controller->model_api_processor = $object = object(array("method" => $model_api_name, "args" => $args_object));
-				// $this->api->controller->api_callback = $api_callback;
 			}
 			if($this->view_api_name && !\lib\router::get_storage('api'))
 			{
@@ -106,7 +104,6 @@ class config
 				{
 					$args_object->api_callback = $api_callback;
 				}
-				// $api_callback = $this->api->controller->view()->$view_api_name($args_object);
 				$this->api->controller->view_api_processor = $object = object(array("method" => $view_api_name, "args" => $args_object));
 			}
 		}

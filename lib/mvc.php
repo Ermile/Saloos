@@ -101,17 +101,10 @@ trait mvc
 		}
 		$addons = $manifest['addons'];
 		foreach ($addons as $key => $value) {
-			if(array_key_exists(router::get_method(), $value)
-				&& $value[router::get_method()] === true
-				&& array_key_exists('addons', $controller::$manifest)
-				&& array_key_exists($key, $controller::$manifest['addons'])
-				)
+			$this->addons_method_import($key, $controller::$manifest['addons'][$key]);
+			if(method_exists($this, 'addons_config') || array_key_exists('addons_config', $this->Methods))
 			{
-				$this->addons_method_import($key, $controller::$manifest['addons'][$key]);
-				if(method_exists($this, 'addons_config') || array_key_exists('addons_config', $this->Methods))
-				{
-					$this->iaddons_config($key, $controller::$manifest['addons'][$key]);
-				}
+				$this->iaddons_config($key, $controller::$manifest['addons'][$key]);
 			}
 		}
 	}
@@ -135,6 +128,15 @@ trait mvc
 				$this->inject($value->name, [$Closure]);
 			}
 		}
+	}
+
+	public function method_exists($_name)
+	{
+		if(method_exists($this, $_name) || array_key_exists($_name, $this->Methods))
+		{
+			return true;
+		}
+		return false;
 	}
 }
 ?>

@@ -68,4 +68,18 @@ class filter
 		else
 			return $slugify->slugify($_string);
 	}
+
+	public static function decode_meta($_array, $_field = null)
+	{
+		$field = $_field? $_field : "/^.+_meta$/";
+		array_walk($_array, function(&$_row, $_key, $_field)
+		{
+			$keys = array_keys($_row);
+			$json_fields = preg_grep($_field, $keys);
+			foreach ($json_fields as $key => $value) {
+				$_row[$value] = json_decode($_row[$value], true);
+			}
+		}, $field);
+		return $_array;
+	}
 }

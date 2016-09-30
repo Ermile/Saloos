@@ -40,7 +40,17 @@ class autoload
 			}
 			else
 			{
-				return false;
+				$name = preg_replace("/[\\\]/", DIRECTORY_SEPARATOR, $name).'.php';
+				$file_addr = stream_resolve_include_path($name);
+				if($file_addr)
+				{
+					self::$require[$name] = 1;
+					include_once($file_addr);
+				}
+				else
+				{
+					return false;
+				}
 			}
 		}
 	}
