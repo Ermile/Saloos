@@ -77,7 +77,8 @@ class filter
 			$keys = array_keys($_row);
 			$json_fields = preg_grep($_field, $keys);
 			foreach ($json_fields as $key => $value) {
-				$_row[$value] = json_decode($_row[$value], true);
+				$json = json_decode($_row[$value], true);
+				$_row[$value] = is_null($json) ? $_row[$value] : $json;
 			}
 		}, $field);
 		return $_array;

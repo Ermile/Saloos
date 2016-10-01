@@ -11,6 +11,7 @@ class db
 
 	// save link to database
 	public static $link;
+	public static $link_open = array();
 	public static $path_project = database. 'install/';
 	public static $path_addons  = addons. 'includes/cls/database/install/';
 
@@ -58,12 +59,16 @@ class db
 			self::$db_name = $_db_name;
 		}
 
-
 		// fill variable if empty variable
 		self::$db_name = self::$db_name ? self::$db_name : db_name;
 		self::$db_user = self::$db_user ? self::$db_user : db_user;
 		self::$db_pass = self::$db_pass ? self::$db_pass : db_pass;
-
+		if(array_key_exists(self::$db_name, self::$link_open))
+		{
+			self::$link = self::$link_open[self::$db_name];
+			return true;
+		}
+		var_dump(self::$db_name);
 		// if mysqli class does not exist or have some problem show related error
 		if(!class_exists('mysqli'))
 		{
@@ -128,7 +133,6 @@ class db
 					break;
 			}
 		}
-
 		// link is created and exist,
 		// check if link is exist set it as global variable
 		if($link)
@@ -137,6 +141,7 @@ class db
 			@mysqli_set_charset($link, self::$db_charset);
 			// save link as global variable
 			self::$link = $link;
+			self::$link_open[self::$db_name] = $link;
 			return true;
 		}
 		// if link is not created return false
