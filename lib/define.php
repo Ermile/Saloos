@@ -83,9 +83,9 @@ class define
       {
         setcookie('preview','yes',time() + 30*24*60*60,'/','.'.Service);
       }
-      elseif(php_sapi_name() == "cli")
+      elseif(router::get_url(0) === 'saloos_tg')
       {
-        // allow cli to commiunate on coming soon
+        // allow telegram to commiunate on coming soon
       }
       elseif(!isset($_COOKIE["preview"]))
       {
