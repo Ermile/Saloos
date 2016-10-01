@@ -7,11 +7,11 @@ class router
 {
 	use router\config;
 
-	public function __construct()
+	public function __construct($_clean_url = null)
 	{
 		self::$repository = repository;
 		$path = preg_replace("/^\.\//","/",'/');
-		$clean_url = $_SERVER['REQUEST_URI'];
+		$clean_url = $_clean_url !== null ? $_clean_url : $_SERVER['REQUEST_URI'];
 		if(preg_match("#0x#", $clean_url))
 		{
 			// error
