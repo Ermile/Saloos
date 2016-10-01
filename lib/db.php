@@ -68,7 +68,6 @@ class db
 			self::$link = self::$link_open[self::$db_name];
 			return true;
 		}
-		var_dump(self::$db_name);
 		// if mysqli class does not exist or have some problem show related error
 		if(!class_exists('mysqli'))
 		{
