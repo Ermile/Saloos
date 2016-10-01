@@ -83,6 +83,10 @@ class define
       {
         setcookie('preview','yes',time() + 30*24*60*60,'/','.'.Service);
       }
+      elseif(php_sapi_name() == "cli")
+      {
+        // allow cli to commiunate on coming soon
+      }
       elseif(!isset($_COOKIE["preview"]))
       {
         header('Location: http://'.AccountService.MainTld.'/static/page/coming/', true, 302);
