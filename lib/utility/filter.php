@@ -69,9 +69,9 @@ class filter
 			return $slugify->slugify($_string);
 	}
 
-	public static function decode_meta($_array, $_field = null)
+	public static function meta_decode($_array, $_field = null)
 	{
-		$field = $_field? $_field : "/^.+_meta$/";
+		$field = $_field? $_field : "/^.+_meta|meta$/";
 		array_walk($_array, function(&$_row, $_key, $_field)
 		{
 			$keys = array_keys($_row);

@@ -669,7 +669,6 @@ class db
 		{
 			// no result exist
 			// save mysql error
-			echo(mysqli_error(self::$link));
 			self::log("MYSQL ERROR ". mysqli_error(self::$link));
 			return false;
 		}

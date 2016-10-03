@@ -612,7 +612,7 @@ class jdate
      * @example     jalali month (1395,6) => 2016-08-12, 2016-09-11
      * @return     <type>
      */
-    public static function jalali_month($year, $month){
+    public static function jalali_month($_year, $_month){
 
         $j_days_in_month = [
                              '01'  => 31,
@@ -630,10 +630,10 @@ class jdate
                              ];
 
         $start_day  = 1;
-        $end_day    = $j_days_in_month[$month];
+        $end_day    = $j_days_in_month[$_month];
 
-        $start_date = (int)self::mktime(0, 0, 0, $month, $start_day, $year, true);
-        $end_date   = (int)self::mktime(0, 0, 0, $month, $end_day, $year, true);
+        $start_date = (int)self::mktime(0, 0, 0, $_month, $start_day, $_year, true);
+        $end_date   = (int)self::mktime(0, 0, 0, $_month, $end_day, $_year, true);
 
 
         $start_date = date("Y-m-d",$start_date);
@@ -646,22 +646,34 @@ class jdate
     /**
      * get jalali year and convert to two date (start , end)
      *
-     * @param      <type>  $year   The year
+     * @param      <type>  $_year   The year
      * @example     jalali year (1395) => 2016-03-12, 2017-03-12
      * @return     <type>  ( description_of_the_return_value )
      */
-    public static function jalali_year($year){
+    public static function jalali_year($_year){
         $start_day   = 1;
         $end_day     = 30;
 
         $start_month = 1;
         $end_month   = 12;
 
-        $start_date = (int)self::mktime(0, 0, 0, $start_month, $start_day, $year, true);
-        $end_date   = (int)self::mktime(0, 0, 0, $end_month, $end_day, $year, true);
+        $start_date = (int)self::mktime(0, 0, 0, $start_month, $start_day, $_year, true);
+        $end_date   = (int)self::mktime(0, 0, 0, $end_month, $end_day, $_year, true);
 
         $start_date = date("Y-m-d",$start_date);
         $end_date   = date("Y-m-d",$end_date);
         return [$start_date, $end_date];
+    }
+
+
+    public static function is_jalali($_date)
+    {
+        return true;
+    }
+
+
+    public static function is_gregorian($_date)
+    {
+        return true;
     }
 }
