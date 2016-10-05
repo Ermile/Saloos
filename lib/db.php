@@ -842,7 +842,8 @@ class db
 	 */
 	public static function num()
 	{
-		$num = @mysqli_num_rows(self::$link);
+		// $num = @mysqli_num_rows(self::$link);
+		$num = self::$link->affected_rows;
 		return $num;
 	}
 }
