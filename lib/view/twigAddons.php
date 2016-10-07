@@ -269,12 +269,47 @@ trait twigAddons
 		{
 			$posts  = $this->model()->posts(...func_get_args());
 			$html   = array_column(func_get_args(), 'html');
+			$desc   = array_column(func_get_args(), 'desc');
+			if($html && count($html) === 1)
+			{
+				$html = $html[0];
+			}
+
+			if($desc && count($desc) === 1)
+			{
+				$desc = $desc[0];
+			}
 
 			if($html)
 			{
-				$result = null;
+				$counter = 0;
+				$result  = '';
+				$content = '';
 				foreach ($posts as $item)
-					$result .= "<a href='/".$item['url']."'>".$item['title']."</a>";
+				{
+					$result .= "\n    ";
+					$result .= "<article>";
+
+					if($desc == 'all' || (is_numeric($desc) && $desc > $counter))
+					{
+						$result .= "<a href='/".$item['url']."'>".$item['title']."</a>";
+						if(isset($item['content']))
+						{
+							$content = \lib\utility\excerpt::get($item['content']);
+							if($content)
+							{
+								$result .= '<p>'. $content .'</p>';
+							}
+						}
+					}
+					else
+					{
+						$result .= "<a href='/".$item['url']."'>".$item['title']."</a>";
+					}
+					$result .= "</article>";
+					// increase counter
+					$counter++;
+				}
 
 				echo $result;
 			}
