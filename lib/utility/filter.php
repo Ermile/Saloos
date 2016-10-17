@@ -87,4 +87,51 @@ class filter
 		}, $field);
 		return $_array;
 	}
+
+
+
+	/**
+	 * gnerate temp password
+	 */
+	public static function temp_password($_num = null)
+	{
+		// alphabet
+		$alphabet = '1234567890abcdefghijklmnopqrstuvwxyz';
+		if(!$_num)
+		{
+			$_num = time(). rand(0,9);
+		}
+		$rand = \lib\utility\shortURL::encode($_num, $alphabet);
+		if(!$_num)
+		{
+			return "rand_". $rand;
+		}
+		return $rand;
+	}
+
+
+	/**
+	 * generate temp mobile
+	 *
+	 * @return     string  ( description_of_the_return_value )
+	 */
+	public static function temp_mobile()
+	{
+		// get auto increment id from users table
+		$query =
+		"
+			SELECT
+				AUTO_INCREMENT AS 'NEXTID'
+			FROM
+				information_schema.tables
+			WHERE
+				table_name = 'users' AND
+				table_schema = DATABASE()
+		";
+		$result  = \lib\db::get($query, "NEXTID", true);
+		$next_id = intval($result) + 1;
+		$next_id = self::temp_password($next_id);
+		return "temp_". $next_id;
+	}
 }
+?>
