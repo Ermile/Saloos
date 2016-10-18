@@ -133,5 +133,37 @@ class filter
 		$next_id = self::temp_password($next_id);
 		return "temp_". $next_id;
 	}
+
+
+	/**
+	 * generate verification code
+	 * save in log table
+	 *
+	 * @param      <type>  $_user_id  The user identifier
+	 * @param      <type>  $_mobile   The mobile
+	 *
+	 * @return     <type>  ( description_of_the_return_value )
+	 */
+	public static function generate_verification_code($_user_id, $_mobile)
+	{
+		$code           = rand(1000, 9999);
+		$log_item_title = "account/verification sms";
+		$log_item_id    = \lib\db\logitems::get_id($log_item_title);
+		$arg =
+		[
+			'logitem_id'     => $log_item_id,
+			'user_id'        => $_user_id,
+			'log_data'       => $code,
+			'log_status'     => 'enable',
+			'log_createdate' => date('Y-m-d H:i:s')
+		];
+		$result = \lib\db\logs::insert($arg);
+		if($result)
+		{
+			$_SESSION['verification_mobile'] = $_mobile;
+			return $code;
+		}
+		return false;
+	}
 }
 ?>

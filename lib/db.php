@@ -773,7 +773,7 @@ class db
 	 * @param  [type] $_text [description]
 	 * @return [type]        [description]
 	 */
-	private static function log($_text)
+	public static function log($_text)
 	{
 		$classes  = (array_column(debug_backtrace(), 'file'));
 		if(DEBUG)

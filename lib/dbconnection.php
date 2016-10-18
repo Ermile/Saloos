@@ -142,7 +142,10 @@ class dbconnection
 		// 	'9'
 		// );
 		// $string = preg_replace($patterns, $replacements, $string);
-
+		if(DEBUG)
+		{
+			\lib\db::log($string);
+		}
 		if(debug::$status)
 		{
 			$this->string = $string;
