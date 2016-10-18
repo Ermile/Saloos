@@ -5,23 +5,23 @@
 @ Author: Javad Evazzadeh | Evazzadeh.com
 
 Quick Start:
-	copy this file in your project and edit KavenegarApi.php first line and insert your apikey and linenumber
+	copy this file in your project and edit kavenegar_api.php first line and insert your apikey and linenumber
 	then copy and paste below line to quickly sent message!
-		require("KavenegarApi.php");
-		$api 	= new KavenegarApi();
+		require("kavenegar_api.php");
+		$api 	= new kavenegar_api();
 		$result = $api->send('09120000000', 'Hi, This is for test!');
 
 
 How to Use:
 	for use this class you must require this file in your project with below line
-		require("KavenegarApi.php");
+		require("kavenegar_api.php");
 
-	then you must create an instance from KavenegarApi with below line
-		$api = new KavenegarApi();
+	then you must create an instance from kavenegar_api with below line
+		$api = new kavenegar_api();
 
 	you can set the apikey and linenumber from declaration part of class in first lines
 	but if you want you can set this parameter on create new instance with below code
-		$api = new KavenegarApi('Your-apikey', 'Your-linenumber');
+		$api = new kavenegar_api('Your-apikey', 'Your-linenumber');
 
 	for use the functions you can use below line sample, this line send message to 09120000000
 		$result = $api->send('09120000000', 'Hi, This is for test!');
@@ -34,7 +34,7 @@ How to Use:
 	var_dump($api->msg);
 
 */
-class kavenegarApi
+class kavenegar_api
 {
 	// declare variable
 	// you can replace null with your api code or your default linenumber

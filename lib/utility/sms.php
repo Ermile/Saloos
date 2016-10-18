@@ -1,6 +1,6 @@
 <?php
 namespace lib\utility;
-require(lib."utility/KavenegarApi.php");
+require(lib."utility/kavenegar_api.php");
 
 /** Sms management class **/
 class sms
@@ -25,7 +25,6 @@ class sms
 		{
 			return false;
 		}
-
 
 		// set restriction
 		if(isset($settings['meta']['iran']) && $settings['meta']['iran'] &&
@@ -172,7 +171,6 @@ class sms
 		// create complete message
 		$sms_msg    = $sms_header. "\n". $_msg. "\n\n". $sms_footer;
 
-		// var_dump($sms_forceOne);
 		if($sms_forceOne && mb_strlen($sms_msg) > self::is_rtl($sms_msg, true))
 		{
 			// create complete message
@@ -196,7 +194,7 @@ class sms
 	 * @param  integer $_type   [description]
 	 * @return [type]           [description]
 	 */
-	private static function kavenegar($_apikey, $_line, $_request, $_mobile = false, $_msg = false, $_type = 0)
+	private static function kavenegar_api($_apikey, $_line, $_request, $_mobile = false, $_msg = false, $_type = 0)
 	{
 		if($_type === 'debug')
 		{
@@ -210,7 +208,7 @@ class sms
 			return 'debug';
 		}
 		// create new instance from kavenegar api and call requested func of it
-		$api    = new \KavenegarApi($_apikey, $_line);
+		$api    = new \kavenegar_api($_apikey, $_line);
 		$result = $api->{$_request}($_mobile, $_msg, 0);
 
 		// $result = $api->select(27657835);
