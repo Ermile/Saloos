@@ -818,7 +818,14 @@ class db
 			else
 			{
 				$count = self::query($_query);
-				$count = mysqli_num_rows($count);
+				if($count && is_a($count, "mysqli_result"))
+				{
+					$count = mysqli_num_rows($count);
+				}
+				else
+				{
+					$count = 0;
+				}
 			}
 			\lib\main::$controller->pagnation_make($count, $_length);
 			$current = \lib\main::$controller->pagnation_get('current');
