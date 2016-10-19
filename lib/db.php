@@ -846,5 +846,32 @@ class db
 		$num = self::$link->affected_rows;
 		return $num;
 	}
+
+
+	/**
+	 * transaction
+	 */
+	public static function transaction()
+	{
+		self::query("START TRANSACTION");
+	}
+
+
+	/**
+	 * commit
+	 */
+	public static function commit()
+	{
+		self::query("COMMIT");
+	}
+
+
+	/**
+	 * rollback
+	 */
+	public static function rollback()
+	{
+		self::query("ROLLBACK");
+	}
 }
 ?>
