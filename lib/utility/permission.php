@@ -175,12 +175,20 @@ class permission
 	{
 		$myList      = [];
 		$contentName = preg_replace("/content_([^\\\]+)/", "content_" . $_content, get_class(\lib\main::$controller));
-		if(get_class(\lib\main::$controller) == $contentName && method_exists($contentName, 'permModules')){
+		if(get_class(\lib\main::$controller) == $contentName && method_exists($contentName, 'permModules'))
+		{
 			$myList = $contentName::permModules();
-		}else{
+		}
+		else
+		{
 			$manifest_class = new \lib\controller\manifest('content_' . $_content);
 			$manifest       = $manifest_class->get();
-			$myList         = $manifest['modules']->modules_search('permissions');
+			$myList = [];
+			if(isset($manifest['modules']))
+			{
+				$myList = $manifest['modules']->modules_search('permissions');
+			}
+
 		}
 		if(count($myList))
 		{
