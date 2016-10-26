@@ -69,22 +69,28 @@ class filter
 			return $slugify->slugify($_string);
 	}
 
-	public static function meta_decode($_array, $_field = null)
+	public static function meta_decode($_array, $_field = null, $_options = [])
 	{
 		$field = $_field? $_field : "/^(.+_meta|meta)$/";
 		if(!is_array($_array))
 		{
 			return $_array;
 		}
-		array_walk($_array, function(&$_row, $_key, $_field)
+		array_walk($_array, function(&$_row, $_key, $_options)
 		{
 			$keys = array_keys($_row);
-			$json_fields = preg_grep($_field, $keys);
+			$json_fields = preg_grep($_options[0], $keys);
+			$to_array = true;
+			$options = $_options[1];
+			if(array_key_exists('return_object', $options) && $options['return_object'] == true)
+			{
+				$to_array = false;
+			}
 			foreach ($json_fields as $key => $value) {
-				$json = json_decode($_row[$value], true);
+				$json = json_decode($_row[$value], $to_array);
 				$_row[$value] = is_null($json) ? $_row[$value] : $json;
 			}
-		}, $field);
+		}, [$field, $_options]);
 		return $_array;
 	}
 
