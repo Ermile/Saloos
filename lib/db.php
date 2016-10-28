@@ -633,11 +633,17 @@ class db
 		// fetch datatable by result
 		$result = self::fetch_all($result, $_column);
 		// if we have only one row of result only return this row
-		if($_onlyOneValue && count($result) === 1 && isset($result[0]))
+		if($_onlyOneValue && count($result) === 1)
 		{
-			$result = $result[0];
+			if(isset($result[0]))
+			{
+				$result = $result[0];
+			}
+			else
+			{
+				$result = null;
+			}
 		}
-
 		return $result;
 	}
 
