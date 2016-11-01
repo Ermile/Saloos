@@ -386,5 +386,21 @@ class countres
 		}
 		return $result;
 	}
+
+	/**
+	 * check country name exist of no
+	 *
+	 * @param      <type>   $_name  The name
+	 *
+	 * @return     boolean  ( description_of_the_return_value )
+	 */
+	public static function check($_name)
+	{
+		if(array_key_exists($_name, self::$country))
+		{
+			return true;
+		}
+		return false;
+	}
 }
 ?>
