@@ -5,7 +5,7 @@ use \lib\api;
 class controller
 {
 	use mvc;
-
+	static $language = false;
 	public $api, $model, $view, $method;
 	public $model_name, $view_name, $display_name;
 	public $debug = true;
@@ -24,6 +24,10 @@ class controller
 	 */
 	public function __construct()
 	{
+		if(!self::$language)
+		{
+			self::$language = $this->set_language();
+		}
 		$manifest = new controller\manifest();
 		self::$manifest = $manifest->get();
 		$this->addons();
@@ -628,6 +632,129 @@ class controller
 			return null;
 			break;
 		}
+	}
+
+	public static function set_language()
+	{
+			    /**
+	     * set default language to storage for next use
+	     */
+	    // var_dump(\lib\utility\option::get('config', 'meta', 'defaultLanguage'));
+	    $default_lang = \lib\utility\option::get('config', 'meta', 'defaultLang');
+	    if($default_lang)
+	    {
+	      router::set_storage('defaultLanguage', $default_lang );
+	    }
+	    else
+	    {
+	      router::set_storage('defaultLanguage', 'en_US' );
+	    }
+
+	    // if current tld is ir or referrer from site with ir tld,
+	    // change language to fa_IR
+	    if(\lib\router::get_storage('language'))
+	    {
+	      $myLang = router::get_storage('language');
+	      switch (Tld)
+	      {
+	        case 'ir':
+	          $myLang = "fa_IR";
+	          break;
+
+	        default:
+	          break;
+	      }
+
+	      if(defined('MainService') && Tld !== 'dev')
+	      {
+	        // for example redirect ermile.ir to ermile.com/fa
+	        $myLang = substr($myLang, 0, 2);
+	        $myredirect = new \lib\redirector();
+	        $myredirect->set_domain()->set_url($myLang)->redirect();
+	      }
+	      else
+	      {
+	        // else show in that domain with fa langusage
+	        router::set_storage('language', $myLang );
+	      }
+	    }
+
+	    /**
+	     * Localized Language, defaults to English.
+	     *
+	     * Change this to localize Saloos. A corresponding MO file for the chosen
+	     * language must be installed to content/languages. For example, install
+	     * fa_IR.mo to content/languages and set LANGUAGE to 'fa_IR' to enable Persian
+	     * language support.
+	     */
+	    router::set_storage('language', router::get_storage('defaultLanguage'));
+	    if(router::get_repository_name() === 'content')
+	    {
+	      // $mysub = router::get_sub_domain();
+	      $mysub  = router::get_url(0);
+	      $myList = \lib\utility\option::languages();
+
+	      // check langlist with subdomain and if is equal set current language
+	      foreach($myList as $key => $value)
+	      {
+	        $myLang = substr($key, 0, 2);
+	        if($mysub === $myLang)
+	        {
+	          if(router::get_storage('defaultLanguage') === $key)
+	          {
+	            // redirect to homepage
+	            $myredirect = new \lib\redirector();
+	            $myredirect->set_domain()->set_url()->redirect();
+	          }
+	          else
+	          {
+	            router::set_storage('language', $key);
+	            // update base url
+	            router::$base .= router::get_url(0). "/";
+	            router::remove_url($myLang);
+	          }
+	        }
+	      }
+	    }
+	    else
+	    {
+	      // change with get all times except on content or root,
+	      // because in root user must change language with subdomain
+	      if (isset($_GET["lang"]))
+	      {
+	        router::set_storage('language', $_GET["lang"] );
+	      }
+
+	      // cookies work all times and on all condition
+	      elseif(isset($_COOKIE["lang"]))
+	        router::set_storage('language', $_COOKIE["lang"] );
+
+	    // save language preference for future page requests
+	      setcookie('lang', router::get_storage('language'), time() + 30*24*60*60,'/', '.'.Service);
+	    }
+
+	    // use saloos php gettext function
+	    require_once(lib.'utility/gettext/gettext.inc');
+	    // gettext setup
+	    T_setlocale(LC_MESSAGES, router::get_storage('language'));
+	    // Set the text domain as 'messages'
+	    T_bindtextdomain('messages', root.'includes/languages');
+	    T_bind_textdomain_codeset('messages', 'UTF-8');
+	    T_textdomain('messages');
+
+	    // check direction of language and set for rtl languages
+	    switch (router::get_storage('language'))
+	    {
+	      case 'fa_IR':
+	      case 'ar_SU':
+	        router::set_storage('direction', 'rtl');
+	        break;
+
+	      default:
+	        router::set_storage('direction', 'ltr');
+	        break;
+	    }
+	    return router::get_storage('language');
 	}
 }
 ?>

@@ -18,13 +18,16 @@ class manifest{
 	 */
 	public function manifest_include_file($_file_name){
 		if(!array_key_exists($_file_name, manifest::$manifest_file_return)){
+			$manifest = object();
 			$req = require_once $_file_name;
-			manifest::$manifest_file_return[$_file_name] = $req;
+			$manifest = (array) $manifest;
+			$manifest = is_array($req) ? $req : $manifest;
+			manifest::$manifest_file_return[$_file_name] = $manifest;
 		}else{
-			$req = manifest::$manifest_file_return[$_file_name];
+			$manifest = manifest::$manifest_file_return[$_file_name];
 		}
-		if(is_array($req)){
-			$this->manifest_analyzer($req);
+		if(is_array($manifest)){
+			$this->manifest_analyzer($manifest);
 		}
 	}
 
@@ -116,9 +119,5 @@ class manifest{
 	public function get(){
 		return $this->manifest;
 	}
-
-	// public function manifest_method_inject($_values){
-		// $this->$_this->{"inject_".$key}($value);
-	// }
 }
 ?>

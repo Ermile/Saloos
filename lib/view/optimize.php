@@ -208,5 +208,9 @@ trait optimize
 			}
 		}
 	}
+	public function addons_config($_name, $_addons)
+	{
+		$this->data->addons_name[$_name] = true;
+	}
 }
 ?>

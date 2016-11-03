@@ -127,7 +127,9 @@ trait mvc
 				$Closure = $value->getClosure($addons_class);
 				$this->inject($value->name, [$Closure]);
 			}
+			return true;
 		}
+		return false;
 	}
 
 	public function method_exists($_name)
