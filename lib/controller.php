@@ -756,8 +756,6 @@ class controller
 	public function set_language($_language)
 	{
 		router::set_storage('language', $_language);
-	    // use saloos php gettext function
-	    require_once(lib.'utility/gettext/gettext.inc');
 	    // gettext setup
 	    T_setlocale(LC_MESSAGES, $_language);
 	    // Set the text domain as 'messages'

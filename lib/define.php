@@ -93,7 +93,8 @@ class define
         exit();
       }
     }
-
+    // use saloos php gettext function
+    require_once(lib.'utility/gettext/gettext.inc');
     // change header and remove php from it
     header("X-Powered-By: Saloos!");
   }
