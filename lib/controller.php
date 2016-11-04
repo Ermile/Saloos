@@ -6,6 +6,7 @@ class controller
 {
 	use mvc;
 	static $language = false;
+	public $custom_language = false;
 	public $api, $model, $view, $method;
 	public $model_name, $view_name, $display_name;
 	public $debug = true;
@@ -26,7 +27,11 @@ class controller
 	{
 		if(!self::$language)
 		{
-			self::$language = $this->set_language();
+			self::$language = $this->detect_language();
+			if(!$this->custom_language)
+			{
+				$this->set_language(self::$language);
+			}
 		}
 		$manifest = new controller\manifest();
 		self::$manifest = $manifest->get();
@@ -634,7 +639,7 @@ class controller
 		}
 	}
 
-	public static function set_language()
+	public static function detect_language()
 	{
 			    /**
 	     * set default language to storage for next use
@@ -733,15 +738,6 @@ class controller
 	      setcookie('lang', router::get_storage('language'), time() + 30*24*60*60,'/', '.'.Service);
 	    }
 
-	    // use saloos php gettext function
-	    require_once(lib.'utility/gettext/gettext.inc');
-	    // gettext setup
-	    T_setlocale(LC_MESSAGES, router::get_storage('language'));
-	    // Set the text domain as 'messages'
-	    T_bindtextdomain('messages', root.'includes/languages');
-	    T_bind_textdomain_codeset('messages', 'UTF-8');
-	    T_textdomain('messages');
-
 	    // check direction of language and set for rtl languages
 	    switch (router::get_storage('language'))
 	    {
@@ -755,6 +751,19 @@ class controller
 	        break;
 	    }
 	    return router::get_storage('language');
+	}
+
+	public function set_language($_language)
+	{
+		router::set_storage('language', $_language);
+	    // use saloos php gettext function
+	    require_once(lib.'utility/gettext/gettext.inc');
+	    // gettext setup
+	    T_setlocale(LC_MESSAGES, $_language);
+	    // Set the text domain as 'messages'
+	    T_bindtextdomain('messages', root.'includes/languages');
+	    T_bind_textdomain_codeset('messages', 'UTF-8');
+	    T_textdomain('messages');
 	}
 }
 ?>
