@@ -238,7 +238,14 @@ class db
 			// read file and save in variable
 			$qry_list = file_get_contents($_path);
 			// seperate with semicolon
-			$qry_list = explode(';', $qry_list);
+			if(substr($qry_list, 0,9) == 'DELIMITER')
+			{
+				$qry_list = [$qry_list];
+			}
+			else
+			{
+				$qry_list = explode(';', $qry_list);
+			}
 			$has_error = null;
 			foreach ($qry_list as $key => $qry)
 			{
