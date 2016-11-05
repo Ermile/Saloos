@@ -243,7 +243,7 @@ class db
 			foreach ($qry_list as $key => $qry)
 			{
 				$qry = trim($qry);
-				if($qry && !@mysqli_query(self::$link, $qry))
+				if($qry && self::query($qry))
 				{
 					$has_error = true;
 				}
