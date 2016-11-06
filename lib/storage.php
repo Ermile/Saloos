@@ -10,9 +10,13 @@ class storage
 		self::$_storage[$_key] = $_value;
 	}
 
-	public static function get($_key)
+	public static function get($_key = null)
 	{
-		if(array_key_exists($_key, self::$_storage))
+		if(!$_key)
+		{
+			return self::$_storage;
+		}
+		elseif(array_key_exists($_key, self::$_storage))
 		{
 			return self::$_storage[$_key];
 		}
