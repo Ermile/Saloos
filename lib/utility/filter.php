@@ -88,8 +88,7 @@ class filter
 			}
 			foreach ($json_fields as $key => $value) {
 				$row_value = preg_replace("#\n#Ui", "\\n", $_row[$value]);
-				$row_value = preg_replace("/\\\/", '\\\\', $row_value);
-				$row_value = preg_replace("/\\\([_*])/", "\\\\\\\\$1", $row_value);
+				$row_value = preg_replace("/\\\/", '\\\\\\\\', $row_value);
 				$json = json_decode($row_value, $to_array);
 				$_row[$value] = is_null($json) ? $_row[$value] : $json;
 			}
