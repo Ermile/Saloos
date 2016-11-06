@@ -21,7 +21,7 @@ class storage
 
 	public static function __callStatic($_name, $_args)
     {
-    	if(preg_match("^(set)_(.+)$", $_name, $name))
+    	if(preg_match("/^(set)_(.+)$/", $_name, $name))
     	{
     		$method = $name[1];
     		return self::$method($name[2], $_args);
