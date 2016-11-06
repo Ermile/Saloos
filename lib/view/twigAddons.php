@@ -219,7 +219,7 @@ trait twigAddons
 	 */
 	public function twig_function_breadcrumb()
 	{
-		return new \Twig_SimpleFunction('breadcrumb', function ($_path = null, $_direct = null)
+		return new \Twig_SimpleFunction('breadcrumb', function ($_path = null, $_direct = null, $_homepage = true)
 		{
 			// if user dont pass a path give it from controller
 			if(!$_path)
@@ -232,12 +232,25 @@ trait twigAddons
 			{
 				$direct = "data-direct";
 			}
+
 			$currentUrl = null;
-			$result = '<a href="/" tabindex="-1" '. $direct.'><i class="fa fa-home"></i> '.T_('Home').'</a>';
+			$result     = '';
+			if($_homepage || count($myurl))
+			{
+				if(\lib\router::get_repository_name() === 'content')
+				{
+					$result = '<a href="/" tabindex="-1" '. $direct.'><i class="fa fa-home"></i> '.T_('Homepage').'</a>';
+				}
+				else
+				{
+					$result = '<a href="/" tabindex="-1" '. $direct.'><i class="fa fa-home"></i> '.T_('Home').'</a>';
+				}
+
+			}
 
 			foreach ($myurl as $key => $part)
 			{
-				if($part != '$')
+				// if($part != '$')
 				{
 					$currentUrl .= $_path[$key].'/';
 					$location   = T_(ucfirst($part));

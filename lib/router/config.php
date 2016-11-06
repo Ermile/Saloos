@@ -199,7 +199,16 @@ trait config
 				$tmp_result = substr($tmp_result, 0, $tmp_strpos);
 
 			if(!$tmp_result && $search === '_')
-				return 'home';
+			{
+				if(self::$repository_name === 'content')
+				{
+					return 'homepage';
+				}
+				else
+				{
+					return 'home';
+				}
+			}
 
 			// var_dump($tmp_result);
 			return $tmp_result;

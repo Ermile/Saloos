@@ -487,7 +487,6 @@ class controller
 	{
 		$tmp_result = null;
 		$myprefix   = Protocol."://";
-		$mypostfix  = '/';
 
 		$mytld      = router::get_root_domain('tld');
 
@@ -542,7 +541,7 @@ class controller
 
 			// like raw plus http[s]:// domain name except subdomain like 'http://ermile.com/'
 			case 'root':
-			return $myprefix. router::get_root_domain(). $mypostfix;
+			return $myprefix. router::get_root_domain();
 			break;
 
 			// use main protocol and give it from config file if not exist use root url
@@ -560,7 +559,7 @@ class controller
 			if(defined('MainSite') && constant('MainSite') && is_string(constant('MainSite')))
 				return constant('MainSite');
 			else
-				return router::get_root_domain(). $mypostfix;
+				return router::get_root_domain();
 			break;
 
 			// base url for user in base tag with http[s]
@@ -715,7 +714,7 @@ class controller
 	          {
 	            router::set_storage('language', $key);
 	            // update base url
-	            router::$base .= router::get_url(0). "/";
+	            router::$base .= '/'.router::get_url(0);
 	            router::remove_url($myLang);
 	          }
 	        }

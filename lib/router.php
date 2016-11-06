@@ -219,11 +219,11 @@ class router
 		router::$base = Protocol.'://';
 		if(router::$sub_is_fake)
 		{
-			router::$base .= Service.'/'.(SubDomain? SubDomain.'/': null);
+			router::$base .= Service.(SubDomain? '/'.SubDomain: null);
 		}
 		else
 		{
-			router::$base .= SubDomain.'.'.Service.'/';
+			router::$base .= SubDomain.'.'.Service;
 		}
 
 		if(count(explode('.', SubDomain)) > 1)
