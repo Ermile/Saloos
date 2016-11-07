@@ -333,5 +333,48 @@ trait twigAddons
 
 		});
 	}
+
+
+	/**
+	 * [twig_function_posts description]
+	 * @return [type] [description]
+	 */
+	public function twig_function_tags()
+	{
+		return new \Twig_SimpleFunction('tags', function()
+		{
+			$tags = [];
+			$args = func_get_args();
+			if(isset($args[0]))
+			{
+				$args = $args[0];
+			}
+			else
+			{
+				if(isset($this->data->post['id']))
+				{
+					$args['post_id'] = $this->data->post['id'];
+					$args['html']    = true;
+				}
+			}
+
+			if(isset($args['post_id']))
+			{
+				$tags = \lib\db\tags::usage($args['post_id']);
+			}
+			if(isset($args['html']))
+			{
+				$html = '';
+				foreach ($tags as $key => $value) {
+					$html .= "<a href=\"$value\">$value</a>";
+				}
+				echo $html;
+			}
+			else
+			{
+				return $tags;
+			}
+		});
+	}
 }
 ?>
