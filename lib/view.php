@@ -108,6 +108,7 @@ class view
 		$this->add_twig_filter('decode');
 		$this->add_twig_function('breadcrumb');
 		$this->add_twig_function('posts');
+		$this->add_twig_function('tags');
 
 
 
