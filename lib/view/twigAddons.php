@@ -349,19 +349,22 @@ trait twigAddons
 			{
 				$args = $args[0];
 			}
-			else
+
+			// get post id
+			if(!isset($args['post_id']))
 			{
 				if(isset($this->data->post['id']))
 				{
 					$args['post_id'] = $this->data->post['id'];
-					$args['html']    = true;
 				}
 			}
-
+			// get tags
 			if(isset($args['post_id']))
 			{
 				$tags = \lib\db\tags::usage($args['post_id']);
 			}
+
+			// check html mod
 			if(isset($args['html']))
 			{
 				$html = '';
@@ -374,6 +377,98 @@ trait twigAddons
 			{
 				return $tags;
 			}
+		});
+	}
+
+
+	/**
+	 * [twig_function_posts description]
+	 * @return [type] [description]
+	 */
+	public function twig_function_comments()
+	{
+		return new \Twig_SimpleFunction('comments', function()
+		{
+			$comments = [];
+			$args = func_get_args();
+			if(isset($args[0]))
+			{
+				$args = $args[0];
+			}
+
+			// get post id
+			if(!isset($args['post_id']))
+			{
+				if(isset($this->data->post['id']))
+				{
+					$args['post_id'] = $this->data->post['id'];
+				}
+			}
+			// count of show comments
+			$limit = 6;
+			if(isset($args['limit']))
+			{
+				$limit = $args['limit'];
+			}
+
+			// get comments
+			if(isset($args['post_id']))
+			{
+				$comments = \lib\db\comments::get_post_comment($args['post_id'], $limit, $this->login('id'));
+			}
+			return $comments;
+		});
+	}
+
+
+	/**
+	 * [twig_function_posts description]
+	 * @return [type] [description]
+	 */
+	public function twig_function_similar_post()
+	{
+		return new \Twig_SimpleFunction('similar_post', function()
+		{
+			$similar_post = [];
+			$args = func_get_args();
+			if(isset($args[0]))
+			{
+				$args = $args[0];
+			}
+			// get post id
+			if(!isset($args['post_id']))
+			{
+				if(isset($this->data->post['id']))
+				{
+					$args['post_id'] = $this->data->post['id'];
+				}
+			}
+
+			// count of show similar
+			$limit = 5;
+			if(isset($args['limit']))
+			{
+				$limit = $args['limit'];
+			}
+
+			if(isset($args['post_id']))
+			{
+				$similar_post = \lib\db\tags::get_post_similar($args['post_id'], $limit);
+			}
+
+			if(isset($args['html']))
+			{
+				$html = '';
+				foreach ($similar_post as $key => $value) {
+					$html .= "<a href=\"$value[url]\">$value[title]</a>";
+				}
+				echo $html;
+			}
+			else
+			{
+				return $similar_post;
+			}
+
 		});
 	}
 }
