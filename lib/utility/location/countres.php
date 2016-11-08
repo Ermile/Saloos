@@ -1,11 +1,9 @@
 <?php
-namespace lib\utility;
-
+namespace lib\utility\location;
 /** country managing **/
 class countres
 {
-
-	 public static $country = [
+	 public static $countres = [
 'Afghanistan'=>['name' => 'Afghanistan', 'id'=>'3','localname'=>'‫افغانستان','phonecode'=>'93','language'=>'fa-AF','containent'=>'Asia','shortcontainent'=>'AS','capital'=>'Kabul','shortname'=>'AFN','iso2'=>'AF','iso3'=>'AFG','width'=>'34°28 N','length'=>'34°28 N'],
 'Åland'=>['name' => 'Åland', 'id'=>'15','localname'=>'Åland','phonecode'=>'0','language'=>'sv-AX','containent'=>'Europe','shortcontainent'=>'EU','capital'=>'Mariehamn','shortname'=>'EUR','iso2'=>'','iso3'=>'','width'=>'-','length'=>'-'],
 'Albania'=>['name' => 'Albania', 'id'=>'6','localname'=>'Shqipëri','phonecode'=>'355','language'=>'sq','containent'=>'Europe','shortcontainent'=>'EU','capital'=>'Tirana','shortname'=>'ALL','iso2'=>'AL','iso3'=>'ALB','width'=>'41°18 N','length'=>'41°18 N'],
@@ -258,149 +256,10 @@ class countres
 'Zimbabwe'=>['name' => 'Zimbabwe', 'id'=>'249','localname'=>'','phonecode'=>'263','language'=>'en-ZW','containent'=>'Africa','shortcontainent'=>'AF','capital'=>'Harare','shortname'=>'ZWL','iso2'=>'ZW','iso3'=>'ZWE','width'=>'17°43 S','length'=>'17°43 S' , "all" ],
 ];
 
-
-	/**
-	 * Gets the by name.
-	 * get the name of country and return all data for this country
-	 *
-	 * @param      <type>  $name   The name of country
-	 *
-	 * @return     <type>  country details.
-	 */
-	public static function get_by_name($_name)
+	public static function __callStatic($_func_name, $_args)
 	{
-		if(isset(self::$country[$_name]))
-		{
-			return self::$country[$_name];
-		}
-		else
-		{
-			return null;
-		}
-	}
-
-
-	/**
-	 * get the cost detail of country
-	 *
-	 * @example self::get('id', 107, 'name')
-	 * @return string "Iran"
-	 *
-	 * @example self::get('name', 'Iran', 'id')
-	 * @return string "107"
-	 *
-	 * @example self::get('name', 'Iran', ['id','language'])
-	 * @return array ['id' => "107", 'language' => "fa-IR"]
-	 *
-	 * @param      string      		  $_type     The type
-	 * @param      string		      $_cost     The cost
-	 * @param      array|string       $_request  The request
-	 *
-	 * @return     array|string  ( description_of_the_return_value )
-	 */
-	public static function get($_type, $_cost, $_request = null)
-	{
-
-		foreach (self::$country as $key => $value)
-		{
-			if(isset(self::$country[$key][$_type]) && self::$country[$key][$_type] == $_cost)
-			{
-				if($_request && !is_array($_request))
-				{
-					if(isset(self::$country[$key][$_request]))
-					{
-						if($_request == "localname" && self::$country[$key][$_request] == '')
-						{
-							return self::$country[$key]['name'];
-						}
-						return self::$country[$key][$_request];
-					}
-					else
-					{
-						return null;
-					}
-				}
-
-				if($_request && is_array($_request))
-				{
-					$result = [];
-					foreach ($_request as $k => $v) {
-						if(isset(self::$country[$key][$v]))
-						{
-							if($v == "localname" && self::$country[$key][$v] == '')
-							{
-								$result[$v] = self::$country[$key]['name'];
-							}
-							else
-							{
-								$result[$v] = self::$country[$key][$v];
-							}
-						}
-						else
-						{
-							$result[$v] = null;
-						}
-					}
-					return $result;
-				}
-				else
-				{
-					return self::$country[$key];
-				}
-			}
-		}
-	}
-
-
-	/**
-	 * get list of country
-	 */
-	public static function list($_field, $_field2 = null)
-	{
-		$result = [];
-
-		foreach (self::$country as $key => $value)
-		{
-			if($_field2)
-			{
-				if($_field2 == "localname" && $value['localname'] == '')
-				{
-					$result[$value[$_field]] = $value['name'];
-				}
-				else
-				{
-					$result[$value[$_field]] = $value[$_field2];
-				}
-			}
-			else
-			{
-				if($_field == "localname" && $value['localname'] == '')
-				{
-					$result[] = $value['name'];
-				}
-				else
-				{
-					$result[] = $value[$_field];
-				}
-			}
-		}
-		return $result;
-	}
-
-	/**
-	 * check country name exist of no
-	 *
-	 * @param      <type>   $_name  The name
-	 *
-	 * @return     boolean  ( description_of_the_return_value )
-	 */
-	public static function check($_name)
-	{
-		if(array_key_exists($_name, self::$country))
-		{
-			return true;
-		}
-		return false;
+		\lib\utility\location\tools::set(self::$countres);
+		return \lib\utility\location\tools::$_func_name(...$_args);
 	}
 }
 ?>
