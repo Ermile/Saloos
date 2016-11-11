@@ -260,7 +260,7 @@ trait twigAddons
 					}
 					else
 					{
-						$baseURL = $this->data->url->base;
+						$baseURL = $this->data->url->base.'/';
 						$anchorUrl = trim($baseURL.$currentUrl, '/');
 						$result .= "<a href='$anchorUrl' tabindex='-1'>$location</a>";
 					}
