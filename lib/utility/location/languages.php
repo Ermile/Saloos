@@ -6,9 +6,9 @@ class languages
 
 	public static $data =
 	[
-		'fa_IR' => ['lang' => 'fa', 'direction' => 'rtl', 'name' => 'fa_IR', 'localname' => 'Persian - فارسی', 'country' => ['Iran']],
-		'en_US' => ['lang' => 'en', 'direction' => 'ltr', 'name' => 'en_US', 'localname' => 'English', 'country' => ['United Kingdom', 'United States']],
-		'ar_SU' => ['lang' => 'ar', 'direction' => 'rtl', 'name' => 'ar_SU', 'localname' => 'Arabic - العربية', 'country' => ['Saudi Arabia']],
+		'en' => ['name' => 'en', 'direction' => 'ltr', 'iso' => 'en_US', 'localname' => 'English', 'country' => ['United Kingdom', 'United States']],
+		'fa' => ['name' => 'fa', 'direction' => 'rtl', 'iso' => 'fa_IR', 'localname' => 'Persian - فارسی', 'country' => ['Iran']],
+		'ar' => ['name' => 'ar', 'direction' => 'rtl', 'iso' => 'ar_SU', 'localname' => 'Arabic - العربية', 'country' => ['Saudi Arabia']],
 	];
 
 
@@ -36,11 +36,12 @@ class languages
 
 
 	/**
-	 * check language exist
-	 *
-	 * @param      <type>  $_lang  The language
+	 * check language exist and return true or false
+	 * @param  [type] $_lang   [description]
+	 * @param  string $_column [description]
+	 * @return [type]          [description]
 	 */
-	public static function check($_lang, $_column = 'lang')
+	public static function check($_lang, $_column = 'name')
 	{
 		$lang_list = array_column(self::$data, $_column);
 		if(in_array($_lang, $lang_list))
