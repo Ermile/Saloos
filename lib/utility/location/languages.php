@@ -50,5 +50,21 @@ class languages
 		}
 		return false;
 	}
+
+
+	/**
+	 * get lang
+	 *
+	 * @param      <type>  $_key      The key
+	 * @param      string  $_request  The request
+	 */
+	public static function get($_key, $_request = 'iso')
+	{
+		if(isset(self::$data[$_key]))
+		{
+			return self::$data[$_key][$_request];
+		}
+		return null;
+	}
 }
 ?>
