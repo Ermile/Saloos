@@ -6,9 +6,9 @@ class languages
 
 	public static $data =
 	[
-		'fa_IR' => ['lang' => 'fa', 'name' => 'fa_IR', 'localname' => 'Persian - فارسی', 'country' => ['Iran']],
-		'en_US' => ['lang' => 'en', 'name' => 'en_US', 'localname' => 'English', 'country' => ['United Kingdom', 'United States']],
-		'ar_SU' => ['lang' => 'ar', 'name' => 'ar_SU', 'localname' => 'Arabic - العربية', 'country' => ['Saudi Arabia']],
+		'fa_IR' => ['lang' => 'fa', 'direction' => 'rtl', 'name' => 'fa_IR', 'localname' => 'Persian - فارسی', 'country' => ['Iran']],
+		'en_US' => ['lang' => 'en', 'direction' => 'ltr', 'name' => 'en_US', 'localname' => 'English', 'country' => ['United Kingdom', 'United States']],
+		'ar_SU' => ['lang' => 'ar', 'direction' => 'rtl', 'name' => 'ar_SU', 'localname' => 'Arabic - العربية', 'country' => ['Saudi Arabia']],
 	];
 
 
