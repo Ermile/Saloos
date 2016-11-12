@@ -275,11 +275,11 @@ class utility
         // get target language
     	if($_type === 'default')
     	{
-    		$_type = substr(\lib\router::get_storage('defaultLanguage'), 0, 2);
+    		$_type = \lib\define::get_language('default');
     	}
     	elseif($_type === 'current')
     	{
-    		$_type = substr(\lib\router::get_storage('language'), 0, 2);
+    		$_type = \lib\define::get_language();
     	}
 
         // if need persian use it else use default date function

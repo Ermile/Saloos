@@ -55,67 +55,12 @@ class router
 		/**
 		 * before router
 		 */
+		// detect language before check repository --f
+		\lib\define::detect_language();
+		// if saloos want to load repository automatically call func
 		if(self::$auto_repository)
 		{
-			// first get subdomain and if not exist get first url part as mysub
-			$mysub = router::get_sub_domain();
-			if(!$mysub)
-			{
-				$mysub = router::get_url(0);
-				router::$sub_is_fake = true;
-				// router::$sub_is_fake = $mysub? true: false;
-      			// router::set_storage('language', router::get_storage('defaultLanguage') );
-			}
-
-			if($mysub)
-			{
-				// automatically set repository if folder of it exist
-				$myaddons    = array();
-				$mysub_real  = $mysub;
-				$myloc       = null;
-				$mysub_valid = null;
-
-				// check for account with specefic name
-				if(\lib\router::get_storage('CMS'))
-				{
-					$myaddons[\lib\router::get_storage('CMS')] = 'cp';
-					$myaddons['account'] = 'account';
-				}
-				// check this sub is exist in our data or not
-				if(array_key_exists($mysub, $myaddons))
-				{
-					$mysub       = $myaddons[$mysub];
-					$mysub_valid = true;
-				}
-
-				// set repository name
-				$myrep    = 'content_'.$mysub;
-
-				// check content_aaa folder is exist in project or saloos addons folder
-				if(is_dir(root.$myrep))
-					$myloc = false;
-				// if exist on addons folder
-				elseif($mysub_valid && is_dir(addons.$myrep))
-					$myloc = addons;
-
-				// if folder exist
-				if(!is_null($myloc))
-				{
-					// if url is fake, show it like subdomain and remove from url
-					if(router::$sub_is_fake)
-					{
-						router::remove_url($mysub_real);
-						router::set_sub_domain($mysub_real);
-					}
-					// set repository to this folder
-					$myparam = array($myrep);
-					if($myloc)
-						array_push($myparam, $myloc);
-
-					// call function and pass param value to it
-					router::set_repository(...$myparam);
-				}
-			}
+			self::check_repository();
 		}
 
 		if(self::$auto_api)
@@ -236,6 +181,79 @@ class router
 		}
 	}
 
+
+	/**
+	 * check url to detect repository and if find fix route
+	 * @return [type] [description]
+	 */
+	public static function check_repository()
+	{
+		// first get subdomain and if not exist get first url part as mysub
+		$mysub = router::get_sub_domain();
+		if(!$mysub)
+		{
+			$mysub = router::get_url(0);
+			router::$sub_is_fake = true;
+		}
+
+		if($mysub)
+		{
+			// automatically set repository if folder of it exist
+			$myaddons    = [];
+			$mysub_real  = $mysub;
+			$myloc       = null;
+			$mysub_valid = null;
+
+			// check for account with specefic name
+			if(\lib\router::get_storage('CMS'))
+			{
+				$myaddons[\lib\router::get_storage('CMS')] = 'cp';
+				$myaddons['account'] = 'account';
+			}
+			// check this sub is exist in our data or not
+			if(array_key_exists($mysub, $myaddons))
+			{
+				$mysub       = $myaddons[$mysub];
+				$mysub_valid = true;
+			}
+
+			// set repository name
+			$myrep    = 'content_'.$mysub;
+
+			// check content_aaa folder is exist in project or saloos addons folder
+			if(is_dir(root.$myrep))
+			{
+				$myloc = false;
+			}
+			// if exist on addons folder
+			elseif($mysub_valid && is_dir(addons.$myrep))
+			{
+				$myloc = addons;
+			}
+
+			// if folder exist
+			if(!is_null($myloc))
+			{
+				// if url is fake, show it like subdomain and remove from url
+				if(router::$sub_is_fake)
+				{
+					router::remove_url($mysub_real);
+					router::set_sub_domain($mysub_real);
+				}
+				// set repository to this folder
+				$myparam = array($myrep);
+				if($myloc)
+				{
+					array_push($myparam, $myloc);
+				}
+
+				// call function and pass param value to it
+				router::set_repository(...$myparam);
+			}
+		}
+	}
+
+
 	public function check_router()
 	{
 		// Check connection protocol and return related value
@@ -322,7 +340,6 @@ class router
 				$newUrl .= router::get_root_domain(). '/'. router::get_url();
 			}
 		}
-// var_dump($newUrl);exit();
 
 		// if newUrl is exist and we must to redirect
 		// then complete url and redirect to this address

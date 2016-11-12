@@ -60,11 +60,24 @@ class languages
 	 */
 	public static function get($_key, $_request = 'iso')
 	{
+		$result = null;
+		// if pass more than 2 character, then only use 2 char
+		if(strlen($_key)> 2)
+		{
+			$_key = substr($_key, 0, 2);
+		}
 		if(isset(self::$data[$_key]))
 		{
-			return self::$data[$_key][$_request];
+			if($_request === 'all' || !$_request)
+			{
+				$result = self::$data[$_key];
+			}
+			else
+			{
+				$result = self::$data[$_key][$_request];
+			}
 		}
-		return null;
+		return $result;
 	}
 }
 ?>

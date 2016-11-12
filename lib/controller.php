@@ -25,14 +25,6 @@ class controller
 	 */
 	public function __construct()
 	{
-		if(!self::$language)
-		{
-			self::$language = define::detect_language();
-			if(!$this->custom_language)
-			{
-				define::set_language(self::$language);
-			}
-		}
 		$manifest = new controller\manifest();
 		self::$manifest = $manifest->get();
 		$this->addons();

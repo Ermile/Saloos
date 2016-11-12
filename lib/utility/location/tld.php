@@ -57,13 +57,15 @@ class tld
 	 * @param      <type>  $_key      The key
 	 * @param      string  $_request  The request
 	 */
-	public static function get($_key, $_request = 'lang')
+	public static function get($_key = Tld, $_request = 'lang')
 	{
+		$result = null;
 		if(isset(self::$data[$_key]))
 		{
-			return self::$data[$_key][$_request];
+			$result = self::$data[$_key][$_request];
 		}
-		return null;
+
+		return $result;
 	}
 }
 ?>

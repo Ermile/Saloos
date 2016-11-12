@@ -2,6 +2,10 @@
 namespace lib;
 class define
 {
+	// declare variables to set only one time each one of this variables
+	private static $language;
+	private static $language_default;
+
 	public function __construct()
 	{
 		// check php version to upper than 5.6
@@ -93,13 +97,36 @@ class define
 				exit();
 			}
 		}
-		// use saloos php gettext function
-		require_once(lib.'utility/gettext/gettext.inc');
 		// change header and remove php from it
 		header("X-Powered-By: Saloos!");
 
-		// $lang = self::detect_language();
-		// self::set_language($lang);
+		self::detect_language();
+		self::set_language(self::$language);
+	}
+
+
+	/**
+	 * get detail of language
+	 * @param  string $_request [description]
+	 * @return [type]           [description]
+	 */
+	public static function get_language($_request = 'name')
+	{
+		$result = null;
+		if($_request === 'all')
+		{
+			$result = self::$language;
+		}
+		elseif($_request === 'default')
+		{
+			$result = self::$language_default;
+		}
+		elseif(isset(self::$language[$_request]))
+		{
+			$result = self::$language[$_request];
+		}
+
+		return $result;
 	}
 
 
@@ -107,134 +134,93 @@ class define
 	 * set language of service
 	 * @param [type] $_language [description]
 	 */
-	public static function set_language($_language)
+	public static function set_language($_language, $_force = false)
 	{
-		router::set_storage('language', $_language);
-		// gettext setup
-		T_setlocale(LC_MESSAGES, $_language);
-		// Set the text domain as 'messages'
-		T_bindtextdomain('messages', root.'includes/languages');
-		T_bind_textdomain_codeset('messages', 'UTF-8');
-		T_textdomain('messages');
+
+		// if language is set and force is not set then return null
+		if(self::$language && !$_force)
+		{
+			return null;
+		}
+		// if default language is not set, then set it only one time
+		if(!self::$language_default)
+		{
+			self::$language_default = \lib\utility\option::get('config', 'meta', 'defaultLang');
+		}
+		// get all detail of this language
+		self::$language = \lib\utility\location\languages::get($_language, 'all');
+
+		// use saloos php gettext function
+		require_once(lib.'utility/gettext/gettext.inc');
+		// if we have iso then trans
+		if(isset(self::$language['iso']))
+		{
+			// gettext setup
+			T_setlocale(LC_MESSAGES, (self::$language['iso']));
+			// Set the text domain as 'messages'
+			T_bindtextdomain('messages', root.'includes/languages');
+			T_bind_textdomain_codeset('messages', 'UTF-8');
+			T_textdomain('messages');
+		}
 	}
 
 
-	/**
-	 * detect language from url of user
-	 * @return [type] [description]
-	 */
 	public static function detect_language()
 	{
-		/**
-		 * set default language to storage for next use
-		 */
-		$default_lang = \lib\utility\option::get('config', 'meta', 'defaultLang');
-		if($default_lang)
+		// if default language is not set, then set it only one time
+		if(!self::$language_default)
 		{
-			router::set_storage('defaultLanguage', $default_lang );
-		}
-		else
-		{
-			router::set_storage('defaultLanguage', 'en_US' );
+			self::$language_default = \lib\utility\option::get('config', 'meta', 'defaultLang');
 		}
 
-		// if current tld is ir or referrer from site with ir tld,
-		// change language to fa_IR
-		if(\lib\router::get_storage('language'))
+		// Step1
+		// if language exist in url like ermile.com/fa/ then simulate remove it from url
+		$my_first_url = router::get_url(0);
+		if(\lib\utility\location\languages::check($my_first_url))
 		{
-			$myLang = router::get_storage('language');
-			switch (Tld)
+			if(substr(self::$language_default, 0, 2) === $my_first_url)
 			{
-				case 'ir':
-					$myLang = "fa_IR";
-					break;
-
-				default:
-					break;
-			}
-
-			if(defined('MainService') && Tld !== 'dev')
-			{
-				// for example redirect ermile.ir to ermile.com/fa
-				$myLang = substr($myLang, 0, 2);
+				// redirect to homepage
+				/**
+					redirect to current url without language
+				 */
 				$myredirect = new \lib\redirector();
-				$myredirect->set_domain()->set_url($myLang)->redirect();
+				$myredirect->set_domain()->set_url()->redirect();
 			}
 			else
 			{
-				// else show in that domain with fa langusage
-				router::set_storage('language', $myLang );
+				// set language
+				define::set_language($my_first_url);
+				// add this language to base url
+				router::$base .= '/'.router::get_url(0);
+				// remove language from url and continue
+				router::remove_url($my_first_url);
 			}
+
 		}
 
-		/**
-		 * Localized Language, defaults to English.
-		 *
-		 * Change this to localize Saloos. A corresponding MO file for the chosen
-		 * language must be installed to content/languages. For example, install
-		 * fa_IR.mo to content/languages and set LANGUAGE to 'fa_IR' to enable Persian
-		 * language support.
-		 */
-		router::set_storage('language', router::get_storage('defaultLanguage'));
-		if(router::get_repository_name() === 'content' || true)
+		// Step2 re
+		// if we are not in dev and tld lang is exist
+		// then use only one domain for this site then redirect to main tld
+
+		// $tld_lang = \lib\utility\location\tld::get();
+		// if(defined('MainService') && Tld !== 'dev')
+		// {
+		// 	/**
+		// 	 need fix
+		// 	 */
+		// 	// for example redirect ermile.ir to ermile.com/fa
+		// 	$myredirect = new \lib\redirector();
+		// 	$myredirect->set_domain()->set_url($tld_lang)->redirect();
+		// 	return false;
+		// }
+
+
+		// if language is not set
+		if(!self::$language)
 		{
-			// $mysub = router::get_sub_domain();
-			$mysub  = router::get_url(0);
-			$myList = \lib\utility\option::languages();
-
-			// check langlist with subdomain and if is equal set current language
-			foreach($myList as $key => $value)
-			{
-				$myLang = substr($key, 0, 2);
-				if($mysub === $myLang)
-				{
-					if(router::get_storage('defaultLanguage') === $key)
-					{
-						// redirect to homepage
-						$myredirect = new \lib\redirector();
-						$myredirect->set_domain()->set_url()->redirect();
-					}
-					else
-					{
-						router::set_storage('language', $key);
-						// update base url
-						router::$base .= '/'.router::get_url(0);
-						router::remove_url($myLang);
-					}
-				}
-			}
+			define::set_language(substr(self::$language_default, 0, 2));
 		}
-		else
-		{
-			// change with get all times except on content or root,
-			// because in root user must change language with subdomain
-			if (isset($_GET["lang"]))
-			{
-				router::set_storage('language', $_GET["lang"] );
-			}
-			// cookies work all times and on all condition
-			elseif(isset($_COOKIE["lang"]))
-			{
-				router::set_storage('language', $_COOKIE["lang"] );
-			}
-
-			// save language preference for future page requests
-			setcookie('lang', router::get_storage('language'), time() + 30*24*60*60,'/', '.'.Service);
-		}
-
-		// check direction of language and set for rtl languages
-		switch (router::get_storage('language'))
-		{
-			case 'fa_IR':
-			case 'ar_SU':
-				router::set_storage('direction', 'rtl');
-				break;
-
-			default:
-				router::set_storage('direction', 'ltr');
-				break;
-		}
-		return router::get_storage('language');
 	}
 }
 ?>
