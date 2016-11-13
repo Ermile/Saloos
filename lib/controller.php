@@ -484,9 +484,24 @@ class controller
 
 		switch ($_type)
 		{
-			// return the $_SERVER[REQUEST_URI]
-			case 'request_url':
-				return $_SERVER['REQUEST_URI'];
+			// return the fakesub
+			case 'fakesub':
+				if(router::$sub_is_fake)
+				{
+					$request_uri = $_SERVER['REQUEST_URI'];
+					if(\lib\utility\location\languages::check(substr($request_uri, 1,2)))
+					{
+						return substr($request_uri, 4);
+					}
+					else
+					{
+						return substr($request_uri, 1);
+					}
+				}
+				else
+				{
+					return null;
+				}
 				break;
 
 			// sub domain like 'account'
