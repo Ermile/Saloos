@@ -484,149 +484,154 @@ class controller
 
 		switch ($_type)
 		{
+			// return the $_SERVER[REQUEST_URI]
+			case 'request_url':
+				return $_SERVER['REQUEST_URI'];
+				break;
+
 			// sub domain like 'account'
 			case 'sub':
-			return router::get_sub_domain($_arg);
-			break;
+				return router::get_sub_domain($_arg);
+				break;
 
 			case 'path':
-			$myUrl = router::get_url($_arg);
-			if($_arg == '_')
-			{
-					// filter url to delete disallow characters
-				$myUrl = router::urlfilterer($myUrl);
-					// dont use $ in id
-				$myUrl = str_replace('$', 'dollar', $myUrl);
-			}
-			return $myUrl;
-			break;
+				$myUrl = router::get_url($_arg);
+				if($_arg == '_')
+				{
+						// filter url to delete disallow characters
+					$myUrl = router::urlfilterer($myUrl);
+						// dont use $ in id
+					$myUrl = str_replace('$', 'dollar', $myUrl);
+				}
+				return $myUrl;
+				break;
 
 			case 'breadcrumb':
-			$myurl      = router::get_url(-1);
-			$breadcrumb = array();
-			foreach ($myurl as $value)
-			{
-				$tmp_pos = strpos($value, '=');
-				array_push($breadcrumb, $tmp_pos? substr($value, 0, $tmp_pos): $value);
-			}
-			return $breadcrumb;
-			break;
+				$myurl      = router::get_url(-1);
+				$breadcrumb = array();
+				foreach ($myurl as $value)
+				{
+					$tmp_pos = strpos($value, '=');
+					array_push($breadcrumb, $tmp_pos? substr($value, 0, $tmp_pos): $value);
+				}
+				return $breadcrumb;
+				break;
 
 			case 'param':
-			return \lib\utility::get(null, $_arg);
-			break;
+				return \lib\utility::get(null, $_arg);
+				break;
 
 			// domain tld like 'com'
 			case 'tld':
-			return $mytld;
-			break;
+				return $mytld;
+				break;
 
 			// domain name like 'ermile'
 			case 'domain':
-			return router::get_root_domain('domain');
-			break;
+				return router::get_root_domain('domain');
+				break;
 
 			// domain name except subdomain like 'ermile.com'
 			case 'raw':
-			return router::get_root_domain('domain').'.'.$mytld;
-			break;
+				return router::get_root_domain('domain').'.'.$mytld;
+				break;
 
 			// like raw plus http[s]:// domain name except subdomain like 'http://ermile.com/'
 			case 'root':
-			return $myprefix. router::get_root_domain();
-			break;
+				return $myprefix. router::get_root_domain();
+				break;
 
 			// use main protocol and give it from config file if not exist use root url
 			// return http or https
 			case 'MainProtocol':
-			if(defined('MainProtocol') && constant('MainProtocol') && is_string(constant('MainProtocol')))
-				return constant('MainProtocol');
-			else
-				return 'http';
-			break;
+				if(defined('MainProtocol') && constant('MainProtocol') && is_string(constant('MainProtocol')))
+					return constant('MainProtocol');
+				else
+					return 'http';
+				break;
 
 			// use main site and give it from config file if not exist use root url
 			// like raw plus http[s]:// domain name except subdomain like 'http://ermile.com/'
 			case 'MainSite':
-			if(defined('MainSite') && constant('MainSite') && is_string(constant('MainSite')))
-				return constant('MainSite');
-			else
-				return router::get_root_domain();
-			break;
+				if(defined('MainSite') && constant('MainSite') && is_string(constant('MainSite')))
+					return constant('MainSite');
+				else
+					return router::get_root_domain();
+				break;
 
 			// base url for user in base tag with http[s]
 			case 'base':
-			return router::$base;
-			break;
+				return router::$base;
+				break;
 
 			// full url except get parameter with http[s]
 			case 'full':
-			return $myprefix. router::get_domain(). '/'. router::get_url();
-			break;
+				return $myprefix. router::get_domain(). '/'. router::get_url();
+				break;
 
 			// return module info
 			case 'module':
-			if($_arg === 'prefix')
-				$mymodule	= substr(router::get_url(0), 0, -1);
-			elseif($_arg == 'array')
-				$mymodule	= router::get_url(-1);
-			elseif($_arg == 'cp')
-			{
-				$mymodule = router::get_url(0);
-				switch ($mymodule)
+				if($_arg === 'prefix')
+					$mymodule	= substr(router::get_url(0), 0, -1);
+				elseif($_arg == 'array')
+					$mymodule	= router::get_url(-1);
+				elseif($_arg == 'cp')
 				{
-					case 'tags':
-					case 'cats':
-					$mymodule = 'terms';
-					break;
-					case 'pages':
-					$mymodule = 'posts';
-					break;
+					$mymodule = router::get_url(0);
+					switch ($mymodule)
+					{
+						case 'tags':
+						case 'cats':
+						$mymodule = 'terms';
+						break;
+						case 'pages':
+						$mymodule = 'posts';
+						break;
+					}
 				}
-			}
-			else
-				$mymodule = router::get_url(0);
+				else
+					$mymodule = router::get_url(0);
 
-			return $mymodule;
-			break;
+				return $mymodule;
+				break;
 
 			case 'child':
-			$mychild = router::get_url(1);
-			if(strrpos($mychild,'=') !==false)
-				$mychild = substr($mychild, 0, strrpos($mychild, '='));
+				$mychild = router::get_url(1);
+				if(strrpos($mychild,'=') !==false)
+					$mychild = substr($mychild, 0, strrpos($mychild, '='));
 
-			if(!$_arg)
-				return $mychild;
+				if(!$_arg)
+					return $mychild;
 
-			if($mychild=='add')
-				return T_('add new');
+				if($mychild=='add')
+					return T_('add new');
 
-			if($mychild == 'edit')
-				return T_('edit');
+				if($mychild == 'edit')
+					return T_('edit');
 
-			if($mychild == 'delete')
-				return T_('delete');
+				if($mychild == 'delete')
+					return T_('delete');
 
-			break;
+				break;
 
 			// login service and main service with full address
 			case 'LoginService':
 			case 'account':
-			return $myprefix. AccountService. MainTld. '/'. MyAccount;
-			break;
+				return $myprefix. AccountService. MainTld. '/'. MyAccount;
+				break;
 
 			case 'MainService':
-			$_arg      = is_array($_arg)  ? $_arg     : array('com', 'dev');
+				$_arg      = is_array($_arg)  ? $_arg     : array('com', 'dev');
 
-			if (in_array($mytld, $_arg))
-				return $myprefix. constant('MainService').'.'.$mytld;
-			else
-				return $myprefix. constant('MainService'). MainTld;
-			break;
+				if (in_array($mytld, $_arg))
+					return $myprefix. constant('MainService').'.'.$mytld;
+				else
+					return $myprefix. constant('MainService'). MainTld;
+				break;
 
 			default:
-			return null;
-			break;
+				return null;
+				break;
 		}
 	}
 }

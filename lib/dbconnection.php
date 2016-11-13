@@ -142,16 +142,16 @@ class dbconnection
 		// 	'9'
 		// );
 		// $string = preg_replace($patterns, $replacements, $string);
-		if(DEBUG)
-		{
-			\lib\db::log($string);
-		}
 		if(debug::$status)
 		{
 			$this->string = $string;
 			$this->result = self::$connection->query($string);
 			if (self::$connection->error)
 			{
+				if(DEBUG)
+				{
+					\lib\db::log($string);
+				}
 				$this->status = false;
 				$this->error(self::$connection->error, self::$connection->errno);
 			}
