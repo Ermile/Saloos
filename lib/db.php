@@ -675,13 +675,13 @@ class db
 		{
 			return null;
 		}
+		self::log($_qry);
 		// if debug mod is true save all string query
 		$result   = mysqli_query(self::$link, $_qry);
 		if(!is_a($result, 'mysqli_result') && !$result)
 		{
 			// no result exist
 			// save mysql error
-			self::log($_qry);
 			self::log("MYSQL ERROR ". mysqli_error(self::$link));
 			return false;
 		}

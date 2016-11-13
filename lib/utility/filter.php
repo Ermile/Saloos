@@ -59,10 +59,13 @@ class filter
 	 * @param  [type] $_splitor if needed pass splitor
 	 * @return [type]           return the new slug in english
 	 */
-	public static function slug($_string, $_splitor=null)
+	public static function slug($_string, $_splitor = null, $_rules = true)
 	{
 		$slugify = new \lib\utility\slugify();
-		$slugify->activateRuleset('persian');
+		if($_rules)
+		{
+			$slugify->activateRuleset('persian');
+		}
 		if($_splitor)
 			return $slugify->slugify($_string, $_splitor);
 		else
