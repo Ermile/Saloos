@@ -471,20 +471,5 @@ trait twigAddons
 
 		});
 	}
-
-
-	/**
-	 * return the number format
-	 *
-	 * @return     \     ( description_of_the_return_value )
-	 */
-	public function twig_function_number_format()
-	{
-		return new \Twig_SimpleFunction('number_format', function ($_number, $_decimals = 0, $_dec_point = '.', $_thousands_sep = ',')
-		{
-			return number_format($_number, $_decimals, $_dec_point, $_thousands_sep);
-		});
-	}
-
 }
 ?>
