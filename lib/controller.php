@@ -484,24 +484,44 @@ class controller
 
 		switch ($_type)
 		{
-			// return the fakesub
-			case 'fakesub':
-				if(router::$sub_is_fake)
+			// return the uri
+			case 'uri':
+
+				$request_uri  = $_SERVER['REQUEST_URI'];
+				$url_language = null;
+				if(\lib\utility\location\languages::check(substr($request_uri, 1, 2)))
 				{
-					$request_uri = $_SERVER['REQUEST_URI'];
-					if(\lib\utility\location\languages::check(substr($request_uri, 1,2)))
+					$url_language = substr($request_uri, 1, 2);
+					$request_uri  = preg_replace("/^\/". $url_language. "\//", "", $request_uri);
+				}
+
+				$content = null;
+				if(router::get_repository_name() !== 'content')
+				{
+
+					preg_match("/^(\/|)([^\/]*)/", $request_uri, $content);
+					if(isset($content[2]))
 					{
-						return substr($request_uri, 4);
+						$content = $content[2];
 					}
 					else
 					{
-						return substr($request_uri, 1);
+						$content = null;
 					}
 				}
-				else
+
+				$uri = $myprefix. router::get_root_domain();
+
+				if($url_language)
 				{
-					return null;
+					$uri .= "/". $url_language;
 				}
+
+				if($content)
+				{
+					$uri .= "/". $content;
+				}
+				return $uri;
 				break;
 
 			// sub domain like 'account'
