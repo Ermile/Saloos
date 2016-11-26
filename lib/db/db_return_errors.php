@@ -18,6 +18,7 @@ class db_return_errors
 				if(file_exists($db_errors_file))
 				{
 					self::db_load_errors($db_errors_file);
+					self::$include_errors[] = $db_errors_file;
 				}
 			}
 			self::$included_errors = true;
