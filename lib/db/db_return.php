@@ -1,4 +1,4 @@
-<?
+<?php
 namespace lib\db;
 
 class db_return
