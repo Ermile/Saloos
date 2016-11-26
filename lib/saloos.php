@@ -46,6 +46,11 @@ class saloos
 			$class = '\lib\saloos\is';
 			return call_user_func_array(array($class, $aName[1]), $args);
 		}
+		elseif($name == 'lib_static')
+		{
+			$class = '\\lib\\saloos\lib';
+			return new $class($args, true);
+		}
 
 		$class = '\\lib\\saloos\\'.$name;
 		return new $class($args);
