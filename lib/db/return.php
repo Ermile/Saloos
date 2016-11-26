@@ -30,6 +30,7 @@ class return
 			{
 				$this->return[$peroperty[1]] = $_args[0];
 			}
+			return $this;
 		}
 		elseif(preg_match("/^get_(.*)$/", $_name, $peroperty))
 		{
