@@ -4,7 +4,7 @@ class db_return
 {
 	public $return;
 
-	public function is($_name, $_args)
+	public function is($_name, ...$_args)
 	{
 		if(!isset($_args[0]))
 		{
