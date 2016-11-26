@@ -1,7 +1,7 @@
 <?
 namespace lib\db;
 
-class return
+class db_return
 {
 	public $return;
 
