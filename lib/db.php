@@ -158,7 +158,7 @@ class db
 	{
 		$result = [];
 		// if mysqli fetch all is exist use it
-		if(function_exists('mysqli_fetch_all'))
+		if(function_exists('mysqli_fetch_all') && is_a($_result, 'mysqli_result'))
 		{
 			$result = @mysqli_fetch_all($_result, $resulttype);
 		}
