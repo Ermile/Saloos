@@ -484,8 +484,9 @@ class controller
 
 		switch ($_type)
 		{
-			// return the uri
-			case 'uri':
+			// return the base
+			case 'base':
+			case 'content':
 
 				$request_uri  = $_SERVER['REQUEST_URI'];
 				$url_language = null;
@@ -521,7 +522,19 @@ class controller
 				{
 					$uri .= "/". $content;
 				}
-				return $uri;
+
+				if($_type == 'base')
+				{
+					return $uri;
+				}
+				elseif($_type == 'content')
+				{
+					if($content)
+					{
+						return $content. "/";
+					}
+					return null;
+				}
 				break;
 
 			// sub domain like 'account'
@@ -595,7 +608,7 @@ class controller
 				break;
 
 			// base url for user in base tag with http[s]
-			case 'base':
+			case 'baseRaw':
 				return router::$base;
 				break;
 
