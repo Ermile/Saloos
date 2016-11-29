@@ -152,6 +152,10 @@ class define
 		}
 		// get all detail of this language
 		self::$language = \lib\utility\location\languages::get($_language, 'all');
+		if(!self::$language)
+		{
+			self::$language = \lib\utility\location\languages::get(self::$language_default, 'all');
+		}
 
 		// use saloos php gettext function
 		require_once(lib.'utility/gettext/gettext.inc');
