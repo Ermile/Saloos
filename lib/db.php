@@ -158,17 +158,21 @@ class db
 	{
 		$result = [];
 		// if mysqli fetch all is exist use it
-		if(function_exists('mysqli_fetch_all') && is_a($_result, 'mysqli_result'))
+		if(is_a($_result, 'mysqli_result'))
 		{
-			$result = @mysqli_fetch_all($_result, $resulttype);
-		}
-		else
-		{
-			for (; $tmp = $_result->fetch_array($resulttype);)
+			if(function_exists('mysqli_fetch_all'))
 			{
-				$result[] = $tmp;
+				$result = @mysqli_fetch_all($_result, $resulttype);
+			}
+			else
+			{
+				for (; $tmp = $_result->fetch_array($resulttype);)
+				{
+					$result[] = $tmp;
+				}
 			}
 		}
+
 		// give only one column of result
 		if($result && $_field !== null)
 		{
