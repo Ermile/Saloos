@@ -487,6 +487,7 @@ class controller
 			// return the base
 			case 'base':
 			case 'content':
+			case 'baseLang':
 
 				$request_uri  = $_SERVER['REQUEST_URI'];
 				$url_language = null;
@@ -534,6 +535,14 @@ class controller
 						return $content. "/";
 					}
 					return null;
+				}
+				elseif($_type == 'baseLang')
+				{
+					if($url_language)
+					{
+						return router::$base. '/'. $url_language;
+					}
+					return router::$base;
 				}
 				break;
 
