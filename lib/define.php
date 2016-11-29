@@ -125,7 +125,6 @@ class define
 		{
 			$result = self::$language[$_request];
 		}
-
 		return $result;
 	}
 
@@ -146,6 +145,10 @@ class define
 		if(!self::$language_default)
 		{
 			self::$language_default = \lib\utility\option::get('config', 'meta', 'defaultLang');
+			if(!self::$language_default)
+			{
+				self::$language_default = 'en';
+			}
 		}
 		// get all detail of this language
 		self::$language = \lib\utility\location\languages::get($_language, 'all');
@@ -215,12 +218,11 @@ class define
 		// 	return false;
 		// }
 
-
 		// if language is not set
-		if(!self::$language)
-		{
-			define::set_language(substr(self::$language_default, 0, 2));
-		}
+		// if(!self::$language)
+		// {
+		// 	define::set_language(substr(self::$language_default, 0, 2));
+		// }
 	}
 }
 ?>
