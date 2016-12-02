@@ -298,7 +298,7 @@ trait config
 			return $mydomain[count($mydomain)-1];
 		}
 		// if arg has a any value return domain name without tld
-		elseif($_arg)
+		elseif($_arg && count($mydomain)-2 >= 0)
 		{
 			return $mydomain[count($mydomain)-2];
 		}
