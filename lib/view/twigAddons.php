@@ -471,5 +471,27 @@ trait twigAddons
 
 		});
 	}
+
+
+	/**
+	 * [twig shortURL decode|encode]
+	 * @return [type] [description]
+	 */
+	public function twig_filter_shortURL()
+	{
+		return new \Twig_SimpleFilter('shortURL', function ($_url, $_type = 'decode', $_alphabet = null)
+		{
+			$result = null;
+			if($_type === 'decode')
+			{
+				$result = \lib\utility\shortURL::decode($_url, $_alphabet);
+			}
+			elseif($_type === 'encode')
+			{
+				$result = \lib\utility\shortURL::encode($_url, $_alphabet);
+			}
+			return $result;
+		});
+	}
 }
 ?>
