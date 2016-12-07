@@ -488,6 +488,7 @@ class controller
 			case 'base':
 			case 'content':
 			case 'baseContent':
+			case 'prefix':
 
 				$request_uri  = $_SERVER['REQUEST_URI'];
 				$url_language = null;
@@ -500,7 +501,6 @@ class controller
 				$content = null;
 				if(router::get_repository_name() !== 'content')
 				{
-
 					preg_match("/^(\/|)([^\/]*)/", $request_uri, $content);
 					if(isset($content[2]))
 					{
@@ -543,6 +543,18 @@ class controller
 						return router::$base. '/'. $url_language;
 					}
 					return router::$base;
+				}
+				elseif($_type == 'prefix')
+				{
+					$return = $content;
+					if($url_language)
+					{
+						if($url_language != \lib\define::get_language('default'))
+						{
+							$return = $url_language . '/'. $return;
+						}
+					}
+					return  trim($return, '/');
 				}
 				break;
 
