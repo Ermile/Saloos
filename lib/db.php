@@ -25,14 +25,14 @@ class db
 	 */
 	public static function query($_qry, $_db_name = true)
 	{
+		// on default system connect to default db
+		$different_db = false;
+
 		// check debug status
 		if(!\lib\debug::$status)
 		{
 			return false;
 		}
-
-		// on default system connect to default db
-		$different_db = false;
 
 		// check connect to default db or no
 		if($_db_name === true)
@@ -40,12 +40,16 @@ class db
 			// connect to main database
 			self::connect(true);
 		}
-		else
+		elseif(is_string($_db_name))
 		{
 			// connect to different db
 			self::connect($_db_name);
 			// different db used.
 			$different_db = true;
+		}
+		else
+		{
+			return false;
 		}
 
 		// check the mysql link
@@ -77,17 +81,7 @@ class db
 		// set the default link
 		if($different_db)
 		{
-			// check if this link is open
-			if(array_key_exists(db_name, self::$link_open))
-			{
-				// set the link to default db
-				self::$link = self::$link_open[db_name];
-			}
-			else
-			{
-				// connect to mysql engine to make default link
-				self::connect(true);
-			}
+			self::$link = self::$link_default;
 		}
 
 		// return the mysql result

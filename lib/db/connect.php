@@ -6,7 +6,8 @@ trait connect
 
 	// save link to database
 	public static $link;
-	public static $link_open = array();
+	public static $link_open    = [];
+	public static $link_default = null;
 
 	// declare connection variables
 	public static $db_name      = null;
@@ -24,21 +25,29 @@ trait connect
 	 */
 	public static function connect($_db_name = null, $_autoCreate = false)
 	{
-		if($_db_name === true)
+		if($_db_name === true || $_db_name === db_name)
 		{
 			// connect to default db
 			self::$db_name = db_name;
 		}
-		elseif($_db_name === '[tools]')
+		else
 		{
-			// connect to core db
-			self::$db_name = core_name.'_tools';
-		}
-		elseif($_db_name)
-		{
-			// connect to db passed from user
-			// else connect to last db saved
-			self::$db_name = $_db_name;
+			// if at first request do not connected to default db
+			// connect to save link of default db
+			self::connect(true);
+			// if want to connect to saloos tools
+			if($_db_name === '[tools]')
+			{
+				// connect to core db
+				self::$db_name = core_name.'_tools';
+			}
+			// else connect to specefic database
+			elseif($_db_name)
+			{
+				// connect to db passed from user
+				// else connect to last db saved
+				self::$db_name = $_db_name;
+			}
 		}
 
 		// fill variable if empty variable
@@ -125,6 +134,10 @@ trait connect
 			// save link as global variable
 			self::$link = $link;
 			self::$link_open[self::$db_name] = $link;
+			if(self::$db_name === db_name)
+			{
+				self::$link_default = $link;
+			}
 			return true;
 		}
 		// if link is not created return false

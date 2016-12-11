@@ -203,7 +203,7 @@ trait install
 	 * check db exist or not
 	 * @return [type] no of tables in database
 	 */
-	public static function exist($_create = false)
+	public static function count_table($_create = false)
 	{
 		$result  = false;
 		$connect = self::connect(true, $_create);
