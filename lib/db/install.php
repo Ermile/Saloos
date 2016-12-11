@@ -71,7 +71,7 @@ trait install
 			else
 			{
 				$result[$myDbName]['connect'] = self::connect($myDbCon, true);
-				$result[$myDbName]['exec']    = self::execFolder($myDbLoc.'/', false, $myDbCon);
+				$result[$myDbName]['exec']    = self::execFolder($myDbLoc.'/', null, false, $myDbCon);
 			}
 		}
 		// on normal installation call upgrade process to complete installation
