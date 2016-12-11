@@ -10,10 +10,10 @@ trait get
 	 * @param  boolean $_onlyOneValue [description]
 	 * @return [type]                 [description]
 	 */
-	public static function get($_qry, $_column = null, $_onlyOneValue = false)
+	public static function get($_qry, $_column = null, $_onlyOneValue = false, $_db_name = true)
 	{
 		// generate query and get result
-		$result = self::query($_qry);
+		$result = self::query($_qry, $_db_name);
 		// fetch datatable by result
 		$result = self::fetch_all($result, $_column);
 		// if we have only one row of result only return this row
