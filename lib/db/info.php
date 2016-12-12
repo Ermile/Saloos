@@ -3,6 +3,8 @@ namespace lib\db;
 
 trait info
 {
+	private static $all_db_version = [];
+
 	/**
 	 * read query info and analyse it and return array contain result
 	 * @return [type] [description]
@@ -63,27 +65,35 @@ trait info
 	 */
 	public static function db_version($_db_name = true)
 	{
-		$query =
-		"
-			SELECT
-				option_value AS 'version'
-			FROM
-				options
-			WHERE
-				post_id IS NULL AND
-				user_id IS NULL AND
-				option_cat = 'database_version' AND
-				option_key = 'database_version'
-			LIMIT 1
-		";
 
-		$db_version = \lib\db::get($query, 'version', true, $_db_name);
-		if(empty($db_version) || !$db_version)
+		self::connect($_db_name);
+
+		$db_name = self::$db_name;
+
+		$core_name = core_name.'_tools';
+
+		if(empty(self::$all_db_version))
 		{
-			// the first time the version is 0
+			$query = "SELECT * FROM $core_name.db_version ";
+			$db_version = \lib\db::get($query,['db_name', 'version']);
+			if(empty($db_version) || !$db_version)
+			{
+				return false;
+			}
+			else
+			{
+				self::$all_db_version = $db_version;
+			}
+		}
+
+		if(isset(self::$all_db_version[$db_name]))
+		{
+			return self::$all_db_version[$db_name];
+		}
+		else
+		{
 			return false;
 		}
-		return $db_version;
 	}
 
 
@@ -95,41 +105,23 @@ trait info
 	 */
 	public static function set_db_version($_version, $_db_name = true)
 	{
-		$result          = null;
-		$current_version = self::db_version($_db_name);
+		self::connect($_db_name);
 
-		if(!$current_version)
-		{
-			$insert =
-			"
-				INSERT INTO
-					options
-				SET
-					options.post_id      = NULL,
-					options.user_id      = NULL,
-					options.option_cat   = 'database_version',
-					options.option_key   = 'database_version',
-					options.option_value = '$_version'
-			";
-			$result = \lib\db::query($insert, $_db_name);
-		}
-		else
-		{
-			$update =
-			"
-				UPDATE
-					options
-				SET
-					options.option_value  = '$_version'
-				WHERE
-					options.user_id IS NULL AND
-					options.post_id IS NULL AND
-					options.option_cat   = 'database_version' AND
-					options.option_key   = 'database_version'
-			";
-			$result = \lib\db::query($update, $_db_name);
-		}
-		return $result;
+		$db_name = self::$db_name;
+
+		$core_name = core_name.'_tools';
+
+		$query =
+		"
+			INSERT INTO
+				$core_name.db_version
+			(db_version.db_name, db_version.version)
+			VALUES
+			('$db_name', '$_version')
+			ON DUPLICATE KEY UPDATE
+				db_version.version = '$_version'
+		";
+		\lib\db::query($query);
 	}
 }
 ?>
