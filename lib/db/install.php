@@ -52,8 +52,6 @@ trait install
 			$myList = array_reverse($myList);
 		}
 
-		var_dump($myList);
-
 		// run query for each folder
 		foreach ($myList as $myDbLoc => $myDbName)
 		{
@@ -72,16 +70,14 @@ trait install
 
 			if($_onlyUpgrade)
 			{
-				$result[$myDbName]['connect'] = self::connect($myDbCon, false);
-				$result[$myDbName]['exec']    =
-					self::execFolder($myDbLoc.'/', 'v.', false, $myDbCon, $db_version);
+				$result[$myDbName]['connect']        = self::connect($myDbCon, false);
+				$result[$myDbName]['exec'][$myDbLoc] =	self::execFolder($myDbLoc.'/', 'v.', false, $myDbCon, $db_version);
 			}
 			// run normal installation
 			else
 			{
-				$result[$myDbName]['connect'] = self::connect($myDbCon, true);
-				$result[$myDbName]['exec']    =
-					self::execFolder($myDbLoc.'/', null, false, $myDbCon, $db_version);
+				$result[$myDbName]['connect']        = self::connect($myDbCon, true);
+				$result[$myDbName]['exec'][$myDbLoc] = self::execFolder($myDbLoc.'/', null, false, $myDbCon, $db_version);
 			}
 		}
 		// on normal installation call upgrade process to complete installation
@@ -111,11 +107,12 @@ trait install
 		$result = [];
 		// if want to read from addons update location
 		$myDbName = null;
+		$path     = $_path;
 		if($_addons)
 		{
-			$_path    = self::$path_addons. $_path;
-			$_path    = $_path.'/';
-			$myDbName = self::find_dbName($_path);
+			$path    = self::$path_addons. $path;
+			$path    = $path.'/';
+			$myDbName = self::find_dbName($path);
 			self::connect($myDbName, true);
 		}
 
@@ -127,17 +124,19 @@ trait install
 		// if want custom group of files, select this group
 		if($_group)
 		{
-			$_path = $_path. $_group. "*.sql";
+			$path = $path. $_group. "*.sql";
 		}
 		else
 		{
-			$_path = $_path. "*.sql";
+			$path = $path. "*.sql";
 		}
-		// var_dump(glob($_path));
+		// var_dump(glob($path));
 		// for each item with this situation create
-		foreach(glob($_path) as $key => $filename)
+		foreach(glob($path) as $key => $filename)
 		{
-			$result[$filename] = self::execFile($filename, false, $myDbName, $_db_version);
+			$fname = $filename;
+			$fname = str_replace($_path, '', $fname);
+			$result[$fname] = self::execFile($filename, false, $myDbName, $_db_version);
 		}
 
 		return $result;
@@ -212,7 +211,7 @@ trait install
 		}
 		else
 		{
-			return T_('Needless of update');
+			return T_('Old version');
 		}
 		// file not exist or error on creating table, return false
 		return false;
