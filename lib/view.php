@@ -79,6 +79,7 @@ class view
 			$this->data->display['home']    = "content/home/display-xhr.html";
 			$this->data->display['cp']      = "content_cp/home/layout-xhr.html";
 			$this->data->display['account'] = "content_account/home/layout-xhr.html";
+			$this->data->loadMode           = 'ajax';
 
 			if($this->method_exists("pushState"))
 			{
