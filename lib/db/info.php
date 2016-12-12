@@ -59,6 +59,17 @@ trait info
 
 
 	/**
+	 * get the affected rows
+	 *
+	 * @return     <type>  ( description_of_the_return_value )
+	 */
+	public static function affected_rows()
+	{
+		return mysqli_affected_rows(self::$link);
+	}
+
+
+	/**
 	 * get the database version from options table
 	 *
 	 * @param      boolean  $_db_name  The database name

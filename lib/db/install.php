@@ -201,11 +201,11 @@ trait install
 				// if command execute successfully
 				if(!$has_error)
 				{
-					return T_('Successfully');
+					return T_('Empty query!');
 				}
 				else
 				{
-					return T_('Error!');
+					return T_('Successfully');
 				}
 			}
 		}
