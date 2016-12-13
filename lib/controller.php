@@ -536,13 +536,15 @@ class controller
 					}
 					return null;
 				}
+				elseif($_type == 'baseLanguage')
+				{
+					$url_language_string = \lib\define::get_current_language_string();
+					return $myprefix.router::get_root_domain(). $url_language_string;
+				}
 				elseif($_type == 'base')
 				{
-					if($url_language)
-					{
-						return router::$base. '/'. $url_language;
-					}
-					return router::$base;
+					$url_language_string = \lib\define::get_current_language_string();
+					return $myprefix.router::get_root_domain(). $url_language_string.'/'.$content;
 				}
 				elseif($_type == 'prefix')
 				{

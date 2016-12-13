@@ -257,11 +257,12 @@ class option
 	{
 		// detect languages exist in current project
 		$langList = glob(dir_includes.'languages/*', GLOB_ONLYDIR);
-		$myList   = ['en_US' => 'English'];
+		$myList   = ['en' => 'English'];
 		foreach ($langList as $myLang)
 		{
 			$myLang     = preg_replace("[\\\\]", "/", $myLang);
 			$myLang     = substr( $myLang, (strrpos($myLang, "/" )+ 1));
+			$myLang     = substr($myLang, 0, 2);
 			$myLangName = $myLang;
 			$myLangDir  = 'ltr';
 			switch (substr($myLang, 0, 2))
