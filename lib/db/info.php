@@ -22,6 +22,39 @@ trait info
 
 
 	/**
+	 * get rows matched
+	 *
+	 * @return     <type>  ( description_of_the_return_value )
+	 */
+	public static function rows_matched()
+	{
+		return self::qry_info("Rows matched");
+	}
+
+
+	/**
+	 * get rows changed
+	 *
+	 * @return     <type>  ( description_of_the_return_value )
+	 */
+	public static function changed()
+	{
+		return self::qry_info("Changed");
+	}
+
+
+	/**
+	 * get the warnings
+	 *
+	 * @return     <type>  ( description_of_the_return_value )
+	 */
+	public static function warnings()
+	{
+		return self::qry_info("Warnings");
+	}
+
+
+	/**
 	 * return the last insert id
 	 *
 	 * @return     <type>  ( description_of_the_return_value )
@@ -52,8 +85,8 @@ trait info
 	 */
 	public static function num()
 	{
-		// $num = @mysqli_num_rows(self::$link);
-		$num = self::$link->affected_rows;
+		$num = @mysqli_num_rows(self::$link);
+		// $num = self::$link->affected_rows;
 		return $num;
 	}
 
