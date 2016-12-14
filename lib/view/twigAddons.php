@@ -214,6 +214,81 @@ trait twigAddons
 
 
 	/**
+	 * [twig_function_language description]
+	 * @return [type] [description]
+	 */
+	public function twig_function_langList()
+	{
+		return new \Twig_SimpleFunction('langList', function()
+		{
+			$result      = null;
+			$html        = array_column(func_get_args(), 'html');
+			$all         = array_column(func_get_args(), 'all');
+			$onlyLink    = array_column(func_get_args(), 'onlyLink');
+			$class       = array_column(func_get_args(), 'class');
+			$langList    = $this->data->site['langlist'];
+			$urlRoot     = $this->data->url->root;
+			$urlContent  = $this->data->url->content;
+			$urlPath     = $this->data->url->path;
+
+			if(!$all)
+			{
+				$currentlang = \lib\define::get_language();
+				unset($langList[$currentlang]);
+			}
+
+			if($html)
+			{
+				$lang_string = '';
+				foreach ($langList as $key => $value)
+				{
+					$langPrefix  = \lib\define::get_current_language_string($key);
+					$href        = $urlRoot. $langPrefix;
+					$activeClass = '';
+
+					if(!$langPrefix)
+					{
+						$activeClass = " class='active'";
+					}
+					if($urlContent)
+					{
+						$href .= '/'.$urlContent;
+					}
+					if($urlPath)
+					{
+						$href .= '/'.$urlPath;
+					}
+					$lang_string .= "<a href='". $href . "'$activeClass>";
+					$lang_string .= $value;
+					$lang_string .= "</a>";
+				}
+
+				if(!$onlyLink)
+				{
+					if(is_array($class) && isset($class[0]))
+					{
+						$class = $class[0];
+					}
+					if(!is_string($class) || !$class)
+					{
+						$class = '';
+					}
+					else
+					{
+						$class = ' '. $class;
+					}
+
+					$lang_string = "<nav class='langlist$class' data-xhr='langlist'>". $lang_string .'</nav>';
+				}
+
+				echo $lang_string;
+			}
+			// return $langList;
+		});
+	}
+
+
+	/**
 	 * [twig_function_breadcrumb description]
 	 * @return [type] [description]
 	 */
