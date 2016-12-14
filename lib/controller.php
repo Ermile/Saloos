@@ -544,7 +544,12 @@ class controller
 				elseif($_type == 'base')
 				{
 					$url_language_string = \lib\define::get_current_language_string();
-					return $myprefix.router::get_root_domain(). $url_language_string.'/'.$content;
+					$return_url = $myprefix.router::get_root_domain(). $url_language_string;
+					// if($content)
+					// {
+					// 	$return_url .= '/'. $content;
+					// }
+					return $return_url;
 				}
 				elseif($_type == 'prefix')
 				{
