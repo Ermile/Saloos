@@ -526,29 +526,35 @@ class controller
 
 				if($_type == 'baseContent')
 				{
-					return $uri;
+					$return_url = $myprefix.router::get_root_domain();
+					if($content)
+					{
+						$return_url .= '/'. $content;
+					}
+					return $return_url;
 				}
 				elseif($_type == 'content')
 				{
 					if($content)
 					{
-						return $content. "/";
+						return $content;
 					}
 					return null;
 				}
-				elseif($_type == 'baseLanguage')
+				elseif($_type == 'baseFull')
 				{
 					$url_language_string = \lib\define::get_current_language_string();
-					return $myprefix.router::get_root_domain(). $url_language_string;
+					$return_url = $myprefix.router::get_root_domain(). $url_language_string;
+					if($content)
+					{
+						$return_url .= '/'. $content;
+					}
+					return $return_url;
 				}
 				elseif($_type == 'base')
 				{
 					$url_language_string = \lib\define::get_current_language_string();
 					$return_url = $myprefix.router::get_root_domain(). $url_language_string;
-					// if($content)
-					// {
-					// 	$return_url .= '/'. $content;
-					// }
 					return $return_url;
 				}
 				elseif($_type == 'prefix')
