@@ -258,7 +258,7 @@ trait twigAddons
 					{
 						$href .= '/'.$urlPath;
 					}
-					$lang_string .= "<a href='". $href . "'$activeClass>";
+					$lang_string .= "<a href='". $href . "'$activeClass hreflang='$key' data-direct>";
 					$lang_string .= $value;
 					$lang_string .= "</a>";
 				}
