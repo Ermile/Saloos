@@ -488,6 +488,7 @@ class controller
 			case 'base':
 			case 'content':
 			case 'baseContent':
+			case 'baseFull':
 			case 'prefix':
 
 				$request_uri  = $_SERVER['REQUEST_URI'];
