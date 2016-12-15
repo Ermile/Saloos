@@ -368,13 +368,19 @@ class file
     public static function humanReadableSize( $_size, $accuracy = 0 )
     {
         if( $_size > 1024 * 1024 * 1024 )
+        {
             return round( $_size /( 1024 * 1024 * 1024 ), $accuracy ) . ' Go';
+        }
 
         if( $_size > 1024 * 1024 )
+        {
             return round( $_size /( 1024 * 1024 ), $accuracy ) . ' Mo';
+        }
 
         if( $_size > 1024 )
+        {
             return round( $_size / 1024, $accuracy ) . ' Ko';
+        }
 
         return $_size . ' octets';
     }

@@ -63,7 +63,9 @@ class upload
 			self::$fileDisallow = $extCheck['disallow'];
 
 			if(!$_maxSize)
+			{
 				$_maxSize = self::max_file_upload_in_bytes(true);
+			}
 
 			// Check filesize here.
 			self::$fileSize = $_FILES[self::$fieldName]['size'];
@@ -89,12 +91,10 @@ class upload
 			self::$fileFullName = \lib\utility\filter::slug(self::$fileName). '.'. self::$fileExt;
 			self::$fileMd5      = md5_file($_FILES[self::$fieldName]['tmp_name']);
 
-
 			if(is_array(self::$extentions) && !in_array(self::$fileExt, self::$extentions))
 			{
 				throw new \RuntimeException(T_("We don't support this type of file"));
 			}
-
 
 			// DO NOT TRUST $_FILES[self::$fieldName]['mime'] VALUE !!
 			// Check MIME Type by yourself.
@@ -145,11 +145,15 @@ class upload
 			if($_filesize == 0)
 			{
 				if(!$_emptyTxt)
+				{
 					$_emptyTxt = $_emptyTxt = 'empty';
+				}
 				return T_($_emptyTxt);
 			}
 			else
+			{
 				return $_filesize .' '. T_('item');
+			}
 		}
 		else
 		{
@@ -212,7 +216,9 @@ class upload
 	public static function transfer($_url, $_folder = null)
 	{
 		if($_folder && !is_dir($_folder))
+		{
 			\lib\utility\file::makeDir($_folder, 0775, true);
+		}
 
 		if($_folder && !is_dir($_folder))
 		{
@@ -225,7 +231,9 @@ class upload
 			return true;
 		}
 		else
+		{
 			return false;
+		}
 	}
 
 
