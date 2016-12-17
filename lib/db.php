@@ -23,7 +23,7 @@ class db
 	 * @param  [type] $_qry [description]
 	 * @return [type]       [description]
 	 */
-	public static function query($_qry, $_db_name = true)
+	public static function query($_qry, $_db_name = true, $_multi_query = false)
 	{
 		// on default system connect to default db
 		$different_db = false;
@@ -67,7 +67,14 @@ class db
 		/**
 		 * send the query to mysql engine
 		 */
-		$result = mysqli_query(self::$link, $_qry);
+		if($_multi_query === true)
+		{
+			$result = mysqli_multi_query(self::$link, $_qry);
+		}
+		else
+		{
+			$result = mysqli_query(self::$link, $_qry);
+		}
 
 		// check the mysql result
 		if(!is_a($result, 'mysqli_result') && !$result)

@@ -173,25 +173,36 @@ trait install
 			// if this path exist, read file and run
 			if(file_exists($_path))
 			{
+				$has_error = false;
 				// read file and save in variable
 				$qry_list = file_get_contents($_path);
 				// seperate with semicolon
-				if(substr($qry_list, 0,9) == 'DELIMITER')
+				if(substr($qry_list, 0,14) == '-- multi_query')
 				{
-					$qry_list = [$qry_list];
+					if($qry_list)
+					{
+						if(!self::query($qry_list, $_db_name, true))
+						{
+							$has_error = true;
+						}
+					}
 				}
 				else
 				{
 					$qry_list = explode(';', $qry_list);
 				}
-
-				$has_error = null;
-				foreach ($qry_list as $key => $qry)
+				if(is_array($qry_list))
 				{
-					$qry = trim($qry);
-					if($qry && self::query($qry, $_db_name))
+					foreach ($qry_list as $key => $qry)
 					{
-						$has_error = true;
+						$qry = trim($qry);
+						if($qry)
+						{
+							if(!self::query($qry, $_db_name))
+							{
+								$has_error = true;
+							}
+						}
 					}
 				}
 
