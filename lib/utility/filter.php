@@ -157,9 +157,15 @@ class filter
 	 */
 	public static function generate_verification_code($_user_id, $_mobile)
 	{
-		$code           = rand(1000, 9999);
-		$log_item_title = "account/verification sms";
-		$log_item_id    = \lib\db\logitems::get_id($log_item_title);
+		$code        = rand(1000, 9999);
+		$caller      = "account_verification_sms";
+		$log_item_id = \lib\db\logitems::get_id($caller);
+
+		if(!$log_item_id)
+		{
+			return false;
+		}
+
 		$arg =
 		[
 			'logitem_id'     => $log_item_id,
