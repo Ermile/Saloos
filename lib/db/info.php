@@ -3,7 +3,8 @@ namespace lib\db;
 
 trait info
 {
-	private static $all_db_version = [];
+	private static $all_db_version        = [];
+	private static $all_db_addons_version = [];
 
 	/**
 	 * read query info and analyse it and return array contain result
@@ -107,7 +108,7 @@ trait info
 	 *
 	 * @param      boolean  $_db_name  The database name
 	 */
-	public static function db_version($_db_name = true)
+	public static function db_version($_db_name = true, $_addons_version = false)
 	{
 
 		self::connect($_db_name);
@@ -116,27 +117,46 @@ trait info
 
 		$core_name = core_name.'_tools';
 
-		if(empty(self::$all_db_version))
+		if(empty(self::$all_db_addons_version) || empty(self::$all_db_version))
 		{
 			$query = "SELECT * FROM $core_name.db_version ";
-			$db_version = \lib\db::get($query,['db_name', 'version']);
-			if(empty($db_version) || !$db_version)
+
+			$db_version = \lib\db::get($query);
+			if(empty($db_version) || !$db_version || !is_array($db_version))
 			{
 				return false;
 			}
 			else
 			{
-				self::$all_db_version = $db_version;
+				foreach ($db_version as $key => $value)
+				{
+					self::$all_db_addons_version[$value['db_name']] = $value['addons_version'];
+					self::$all_db_version[$value['db_name']]        = $value['version'];
+				}
 			}
 		}
 
-		if(isset(self::$all_db_version[$db_name]))
+		if($_addons_version === true)
 		{
-			return self::$all_db_version[$db_name];
+			if(isset(self::$all_db_addons_version[$db_name]))
+			{
+				return self::$all_db_addons_version[$db_name];
+			}
+			else
+			{
+				return false;
+			}
 		}
 		else
 		{
-			return false;
+			if(isset(self::$all_db_version[$db_name]))
+			{
+				return self::$all_db_version[$db_name];
+			}
+			else
+			{
+				return false;
+			}
 		}
 	}
 
@@ -147,7 +167,7 @@ trait info
 	 * @param      <type>   $_version  The version
 	 * @param      boolean  $_db_name  The database name
 	 */
-	public static function set_db_version($_version, $_db_name = true)
+	public static function set_db_version($_version, $_db_name = true, $_addons_version = false)
 	{
 		self::connect($_db_name);
 
@@ -155,16 +175,35 @@ trait info
 
 		$core_name = core_name.'_tools';
 
-		$query =
-		"
-			INSERT INTO
-				$core_name.db_version
-			(db_version.db_name, db_version.version)
-			VALUES
-			('$db_name', '$_version')
-			ON DUPLICATE KEY UPDATE
-				db_version.version = '$_version'
-		";
+		if($_addons_version === true)
+		{
+			$query =
+			"
+				INSERT INTO
+					$core_name.db_version
+				SET
+					db_version.db_name        = '$db_name',
+					db_version.addons_version = '$_version',
+					db_version.version        = db_version.version
+				ON DUPLICATE KEY UPDATE
+					db_version.addons_version = '$_version'
+			";
+		}
+		else
+		{
+			$query =
+			"
+				INSERT INTO
+					$core_name.db_version
+				SET
+					db_version.db_name        = '$db_name',
+					db_version.version        = '$_version',
+					db_version.addons_version = db_version.addons_version
+				ON DUPLICATE KEY UPDATE
+					db_version.version = '$_version'
+			";
+		}
+
 		\lib\db::query($query);
 	}
 }

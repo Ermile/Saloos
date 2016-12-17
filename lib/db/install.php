@@ -151,10 +151,15 @@ trait install
 	 */
 	public static function execFile($_path, $_addons = false, $_db_name = true, $_db_version = 0)
 	{
+		// default set version in db_name version
+		// the addons_version is false
+		$addons_version = false;
+
 		// if want to read from addons update location
 		if($_addons)
 		{
 			$_path = self::$path_addons. $_path. '.sql';
+			$addons_version = true;
 		}
 
 		$file_version = 0;
@@ -165,8 +170,17 @@ trait install
 				$file_version = $split[1];
 			}
 		}
-		// var_dump($_path);
-		// var_dump($file_version);
+
+		if(preg_match("/(.*)addons(.*)\(db_name\)/", $_path))
+		{
+			$addons_version = true;
+		}
+
+		if($addons_version === true)
+		{
+			// get the addons version on this database
+			$_db_version = self::db_version(self::$db_name, true);
+		}
 
 		if(version_compare($_db_version, $file_version, "<"))
 		{
@@ -206,8 +220,10 @@ trait install
 					}
 				}
 
+
+
 				// set the new version in database
-				self::set_db_version($file_version, $_db_name);
+				self::set_db_version($file_version, $_db_name, $addons_version);
 
 				// if command execute successfully
 				if(!$has_error)
