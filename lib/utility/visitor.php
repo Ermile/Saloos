@@ -416,13 +416,16 @@ class visitor
 				WHERE `service_id` = $service_id
 
 				GROUP BY visitor_date
-				ORDER BY visitor_date ASC
+				ORDER BY visitor_date DESC
 				LIMIT 0, 10";
 		$result  = @mysqli_query(self::$link, $qry);
 		if(!$result)
+		{
 			return false;
+		}
 
 		$result = \lib\db::fetch_all($result);
+		$result = array_reverse($result);
 
 		$result_total = array_column($result, 'total');
 		self::$result['chart'] = $result;
