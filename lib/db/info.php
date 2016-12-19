@@ -104,6 +104,15 @@ trait info
 
 
 	/**
+	 * return the mysql error
+	 */
+	public static function error()
+	{
+		return mysqli_error(self::$link);
+	}
+
+
+	/**
 	 * get the database version from options table
 	 *
 	 * @param      boolean  $_db_name  The database name
