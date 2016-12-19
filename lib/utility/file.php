@@ -114,6 +114,19 @@ class file
 
 
     /**
+     * get the file content type
+     *
+     * @param      <type>  $_file_path  The file path
+     *
+     * @return     <type>  ( description_of_the_return_value )
+     */
+    public static function content_type($_file_path)
+    {
+        return mime_content_type($_file_path);
+    }
+
+
+    /**
      * Moves a file or a directory
      *
      * @param string $path		Name of the file / dir
@@ -273,18 +286,17 @@ class file
      */
     public static function upload( $name )
     {
-        if( isset( $_FILES[ $name ] ) && isset( $_FILES[ $name ]['name'] ) && $_FILES[ $name ]['size'] != 0 )
+        if( \lib\utility\upload::_FILES($name) && isset( \lib\utility\upload::_FILES($name)['name'] ) && \lib\utility\upload::_FILES($name)['size'] != 0 )
         {
-
             // Multi-upload
-            if( is_array( $_FILES[ $name ]['name'] ) )
+            if( is_array( \lib\utility\upload::_FILES($name)['name'] ) )
             {
                 $paths = array();
 
-                for( $i = 0; $i < count( $_FILES[ $name ]['name'] ); $i++ )
+                for( $i = 0; $i < count( \lib\utility\upload::_FILES($name)['name'] ); $i++ )
                 {
-                    $path = DATA_DIR . Config::DIR_DATA_TMP . $_FILES[ $name ]['name'][ $i ];
-                    if( move_uploaded_file( $_FILES[ $name ]['tmp_name'][ $i ], $path ) )
+                    $path = DATA_DIR . Config::DIR_DATA_TMP . \lib\utility\upload::_FILES($name)['name'][ $i ];
+                    if( move_uploaded_file( \lib\utility\upload::_FILES($name)['tmp_name'][ $i ], $path ) )
                     {
                         @chmod( $path, 0777 );
                         $paths[] = $path;
@@ -298,8 +310,8 @@ class file
             }
             else
             {
-                $path = DATA_DIR . Config::DIR_DATA_TMP . $_FILES[ $name ]['name'];
-                if( move_uploaded_file( $_FILES[ $name ]['tmp_name'], $path ) )
+                $path = DATA_DIR . Config::DIR_DATA_TMP . \lib\utility\upload::_FILES($name)['name'];
+                if( move_uploaded_file( \lib\utility\upload::_FILES($name)['tmp_name'], $path ) )
                 {
                     @chmod( $path, 0777 );
                     return $path;

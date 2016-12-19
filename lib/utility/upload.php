@@ -15,8 +15,52 @@ class upload
 	public static $fileDisallow;
 	public static $fileMd5;
 	public static $fileSize;
+	public static $upload_from_path = null;
 	public static $extentionsDisallow = ['php', 'php5', 'htaccess', 'exe', 'bat', 'bin'];
-	public static $extentions         = ['png', 'jpeg', 'jpg', 'zip', 'rar', 'mp3', 'mp4', 'pdf', 'doc', 'docx', 'apk', 'chm', 'jar', 'txt', 'css', 'js', 'htm', 'html', 'swf', 'xml', 'xlsx', 'pptx'];
+	public static $extentions         =
+	[
+		'png', 'jpeg', 	'jpg', 	'zip', 	'rar', 'mp3',
+		'mp4', 'pdf', 	'doc', 	'docx', 'apk', 'chm',
+		'jar', 'txt', 	'css', 	'js', 	'htm', 'html',
+		'swf', 'xml', 	'xlsx', 'pptx'
+	];
+
+
+	/**
+	 * get $_FILES
+	 *
+	 * @param      <type>  $_name  The name
+	 *
+	 * @return     <type>  ( description_of_the_return_value )
+	 */
+	public static function _FILES($_name)
+	{
+		if(self::$upload_from_path)
+		{
+			$path = self::$upload_from_path;
+			if(\lib\utility\file::exists($path))
+			{
+				$tmp_FILES =
+				[
+					'name'     => \lib\utility\file::getName($path),
+					'type'     => \lib\utility\file::content_type($path),
+					'tmp_name' => $path,
+					'error'    => 0,
+					'size'     => \lib\utility\file::getSize($path),
+				];
+				return $tmp_FILES;
+			}
+		}
+		else
+		{
+			if(isset($_FILES[$_name]))
+			{
+				return $_FILES[$_name];
+			}
+		}
+		return [];
+	}
+
 
 	/**
 	 * Check for invalid upload process
@@ -30,13 +74,13 @@ class upload
 		{
 			// Undefined | Multiple Files | $_FILES Corruption Attack
 			// If this request falls under any of them, treat it invalid.
-			if ( !isset($_FILES[self::$fieldName]['error']) || is_array($_FILES[self::$fieldName]['error']))
+			if ( !isset(self::_FILES(self::$fieldName)['error']) || is_array(self::_FILES(self::$fieldName)['error']))
 			{
 				throw new \RuntimeException(T_('Invalid parameters'));
 			}
 
-			// Check $_FILES[self::$fieldName]['error'] value.
-			switch ($_FILES[self::$fieldName]['error'])
+			// Check self::_FILES(self::$fieldName)['error'] value.
+			switch (self::_FILES(self::$fieldName)['error'])
 			{
 				case UPLOAD_ERR_OK:
 					break;
@@ -53,7 +97,7 @@ class upload
 			}
 
 
-			$fileInfo           = pathinfo($_FILES[self::$fieldName]['name']);
+			$fileInfo           = pathinfo(self::_FILES(self::$fieldName)['name']);
 			self::$fileName     = $fileInfo['filename'];
 
 			self::$fileExt      = strtolower($fileInfo['extension']);
@@ -68,7 +112,7 @@ class upload
 			}
 
 			// Check filesize here.
-			self::$fileSize = $_FILES[self::$fieldName]['size'];
+			self::$fileSize = self::_FILES(self::$fieldName)['size'];
 			if ( self::$fileSize > $_maxSize)
 			{
 				throw new \RuntimeException(T_('Exceeded filesize limit'));
@@ -89,21 +133,21 @@ class upload
 			}
 
 			self::$fileFullName = \lib\utility\filter::slug(self::$fileName). '.'. self::$fileExt;
-			self::$fileMd5      = md5_file($_FILES[self::$fieldName]['tmp_name']);
+			self::$fileMd5      = md5_file(self::_FILES(self::$fieldName)['tmp_name']);
 
 			if(is_array(self::$extentions) && !in_array(self::$fileExt, self::$extentions))
 			{
 				throw new \RuntimeException(T_("We don't support this type of file"));
 			}
 
-			// DO NOT TRUST $_FILES[self::$fieldName]['mime'] VALUE !!
+			// DO NOT TRUST self::_FILES(self::$fieldName)['mime'] VALUE !!
 			// Check MIME Type by yourself.
 			// Alternative check
 			if(function_exists('finfo'))
 			{
 				$finfo = new finfo(FILEINFO_MIME_TYPE);
 				// var_dump($finfo);
-				// if (false === $ext = array_search( $finfo->file($_FILES[self::$fieldName]['tmp_name']), self::$extentions ), true ))
+				// if (false === $ext = array_search( $finfo->file(self::_FILES(self::$fieldName)['tmp_name']), self::$extentions ), true ))
 				// {
 				// 	throw new \RuntimeException(T_('Invalid file format.'));
 				// }
@@ -226,7 +270,7 @@ class upload
 			exit();
 		}
 
-		if(move_uploaded_file($_FILES[self::$fieldName]['tmp_name'], $_url))
+		if(move_uploaded_file(self::_FILES(self::$fieldName)['tmp_name'], $_url))
 		{
 			return true;
 		}
@@ -342,6 +386,198 @@ class upload
 		}
 		// else return the
 		return $myResult;
+	}
+
+
+	/**
+	 * upload and insert post in database
+	 *
+	 * @return     boolean  ( description_of_the_return_value )
+	 */
+	public static function complete_upload($_options = [])
+	{
+		$default_options =
+		[
+
+			'file_path'     => null,
+			'user_id'       => false,
+			'folder_size'   => 1000,
+			'upload_name'   => 'upfile',
+			'folder_prefix' => 'files/',
+			'crop'          => true,
+			'resize'        => false,
+			'copy_file'     => false,
+			'ftp'			=> false,
+			'ftp_user'		=> null,
+			'ftp_password'	=> null,
+		];
+
+		$_options = array_merge($default_options, $_options);
+
+		// check upload name
+		if(!$_options['upload_name'])
+		{
+			return \lib\debug::error(T_("upload name not found"), false, 'upload');
+		}
+
+		// check foler prefix
+		if(!$_options['folder_prefix'])
+		{
+			return \lib\debug::error(T_("folder prefix not found"), false, 'upload');
+		}
+
+		// check user id
+		if(!$_options['user_id'] || !is_numeric($_options['user_id']))
+		{
+			return \lib\debug::error(T_("user id not set"), false, 'sql');
+		}
+
+		// default upload file from upload in server
+		// you can move from read path in new path
+		// by set 'file_path' = [real file path]
+		$upload_from_path = false;
+
+		// check file path
+		if($_options['file_path'] !== null)
+		{
+			self::$upload_from_path = $_options['file_path'];
+			$upload_from_path = true;
+		}
+
+		// 1. check upload process and validate it
+		$invalid = self::invalid($_options['upload_name']);
+		if($invalid)
+		{
+			var_dump(self::_FILES('upfile'));
+			exit();
+			return \lib\debug::error($invalid, false, 'upload');
+		}
+
+		// 2. Generate file_id, folder_id and url
+		$query         = "SELECT COUNT(posts.id) AS 'count' FROM posts WHERE post_type = 'attachment' ";
+		$qry_count     = \lib\db::get($query,'count', true);
+
+		$folder_prefix = $_options['folder_prefix'];
+		$folder_id     = ceil(($qry_count+1) / $_options['folder_size']);
+
+		$folder_loc    = $folder_prefix . $folder_id;
+		$file_id       = $qry_count % $_options['folder_size'] + 1;
+		$url_full      = "$folder_loc/$file_id-" . self::$fileFullName;
+
+		// 3. Check for record exist in db or not
+		$file_md5  = self::$fileMd5;
+		$qry_count = "SELECT posts.id AS 'id' FROM posts WHERE post_slug = '$file_md5' LIMIT 1";
+		$qry_count = \lib\db::get($qry_count, 'id', true);
+		if($qry_count || !empty($qry_count))
+		{
+			$id = (int) $qry_count;
+			// $link = '<a target="_blank" href=/cp/attachments/edit='. $id. '>'.
+			// T_('Duplicate - File exist').'</a>';
+			// \lib\debug::msg("link", $link);
+			return \lib\debug::error(T_('Duplicate - File exist'), false, 'upload');
+		}
+
+		// 4. transfer file to project folder with new name
+		if($upload_from_path)
+		{
+			if(!\lib\utility\file::copy($_options['file_path'], $folder_loc))
+			{
+				return \lib\debug::fatal(T_('Fail on tranfering file, upload from path'));
+			}
+
+			if($_options['copy_file'] === false)
+			{
+				\lib\utility\file::delete($_options['file_path']);
+			}
+		}
+		else
+		{
+			if(!self::transfer($url_full, $folder_loc))
+			{
+				return \lib\debug::msg('mag', false); //->set_message(T_('Fail on tranfering file'));
+			}
+		}
+
+		$file_ext   = self::$fileExt;
+		$url_thumb  = null;
+		$url_normal = null;
+
+		switch ($file_ext)
+		{
+			case 'jpg':
+			case 'jpeg':
+			case 'png':
+			case 'gif':
+				$extlen     = strlen(self::$fileExt);
+				$url_file   = substr($url_full, 0, -$extlen-1);
+				$url_thumb  = $url_file.'-thumb.'.self::$fileExt;
+				$url_normal = $url_file.'-normal.'.self::$fileExt;
+
+				\lib\utility\image::load($url_full);
+				\lib\utility\image::thumb(600, 400);
+				\lib\utility\image::save($url_normal);
+
+				\lib\utility\image::thumb(150, 150);
+				\lib\utility\image::save($url_thumb);
+				break;
+		}
+
+		// 5. get filemeta data
+		$file_meta =
+		[
+			'mime'   => self::$fileMime,
+			'type'   => self::$fileType,
+			'size'   => self::$fileSize,
+			'ext'    => $file_ext,
+			'url'    => $url_full,
+			'thumb'  => $url_thumb,
+			'normal' => $url_normal,
+		];
+
+		$url_slug = self::$fileMd5;
+		$url_body = $folder_id. "_". $file_id;
+		$page_url = self::sp_generateUrl($url_slug, $url_body, $file_meta['type']. "/");
+
+		if( strpos($file_meta['mime'], 'image') !== false)
+			list($file_meta['width'], $file_meta['height'])= getimagesize($url_full);
+		$file_meta = json_encode($file_meta, JSON_UNESCAPED_UNICODE);
+
+		// 6. add uploaded file record to db
+		$insert_attachment =
+		[
+			'post_title'       => self::$fileName,
+			'post_slug'        => self::$fileMd5,
+			'post_meta'        => $file_meta,
+			'post_type'        => 'attachment',
+			'post_url'         => $page_url,
+			'user_id'          => $_options['user_id'],
+			'post_status'      => 'draft',
+			'post_publishdate' => date('Y-m-d H:i:s')
+		];
+		$post_new_id = \lib\db\posts::insert($insert_attachment);
+		return \lib\debug::msg('mag', true); //->set_result($post_new_id)->set_file_id(\lib\db::insert_id());
+	}
+
+
+	/**
+	 * create url automatically from input values
+	 * @param  [type] $_slug   slug
+	 * @param  [type] $_catUrl body url, cat url or parent url
+	 * @param  [type] $_prefix prefix if needed
+	 * @return [type]          created url
+	 */
+	public static function sp_generateUrl($_slug, $_catUrl = null, $_prefix = null)
+	{
+		$newURL = $_prefix. $_catUrl;
+		if($newURL)
+		{
+			$newURL .= '/';
+		}
+		$newURL .= $_slug. '/';
+		$newURL = trim($newURL, '/');
+		// $newURL .= '/';
+
+		return $newURL;
 	}
 }
 ?>
