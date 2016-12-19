@@ -230,10 +230,10 @@ trait twigAddons
 			$urlRoot     = $this->data->url->root;
 			$urlContent  = $this->data->url->content;
 			$urlPath     = $this->data->url->path;
+			$currentlang = \lib\define::get_language();
 
 			if(!$all)
 			{
-				$currentlang = \lib\define::get_language();
 				unset($langList[$currentlang]);
 			}
 
@@ -245,8 +245,7 @@ trait twigAddons
 					$langPrefix  = \lib\define::get_current_language_string($key);
 					$href        = $urlRoot. $langPrefix;
 					$activeClass = '';
-
-					if(!$langPrefix)
+					if($key === $currentlang)
 					{
 						$activeClass = " class='active'";
 					}
