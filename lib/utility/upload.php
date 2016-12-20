@@ -4,6 +4,10 @@ namespace lib\utility;
 /** PHP Upload Management **/
 class upload
 {
+	use upload\sql;
+	use upload\ext;
+	use upload\check;
+
 	// default max size is 10MB
 	const MAX_SIZE = 10000000;
 	public static $fieldName;
@@ -69,106 +73,6 @@ class upload
 		return self::$FILES;
 	}
 
-
-	/**
-	 * Check for invalid upload process
-	 * @param  string self::$fieldName [description]
-	 * @return [type]        [description]
-	 */
-	public static function invalid($_name = 'upfile', $_maxSize = null)
-	{
-		self::$fieldName = $_name;
-		try
-		{
-			// Undefined | Multiple Files | $_FILES Corruption Attack
-			// If this request falls under any of them, treat it invalid.
-			if ( !isset(self::_FILES(self::$fieldName)['error']) || is_array(self::_FILES(self::$fieldName)['error']))
-			{
-				throw new \RuntimeException(T_('Invalid parameters'));
-			}
-
-			// Check self::_FILES(self::$fieldName)['error'] value.
-			switch (self::_FILES(self::$fieldName)['error'])
-			{
-				case UPLOAD_ERR_OK:
-					break;
-
-				case UPLOAD_ERR_NO_FILE:
-					throw new \RuntimeException(T_('No file sent'));
-
-				case UPLOAD_ERR_INI_SIZE:
-				case UPLOAD_ERR_FORM_SIZE:
-					throw new \RuntimeException(T_('Exceeded filesize limit'));
-
-				default:
-					throw new \RuntimeException(T_('Unknown errors'));
-			}
-
-			$fileInfo           = pathinfo(self::_FILES(self::$fieldName)['name']);
-			self::$fileName     = $fileInfo['filename'];
-
-			self::$fileExt      = strtolower($fileInfo['extension']);
-			$extCheck           = self::extCheck(self::$fileExt);
-			self::$fileType     = $extCheck['type'];
-			self::$fileMime     = $extCheck['mime'];
-			self::$fileDisallow = $extCheck['disallow'];
-
-			if(!$_maxSize)
-			{
-				$_maxSize = self::max_file_upload_in_bytes(true);
-			}
-
-			// Check filesize here.
-			self::$fileSize = self::_FILES(self::$fieldName)['size'];
-			if ( self::$fileSize > $_maxSize)
-			{
-				throw new \RuntimeException(T_('Exceeded filesize limit'));
-			}
-
-			//check file extention with allowed extention list
-			// set file data like name, ext, mime
-			// file with long name does not allowed in our system
-			if(strlen(self::$fileName) > 200 || strpos(self::$fileName, 'htaccess') !== false)
-			// if(strlen(self::$fileName) > 200)
-			{
-				throw new \RuntimeException(T_('Exceeded file name limit'));
-			}
-			// file with long extension does not allowed in our system
-			if(strlen(self::$fileExt) > 10 || self::$fileDisallow )
-			{
-				throw new \RuntimeException(T_('Exceeded file extension limit'));
-			}
-
-			self::$fileFullName = \lib\utility\filter::slug(self::$fileName). '.'. self::$fileExt;
-			self::$fileMd5      = md5_file(self::_FILES(self::$fieldName)['tmp_name']);
-
-			if(is_array(self::$extentions) && !in_array(self::$fileExt, self::$extentions))
-			{
-				throw new \RuntimeException(T_("We don't support this type of file"));
-			}
-
-			// DO NOT TRUST self::_FILES(self::$fieldName)['mime'] VALUE !!
-			// Check MIME Type by yourself.
-			// Alternative check
-			if(function_exists('finfo'))
-			{
-				$finfo = new finfo(FILEINFO_MIME_TYPE);
-				// var_dump($finfo);
-				// if (false === $ext = array_search( $finfo->file(self::_FILES(self::$fieldName)['tmp_name']), self::$extentions ), true ))
-				// {
-				// 	throw new \RuntimeException(T_('Invalid file format.'));
-				// }
-				self::$fileMime = mime_content_type($fileInfo['basename']);
-			}
-
-			// it is not invalid, that's mean it's a valid upload
-			return false;
-		}
-		catch (\RuntimeException $e)
-		{
-			return $e->getMessage();
-		}
-	}
 
 
 	/**
@@ -289,148 +193,60 @@ class upload
 
 
 	/**
-	 * Get the MIME and type of file extension.
-	 * @param string $_ext File extension
-	 * @access public
-	 * @return string MIME type of file.
-	 * @static
-	 */
-	public static function extCheck($_ext = '')
-	{
-		// if pass filepath
-        if(file_exists($_ext))
-        {
-        	$fileInfo = pathinfo($_ext);
-        	$_ext     = strtolower($fileInfo['extension']);
-        }
-
-		$mimes =
-		[
-			// archive
-			'gtar'     => [ 'type' => 'archive',    'mime' => 'application/x-gtar'],
-			'tar'      => [ 'type' => 'archive',    'mime' => 'application/x-tar'],
-			'tgz'      => [ 'type' => 'archive',    'mime' => 'application/x-tar'],
-			'zip'      => [ 'type' => 'archive',    'mime' => 'application/zip'],
-			'7z'       => [ 'type' => 'archive',    'mime' => 'application/x-7z-compressed'],
-			'rar'      => [ 'type' => 'archive',    'mime' => 'application/x-rar-compressed'],
-			// audio
-			'mp3'      => [ 'type' => 'audio',      'mime' => 'audio/mpeg'],
-			'wav'      => [ 'type' => 'audio',      'mime' => 'audio/x-wav'],
-			// image
-			'bmp'      => [ 'type' => 'image',      'mime' => 'image/bmp'],
-			'gif'      => [ 'type' => 'image',      'mime' => 'image/gif'],
-			'jpeg'     => [ 'type' => 'image',      'mime' => 'image/jpeg'],
-			'jpg'      => [ 'type' => 'image',      'mime' => 'image/jpeg'],
-			'png'      => [ 'type' => 'image',      'mime' => 'image/png'],
-			'tif'      => [ 'type' => 'image',      'mime' => 'image/tiff'],
-			'svg'      => [ 'type' => 'image',      'mime' => 'image/svg+xml'],
-			// pdf
-			'pdf'      => [ 'type' => 'pdf',        'mime' => 'application/pdf'],
-			// video
-			'mpeg'     => [ 'type' => 'video',      'mime' => 'video/mpeg'],
-			'mpg'      => [ 'type' => 'video',      'mime' => 'video/mpeg'],
-			'mp4'      => [ 'type' => 'video',      'mime' => 'video/mp4'],
-			'mov'      => [ 'type' => 'video',      'mime' => 'video/quicktime'],
-			'avi'      => [ 'type' => 'video',      'mime' => 'video/x-msvideo'],
-			'dvi'      => [ 'type' => 'video',      'mime' => 'application/x-dvi'],
-			// word
-			'doc'      => [ 'type' => 'word',       'mime' => 'application/msword'],
-			'docx'     => [ 'type' => 'word',       'mime' => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'],
-			// excel
-			'xls'      => [ 'type' => 'excel',      'mime' => 'application/vnd.ms-excel'],
-			'xlsx'     => [ 'type' => 'excel',      'mime' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'],
-			// powerpoint
-			'ppt'      => [ 'type' => 'powerpoint', 'mime' => 'application/vnd.ms-powerpoint'],
-			'pptx'     => [ 'type' => 'powerpoint', 'mime' => 'application/vnd.openxmlformats-officedocument.presentationml.presentation'],
-			'ppsx'     => [ 'type' => 'powerpoint', 'mime' => 'application/vnd.openxmlformats-officedocument.presentationml.slideshow'],
-			// code
-			'js'       => [ 'type' => 'code',       'mime' => 'application/x-javascript'],
-			'dll'      => [ 'type' => 'code',       'mime' => 'application/octet-stream'],
-			// diallow file list
-			'php'      => [ 'type' => 'code',       'mime' => 'application/x-httpd-php'],
-			'php5'     => [ 'type' => 'code',       'mime' => 'application/x-httpd-php'],
-			'exe'      => [ 'type' => 'code',       'mime' => 'application/octet-stream'],
-			'bat'      => [ 'type' => 'code',       'mime' => 'application/x-bat'],
-			'bin'      => [ 'type' => 'code',       'mime' => 'application/macbinary'],
-			'htaccess' => [ 'type' => 'code',       'mime' => 'application/x-jar'],
-			// text
-			'rtx'      => [ 'type' => 'text',       'mime' => 'text/richtext'],
-			'rtf'      => [ 'type' => 'text',       'mime' => 'text/rtf'],
-			'log'      => [ 'type' => 'text',       'mime' => 'text/plain'],
-			'text'     => [ 'type' => 'text',       'mime' => 'text/plain'],
-			'txt'      => [ 'type' => 'text',       'mime' => 'text/plain'],
-			'xml'      => [ 'type' => 'text',       'mime' => 'text/xml'],
-			'xsl'      => [ 'type' => 'text',       'mime' => 'text/xml'],
-			'css'      => [ 'type' => 'text',       'mime' => 'text/css'],
-			'htm'      => [ 'type' => 'text',       'mime' => 'text/html'],
-			'html'     => [ 'type' => 'text',       'mime' => 'text/html'],
-			'shtml'    => [ 'type' => 'text',       'mime' => 'text/html'],
-			'xht'      => [ 'type' => 'text',       'mime' => 'application/xhtml+xml'],
-			'xhtml'    => [ 'type' => 'text',       'mime' => 'application/xhtml+xml'],
-			// file
-			'psd'      => [ 'type' => 'file',       'mime' => 'application/octet-stream'],
-			'eps'      => [ 'type' => 'file',       'mime' => 'application/postscript'],
-			'apk'      => [ 'type' => 'file',       'mime' => 'application/vnd.android.package-archive'],
-			'chm'      => [ 'type' => 'file',       'mime' => 'application/vnd.ms-htmlhelp'],
-			'jar'      => [ 'type' => 'file',       'mime' => 'application/x-jar'],
-		];
-
-		// if exist in list return it
-		if(array_key_exists(strtolower($_ext), $mimes))
-		{
-			$myResult = $mimes[strtolower($_ext)];
-		}
-		else
-		{
-			$myResult = ['type' => 'file', 'mime' => 'application/octet-stream'];
-		}
-
-		$myResult['disallow'] = null;
-
-		if(in_array($_ext, self::$extentionsDisallow))
-		{
-			$myResult['disallow'] = true;
-		}
-		// else return the
-		return $myResult;
-	}
-
-
-	/**
 	 * upload and insert post record in database
 	 *
 	 * @return     boolean  ( description_of_the_return_value )
 	 */
-	public static function complete_upload($_options = [])
+	public static function upload($_options = [])
 	{
 		$default_options =
 		[
 			// the file path to download and move
+			// @example : http://domain.com/file.jpg
+			// @example : /var/www/html/file.jpg
+			// leave null to get file from $_FILES
 			'file_path'     => null,
 			// the user inserted the attachment
 			'user_id'       => false,
-			// folder size
+			// folder size of file
+			// every folder have 1000 files
 			'folder_size'   => 1000,
-			// the upload name in <form> html
+			// the upload name in <form> in html
 			'upload_name'   => 'upfile',
 			// file move to this location
+			// if use from $_FILE this option is useless
+			// the apache move the file to public_html of site
+			// when you are set a file_path to download and move
+			// we need to move() the file and the move() function need to real location
 			'move_to'       => root. 'public_html/',
 			// folder prefix
+			// this option set after 'move_to' option
+			// in upload mode [apache upload the file] this option afte folder public_html of site
 			'folder_prefix' => 'files/',
 			// crop file [image file]
+			// creat the thump image file
 			'crop'          => true,
 			// resize file
+			// no thing ye...
 			'resize'        => true,
 			// copy file, we not delete the masert file
+			// this option is useless because we get the file in tmp folder
+			// we must to delete it
 			'copy'          => false,
 			'move'			=> true,
 			// the protocol of resive file
-			'protocol'      => null, //'http', 'https', 'ftp',	'sftp', null: local,
+			// for example http, https, ftp,	sftp, null: local
+			// we get the protocol from firt of 'file_path'
+			// this method autmatic was set
+			'protocol'      => null,
 			// the user name of ftp or sftp protocol
 			'username'      => null,
 			// the password of ftp or sftp protocol
 			'password'      => null,
 			// the file meta in post talbe
+			// default meta of post is mime, type, size, ext, url, thumb, normal
+			// you can set this index to replace the index or inser new index to
+			// merge this array and your array
 			'meta'          => [],
 			// the parent id of post record
 			'parent'        => null,
@@ -504,8 +320,8 @@ class upload
 		}
 
 		// 2. Generate file_id, folder_id and url
-		$query         = "SELECT COUNT(posts.id) AS 'count' FROM posts WHERE post_type = 'attachment' ";
-		$qry_count     = \lib\db::get($query,'count', true);
+
+		$qry_count     = self::attachment_count();
 
 		$folder_prefix = $_options['folder_prefix'];
 		$folder_id     = ceil(($qry_count + 1) / $_options['folder_size']);
@@ -515,15 +331,8 @@ class upload
 		$url_full      = "$folder_loc/$file_id-" . self::$fileFullName;
 
 		// 3. Check for record exist in db or not
-		$file_md5  = self::$fileMd5;
-		$qry_count = "SELECT posts.id AS 'id' FROM posts WHERE post_slug = '$file_md5' LIMIT 1";
-		$qry_count = \lib\db::get($qry_count, 'id', true);
-		if($qry_count || !empty($qry_count))
+		if(self::duplicate(self::$fileMd5))
 		{
-			$id = (int) $qry_count;
-			// $link = '<a target="_blank" href=/cp/attachments/edit='. $id. '>'.
-			// T_('Duplicate - File exist').'</a>';
-			// \lib\debug::msg("link", $link);
 			return \lib\debug::db_return(false)->set_message(T_('Duplicate - File exist'));
 		}
 
@@ -609,8 +418,10 @@ class upload
 			'post_url'         => $page_url,
 			'user_id'          => $_options['user_id'],
 			'post_status'      => 'draft',
+			'post_parent'	   => $_options['parent'],
 			'post_publishdate' => date('Y-m-d H:i:s')
 		];
+
 		$post_new_id = \lib\db\posts::insert($insert_attachment);
 		return \lib\debug::db_return(true)->set_result($post_new_id)->set_file_id(\lib\db::insert_id());
 	}
@@ -632,8 +443,6 @@ class upload
 		}
 		$newURL .= $_slug. '/';
 		$newURL = trim($newURL, '/');
-		// $newURL .= '/';
-
 		return $newURL;
 	}
 }

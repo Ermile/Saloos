@@ -180,10 +180,7 @@ class file
             }
             closedir( $handle );
             return true;
-
             // If it's a file
-
-
         }
         else if( file_exists( $name ) )
         {
@@ -275,8 +272,6 @@ class file
             return rmdir( $path );
 
             // If it's a file
-
-
         }
         else if( file_exists( $path ) )
         {
@@ -292,19 +287,27 @@ class file
      * @param string $name	Name of the input[type=file] tag
      * @return string|array|bool	Path of the file in the tmp dir, or array of paths if multi-upload, false on failure
      */
-    public static function upload( $name )
+    public static function upload( $_name , $_path = null)
     {
-        if( upload::_FILES($name) && isset( upload::_FILES($name)['name'] ) && upload::_FILES($name)['size'] != 0 )
+        if( upload::_FILES($_name) && isset( upload::_FILES($_name)['name'] ) && upload::_FILES($_name)['size'] != 0 )
         {
             // Multi-upload
-            if( is_array( upload::_FILES($name)['name'] ) )
+            if( is_array( upload::_FILES($_name)['name'] ) )
             {
                 $paths = array();
 
-                for( $i = 0; $i < count( upload::_FILES($name)['name'] ); $i++ )
+                for( $i = 0; $i < count( upload::_FILES($_name)['name'] ); $i++ )
                 {
-                    $path = DATA_DIR . Config::DIR_DATA_TMP . upload::_FILES($name)['name'][ $i ];
-                    if( move_uploaded_file( upload::_FILES($name)['tmp_name'][ $i ], $path ) )
+                    if(!$_path)
+                    {
+                        $path = DATA_DIR . Config::DIR_DATA_TMP . upload::_FILES($_name)['name'][ $i ];
+                    }
+                    else
+                    {
+                        $path = $_path;
+                    }
+
+                    if( move_uploaded_file( upload::_FILES($_name)['tmp_name'][ $i ], $path ) )
                     {
                         @chmod( $path, 0777 );
                         $paths[] = $path;
@@ -320,8 +323,16 @@ class file
             }
             else
             {
-                $path = DATA_DIR . Config::DIR_DATA_TMP . upload::_FILES($name)['name'];
-                if( move_uploaded_file( upload::_FILES($name)['tmp_name'], $path ) )
+                if(!$_path)
+                {
+                    $path = DATA_DIR . Config::DIR_DATA_TMP . upload::_FILES($_name)['name'];
+                }
+                else
+                {
+                    $path = $_path;
+                }
+
+                if( move_uploaded_file( upload::_FILES($_name)['tmp_name'], $path ) )
                 {
                     @chmod( $path, 0777 );
                     return $path;
