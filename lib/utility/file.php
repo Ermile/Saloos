@@ -488,7 +488,13 @@ class file
 
         $new_path = tempnam($_options['tmp_path'], 'SALOOS_');
 
-        $file     = fopen($_path, 'r');
+        $file     = @fopen($_path, 'r');
+
+        if(!$file)
+        {
+            throw new \RuntimeException(T_('File not exist'));
+        }
+
         $tmp_file = fopen($new_path, 'w');
 
         while(!feof($file))
