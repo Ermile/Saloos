@@ -150,6 +150,12 @@ class debug
 		if(count($messages) > 0) $debug['messages']       = $messages;
 		return ($_json)? json_encode($debug) : $debug;
 	}
+
+	public static function db_return($_status)
+	{
+		$return = new \lib\db\db_return();
+		return $return->set_ok($_status);
+	}
 }
 
 ?>

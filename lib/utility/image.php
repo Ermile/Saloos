@@ -83,7 +83,6 @@ class image
 		}
 		else
 		{
-			var_dump(4);
 			throw new \RuntimeException('The image file "'.$filepath.'" doesn\'t exist');
 		}
 	}

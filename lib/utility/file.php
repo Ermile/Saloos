@@ -35,6 +35,7 @@
  * - File
  */
 namespace lib\utility;
+use \lib\utility\upload;
 
 /** Files management : write, read, delete, upload... **/
 class file
@@ -133,10 +134,17 @@ class file
      * @param string $newdir	Name of the new parent dir
      * @return bool	True on success, false on failure
      */
-    public static function move( $path, $newdir )
+    public static function move( $path, $newdir, $_raw_rename = false )
     {
-        $newdir = rtrim( $newdir, '/' );
-        return self::rename( $path, $newdir . '/' . basename( $path ) );
+        if($_raw_rename)
+        {
+            return self::rename( $path, $newdir );
+        }
+        else
+        {
+            $newdir = rtrim( $newdir, '/' );
+            return self::rename( $path, $newdir . '/' . basename( $path ) , $_raw_rename);
+        }
     }
 
 
@@ -286,32 +294,34 @@ class file
      */
     public static function upload( $name )
     {
-        if( \lib\utility\upload::_FILES($name) && isset( \lib\utility\upload::_FILES($name)['name'] ) && \lib\utility\upload::_FILES($name)['size'] != 0 )
+        if( upload::_FILES($name) && isset( upload::_FILES($name)['name'] ) && upload::_FILES($name)['size'] != 0 )
         {
             // Multi-upload
-            if( is_array( \lib\utility\upload::_FILES($name)['name'] ) )
+            if( is_array( upload::_FILES($name)['name'] ) )
             {
                 $paths = array();
 
-                for( $i = 0; $i < count( \lib\utility\upload::_FILES($name)['name'] ); $i++ )
+                for( $i = 0; $i < count( upload::_FILES($name)['name'] ); $i++ )
                 {
-                    $path = DATA_DIR . Config::DIR_DATA_TMP . \lib\utility\upload::_FILES($name)['name'][ $i ];
-                    if( move_uploaded_file( \lib\utility\upload::_FILES($name)['tmp_name'][ $i ], $path ) )
+                    $path = DATA_DIR . Config::DIR_DATA_TMP . upload::_FILES($name)['name'][ $i ];
+                    if( move_uploaded_file( upload::_FILES($name)['tmp_name'][ $i ], $path ) )
                     {
                         @chmod( $path, 0777 );
                         $paths[] = $path;
                     }
                 }
-                if( count( $paths ) != 0 )return $paths;
+
+                if( count( $paths ) != 0 )
+                {
+                    return $paths;
+                }
 
                 // Single file
-
-
             }
             else
             {
-                $path = DATA_DIR . Config::DIR_DATA_TMP . \lib\utility\upload::_FILES($name)['name'];
-                if( move_uploaded_file( \lib\utility\upload::_FILES($name)['tmp_name'], $path ) )
+                $path = DATA_DIR . Config::DIR_DATA_TMP . upload::_FILES($name)['name'];
+                if( move_uploaded_file( upload::_FILES($name)['tmp_name'], $path ) )
                 {
                     @chmod( $path, 0777 );
                     return $path;
@@ -419,7 +429,7 @@ class file
         if(!$_fileMime)
         {
             // get file mime from upload library
-            $_fileMime = \lib\utility\upload::extCheck($_filePath);
+            $_fileMime = upload::extCheck($_filePath);
             $_fileMime = $_fileMime['mime'];
         }
 
@@ -447,6 +457,37 @@ class file
 
         readfile($_filePath);
         exit();
+    }
+
+
+    /**
+     * open file as fopen function
+     *
+     * @param      <type>  $_path  The path
+     */
+    public static function open($_path, $_options = [])
+    {
+        $default_options =
+        [
+            'read_size'  => 1024 * 5, // 5 MB
+            'tmp_path'   => '/tmp'
+        ];
+
+        $_options = array_merge($default_options, $_options);
+
+        $new_path = tempnam($_options['tmp_path'], 'SALOOS_');
+
+        $file     = fopen($_path, 'r');
+        $tmp_file = fopen($new_path, 'w');
+
+        while(!feof($file))
+        {
+            fwrite($tmp_file, fread($file, $_options['read_size']));
+        }
+
+        fclose($file);
+        fclose($tmp_file);
+        return $new_path;
     }
 }
 ?>
