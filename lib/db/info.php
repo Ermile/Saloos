@@ -139,8 +139,14 @@ trait info
 			{
 				foreach ($db_version as $key => $value)
 				{
-					self::$all_db_addons_version[$value['db_name']] = $value['addons_version'];
-					self::$all_db_version[$value['db_name']]        = $value['version'];
+					if(isset($value['addons_version']))
+					{
+						self::$all_db_addons_version[$value['db_name']] = $value['addons_version'];
+					}
+					if(isset($value['version']))
+					{
+						self::$all_db_version[$value['db_name']] = $value['version'];
+					}
 				}
 			}
 		}
