@@ -431,6 +431,7 @@ class upload
 			{
 				return \lib\debug::db_return(false)->set_message(T_('Fail on tranfering file, upload from path'));
 			}
+			$url_full = $_options['move_to']. $url_full;
 
 			if($_options['copy'] === false || $_options['move'] === true)
 			{
