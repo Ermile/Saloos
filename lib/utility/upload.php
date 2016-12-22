@@ -317,7 +317,7 @@ class upload
 			// whitout save in database
 			'save_as_tmp'   => false,
 			// the tmp_path
-			'tmp_path'      => 'files/tmp/',
+			'tmp_path'      => implode(DIRECTORY_SEPARATOR, ['files','tmp']). DIRECTORY_SEPARATOR,
 
 		];
 
@@ -408,7 +408,7 @@ class upload
 		}
 
 		$file_id       = $qry_count % $_options['folder_size'] + 1;
-		$url_full      = "$folder_loc/$file_id-" . self::$fileFullName;
+		$url_full      = "$folder_loc". DIRECTORY_SEPARATOR. "$file_id-" . self::$fileFullName;
 
 		// 3. Check for record exist in db or not
 		$duplicate = self::duplicate(self::$fileMd5);
@@ -523,10 +523,10 @@ class upload
 		$newURL = $_prefix. $_catUrl;
 		if($newURL)
 		{
-			$newURL .= '/';
+			$newURL .= DIRECTORY_SEPARATOR;
 		}
-		$newURL .= $_slug. '/';
-		$newURL = trim($newURL, '/');
+		$newURL .= $_slug. DIRECTORY_SEPARATOR;
+		$newURL = trim($newURL, DIRECTORY_SEPARATOR);
 		return $newURL;
 	}
 }
