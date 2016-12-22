@@ -512,7 +512,7 @@ class upload
 		];
 
 		$post_new_id = \lib\db\posts::insert($insert_attachment);
-		return \lib\debug::db_return(true)->set_result($post_new_id)->set_file_id(\lib\db::insert_id());
+		return \lib\debug::db_return(true)->set_result(\lib\db::insert_id());
 	}
 
 
