@@ -431,7 +431,7 @@ class upload
 			{
 				return \lib\debug::db_return(false)->set_message(T_('Fail on tranfering file, upload from path'));
 			}
-			$url_full = $_options['move_to']. $url_full;
+			$real_url_full = $_options['move_to']. $url_full;
 
 			if($_options['copy'] === false || $_options['move'] === true)
 			{
@@ -444,6 +444,7 @@ class upload
 			{
 				return \lib\debug::db_return(false)->set_message(T_('Fail on tranfering file'));
 			}
+			$real_url_full = $url_full;
 		}
 
 		$file_ext   = self::$fileExt;
@@ -463,7 +464,7 @@ class upload
 					$url_thumb  = $url_file.'-thumb.'.self::$fileExt;
 					$url_normal = $url_file.'-normal.'.self::$fileExt;
 
-					\lib\utility\image::load($url_full);
+					\lib\utility\image::load($real_url_full);
 					\lib\utility\image::thumb(600, 400);
 					\lib\utility\image::save($url_normal);
 
