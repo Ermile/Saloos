@@ -216,20 +216,23 @@ class upload
 				}
 			}
 
-			$new_name  = $move_to. $master_name. '_'. \lib\utility\file::getName(self::$real_file_path);
-			$file_name = self::$upload_from_path;
+			$file_name   = \lib\utility\file::getName(self::$real_file_path);
+			$master_name = $master_name. '_'. $file_name;
+			$new_name    = $move_to. $master_name;
+
+			$link = \lib\router::$base.DIRECTORY_SEPARATOR.$_options['tmp_path']. $master_name;
 
 			if($move_to && !is_dir($move_to))
 			{
 				\lib\utility\file::makeDir($move_to, 0775, true);
 			}
 
-			if(\lib\utility\file::move($file_name, $new_name, true))
+			if(\lib\utility\file::move(self::$upload_from_path, $new_name, true))
 			{
 				return \lib\debug::db_return(true)
 								->set_result($file_name)
 								->set_file_name($master_name)
-								->set_move_path($move_to)
+								->set_link($link)
 								->set_new_name($new_name);
 			}
 			else
@@ -388,6 +391,7 @@ class upload
 			return \lib\debug::db_return(false)->set_message($invalid);
 		}
 
+		// save file as tmp in tmp_path
 		if($_options['save_as_tmp'] === true)
 		{
 			return self::temp_donwload(null, $_options, true);
