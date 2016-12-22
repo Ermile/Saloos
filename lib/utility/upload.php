@@ -250,6 +250,8 @@ class upload
 			'meta'          => [],
 			// the parent id of post record
 			'parent'        => null,
+			// the post status
+			'post_status'   => 'draft',
 		];
 
 		$_options = array_merge($default_options, $_options);
@@ -417,7 +419,7 @@ class upload
 			'post_type'        => 'attachment',
 			'post_url'         => $page_url,
 			'user_id'          => $_options['user_id'],
-			'post_status'      => 'draft',
+			'post_status'      => $_options['post_status'],
 			'post_parent'	   => $_options['parent'],
 			'post_publishdate' => date('Y-m-d H:i:s')
 		];
