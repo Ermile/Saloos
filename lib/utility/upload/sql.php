@@ -28,13 +28,13 @@ trait sql
 		$qry_count = \lib\db::get($qry_count, 'id', true);
 		if($qry_count || !empty($qry_count))
 		{
-			return true;
-			// $id = (int) $qry_count;
+			$id = (int) $qry_count;
 			// $link = '<a target="_blank" href=/cp/attachments/edit='. $id. '>'.
 			// T_('Duplicate - File exist').'</a>';
 			// \lib\debug::msg("link", $link);
+			return \lib\debug::db_return(true)->set_result($id);
 		}
-		return false;
+		return \lib\debug::db_return(false)->set_result($qry_count);
 	}
 }
 ?>

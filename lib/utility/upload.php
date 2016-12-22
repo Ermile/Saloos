@@ -42,28 +42,25 @@ class upload
 	 */
 	public static function _FILES($_name = 'upfile')
 	{
-		if(empty(self::$FILES))
+		if(self::$upload_from_path)
 		{
-			if(self::$upload_from_path)
+			$path = self::$upload_from_path;
+			if(\lib\utility\file::exists($path))
 			{
-				$path = self::$upload_from_path;
-				if(\lib\utility\file::exists($path))
-				{
-					$tmp_FILES =
-					[
-						'name'     => \lib\utility\file::getName(self::$real_file_path),
-						'type'     => \lib\utility\file::content_type($path),
-						'tmp_name' => $path,
-						'error'    => 0,
-						'size'     => \lib\utility\file::getSize($path),
-					];
-					self::$FILES[$_name] = $tmp_FILES;
-				}
+				$tmp_FILES =
+				[
+					'name'     => \lib\utility\file::getName(self::$real_file_path),
+					'type'     => \lib\utility\file::content_type($path),
+					'tmp_name' => $path,
+					'error'    => 0,
+					'size'     => \lib\utility\file::getSize($path),
+				];
+				self::$FILES[$_name] = $tmp_FILES;
 			}
-			else
-			{
-				self::$FILES = $_FILES;
-			}
+		}
+		else
+		{
+			self::$FILES = $_FILES;
 		}
 
 		if(isset(self::$FILES[$_name]))
@@ -191,6 +188,70 @@ class upload
 		}
 	}
 
+	/**
+	 * save file as tmp
+	 *
+	 * @param      <type>  $_file_path  The file path
+	 *
+	 * @return     <type>  ( description_of_the_return_value )
+	 */
+	public static function temp_donwload($_file_path, $_options = [], $_upload_process = false)
+	{
+		if($_upload_process === false)
+		{
+			$_options['file_path']   = $_file_path;
+			$_options['save_as_tmp'] = true;
+			return self::upload($_options);
+		}
+		elseif($_upload_process === true)
+		{
+			$move_to = $_options['move_to']. $_options['tmp_path'];
+
+			$master_name = 'tmp_master_name';
+			if(preg_match("/(SALOOS\_[^\/]+)/", self::$upload_from_path, $master_name))
+			{
+				if(isset($master_name[1]))
+				{
+					$master_name = $master_name[1];
+				}
+			}
+
+			$new_name  = $move_to. $master_name. '_'. \lib\utility\file::getName(self::$real_file_path);
+			$file_name = self::$upload_from_path;
+
+			if($move_to && !is_dir($move_to))
+			{
+				\lib\utility\file::makeDir($move_to, 0775, true);
+			}
+
+			if(\lib\utility\file::move($file_name, $new_name, true))
+			{
+				return \lib\debug::db_return(true)
+								->set_result($file_name)
+								->set_file_name($master_name)
+								->set_move_path($move_to)
+								->set_new_name($new_name);
+			}
+			else
+			{
+				return \lib\debug::db_return(false)->set_message(T_('Fail on tranfering file, move in temp'));
+			}
+		}
+	}
+
+
+	/**
+	 * move temp file
+	 *
+	 * @param      <type>  $_file_path  The file path
+	 * @param      array   $_options    The options
+	 */
+	public static function temp_move($_file_path, $_options = [])
+	{
+		$_options['file_path'] = $_file_path;
+		return self::upload($_options);
+	}
+
 
 	/**
 	 * upload and insert post record in database
@@ -233,7 +294,7 @@ class upload
 			// this option is useless because we get the file in tmp folder
 			// we must to delete it
 			'copy'          => false,
-			'move'			=> true,
+			'move'          => true,
 			// the protocol of resive file
 			// for example http, https, ftp,	sftp, null: local
 			// we get the protocol from firt of 'file_path'
@@ -252,6 +313,12 @@ class upload
 			'parent'        => null,
 			// the post status
 			'post_status'   => 'draft',
+			// save file in temp directory
+			// whitout save in database
+			'save_as_tmp'   => false,
+			// the tmp_path
+			'tmp_path'      => 'files/tmp/',
+
 		];
 
 		$_options = array_merge($default_options, $_options);
@@ -269,7 +336,7 @@ class upload
 		}
 
 		// check user id
-		if(!$_options['user_id'] || !is_numeric($_options['user_id']))
+		if((!$_options['user_id'] || !is_numeric($_options['user_id'])) && $_options['save_as_tmp'] === false)
 		{
 			return \lib\debug::db_return(false)->set_message(T_("user id not set"));
 		}
@@ -285,7 +352,7 @@ class upload
 		// check file path
 		if($_options['file_path'] !== null)
 		{
-			if(preg_match("/^(http|https|ftp|sftp|)\:/", $_options['file_path'], $protocol))
+			if(preg_match("/^(http|https|ftp|sftp)\:/", $_options['file_path'], $protocol))
 			{
 				if(isset($protocol[1]))
 				{
@@ -321,6 +388,11 @@ class upload
 			return \lib\debug::db_return(false)->set_message($invalid);
 		}
 
+		if($_options['save_as_tmp'] === true)
+		{
+			return self::temp_donwload(null, $_options, true);
+		}
+
 		// 2. Generate file_id, folder_id and url
 
 		$qry_count     = self::attachment_count();
@@ -329,13 +401,23 @@ class upload
 		$folder_id     = ceil(($qry_count + 1) / $_options['folder_size']);
 
 		$folder_loc    = $folder_prefix . $folder_id;
+
+		if($folder_loc && !is_dir($folder_loc))
+		{
+			\lib\utility\file::makeDir($folder_loc, 0775, true);
+		}
+
 		$file_id       = $qry_count % $_options['folder_size'] + 1;
 		$url_full      = "$folder_loc/$file_id-" . self::$fileFullName;
 
 		// 3. Check for record exist in db or not
-		if(self::duplicate(self::$fileMd5))
+		$duplicate = self::duplicate(self::$fileMd5);
+
+		if($duplicate->is_ok())
 		{
-			return \lib\debug::db_return(false)->set_message(T_('Duplicate - File exist'));
+			return \lib\debug::db_return(false)
+					->set_result($duplicate->get_result())
+					->set_message(T_('Duplicate - File exist'));
 		}
 
 		// 4. transfer file to project folder with new name
