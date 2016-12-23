@@ -10,7 +10,7 @@
 <body>
  <h1><?php echo $HTTP_ERROR?></h1>
  <b class='slash'><?php echo $STRING; ?></b>
-<?php if(DEBUG && Tld === 'dev') {?>
+<?php if(defined("DEBUG") && defined("Tld") && DEBUG && Tld === 'dev') {?>
  <ol>
 <?php
 $obj = array_reverse($obj);
@@ -31,7 +31,12 @@ foreach ($obj as $key => $value):?>
 <?php } else {?>
  <div id="smile">:(</div>
 <?php } ?>
- <br/><br/><br/><a href="http://<?php echo Service; ?>">Return to Homepage</a>
+ <br/><br/><br/>
+ <?php if(defined("Service")) {?>
+ <a href="http://<?php echo defined("Service") ? Service: ''; ?>">Return to Homepage</a>
+ <?php } else { ?>
+ <a href="http://<?php echo $_SERVER['HTTP_HOST'] ?>">Return to Homepage</a>
+ <?php } ?>
  <div id="no"><?php echo $STATUS?></div>
 </body>
 </html>

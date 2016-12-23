@@ -236,6 +236,10 @@ class define
 				router::$base .= '/'.router::get_url(0);
 				// remove language from url and continue
 				router::remove_url($my_first_url);
+				if(\lib\utility\location\languages::check(\lib\router::get_url(0)))
+				{
+					\lib\error::page("More than one language found");
+				}
 			}
 
 		}
