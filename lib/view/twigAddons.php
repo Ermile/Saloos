@@ -311,13 +311,16 @@ trait twigAddons
 			$result     = '';
 			if($_homepage || count($myurl))
 			{
+				$baseURL    = $this->data->url->base;
 				if(\lib\router::get_repository_name() === 'content')
 				{
-					$result = '<a href="/" tabindex="-1" '. $direct.'><i class="fa fa-home"></i> '.T_('Homepage').'</a>';
+					$result = '<a href="'. $baseURL. '" tabindex="-1" '. $direct.'><i class="fa fa-home"></i> '.T_('Homepage').'</a>';
 				}
 				else
 				{
-					$result = '<a href="/" tabindex="-1" '. $direct.'><i class="fa fa-home"></i> '.T_('Home').'</a>';
+					$myContent = substr(\lib\router::get_repository_name(), 8);
+					$result    = '<a href="'. $baseURL. '" tabindex="-1" '. $direct.'><i class="fa fa-home"></i> '.T_('Home').'</a>';
+					$result    .= '<a href="'. $baseURL.'/'. $myContent. '" tabindex="-1" '. $direct.'>'.T_($myContent).'</a>';
 				}
 
 			}
@@ -326,16 +329,16 @@ trait twigAddons
 			{
 				// if($part != '$')
 				{
-					$currentUrl .= $_path[$key].'/';
-					$location   = T_(ucfirst($part));
+					$currentUrl  .= $_path[$key].'/';
+					$location    = T_(ucfirst($part));
+					$baseURLFull = $this->data->url->baseFull;
+					$anchorUrl   = trim($baseURLFull.'/'.$currentUrl, '/');
 					if(end($myurl) === $part)
 					{
 						$result .= "<a>$location</a>";
 					}
 					else
 					{
-						$baseURL = $this->data->url->baseFull.'/';
-						$anchorUrl = trim($baseURL.$currentUrl, '/');
 						$result .= "<a href='$anchorUrl' tabindex='-1'>$location</a>";
 					}
 				}
