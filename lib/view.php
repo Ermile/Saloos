@@ -72,7 +72,8 @@ class view
 
 	public function display()
 	{
-		$render = false;
+		$render               = false;
+		$this->data->loadMode = 'normal';
 		if(\saloos::is_Ajax())
 		{
 			$this->data->display['main']    = "content/main/layout-xhr.html";
