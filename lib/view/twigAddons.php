@@ -318,29 +318,45 @@ trait twigAddons
 				}
 				else
 				{
-					$myContent = substr(\lib\router::get_repository_name(), 8);
-					$result    = '<a href="'. $baseURL. '" tabindex="-1" '. $direct.'><i class="fa fa-home"></i> '.T_('Home').'</a>';
-					$result    .= '<a href="'. $baseURL.'/'. $myContent. '" tabindex="-1" '. $direct.'>'.T_($myContent).'</a>';
+					$myContent     = substr(\lib\router::get_repository_name(), 8);
+					$myContentName = $myContent;
+					// if contetent name is exist use it as alternative
+					if(isset($this->data->breadcrumb[$myContent]))
+					{
+						$myContentName = $this->data->breadcrumb[$myContent];
+					}
+					elseif($myContent === 'cp')
+					{
+						$myContentName = 'Control Panel';
+					}
+					$result = '<a href="'. $baseURL. '" tabindex="-1" '. $direct.'><i class="fa fa-home"></i> '.T_('Home').'</a>';
+					$result .= '<a href="'. $baseURL.'/'. $myContent. '" tabindex="-1" '. $direct.'>'.T_($myContentName).'</a>';
 				}
 
 			}
 
 			foreach ($myurl as $key => $part)
 			{
-				// if($part != '$')
+				$currentUrl  .= $_path[$key].'/';
+				$baseURLFull = $this->data->url->baseFull;
+				$anchorUrl   = trim($baseURLFull.'/'.$currentUrl, '/');
+				$location    = $part;
+				// set title of each locations
+				if(isset($this->data->breadcrumb[$location]))
 				{
-					$currentUrl  .= $_path[$key].'/';
-					$location    = T_(ucfirst($part));
-					$baseURLFull = $this->data->url->baseFull;
-					$anchorUrl   = trim($baseURLFull.'/'.$currentUrl, '/');
-					if(end($myurl) === $part)
-					{
-						$result .= "<a>$location</a>";
-					}
-					else
-					{
-						$result .= "<a href='$anchorUrl' tabindex='-1'>$location</a>";
-					}
+					$location = $this->data->breadcrumb[$location];
+				}
+				$location    = str_replace('-', ' ', $location);
+				$location    = ucwords($location);
+				$location    = str_replace('And', 'and', $location);
+
+				if(end($myurl) === $part)
+				{
+					$result .= "<a>$location</a>";
+				}
+				else
+				{
+					$result .= "<a href='$anchorUrl' tabindex='-1'>". T_($location). "</a>";
 				}
 			}
 
