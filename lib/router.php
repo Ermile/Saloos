@@ -337,7 +337,7 @@ class router
 			}
 			if($newUrl)
 			{
-				$newUrl .= router::get_root_domain(). '/'. router::get_url();
+				$newUrl .= router::get_root_domain(). '/'. self::$real_url_string;
 			}
 		}
 
