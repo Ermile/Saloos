@@ -212,6 +212,10 @@ class define
 		if(!self::$language_default)
 		{
 			self::$language_default = \lib\utility\option::get('config', 'meta', 'defaultLang');
+			if(!self::$language_default)
+			{
+				self::$language_default = 'en';
+			}
 		}
 
 		// Step1
@@ -221,12 +225,18 @@ class define
 		{
 			if(substr(self::$language_default, 0, 2) === $my_first_url)
 			{
-				// redirect to homepage
-				/**
-					redirect to current url without language
-				 */
-				$myredirect = new \lib\redirector();
-				$myredirect->set_domain()->set_url()->redirect();
+				$redirectURL = router::get_url();
+				if(substr($redirectURL, 0, 2) === $my_first_url)
+				{
+					$redirectURL = substr($redirectURL, 2);
+				}
+				if(!$redirectURL)
+				{
+					$redirectURL = '/';
+				}
+
+				$myredirect = new \lib\redirector($redirectURL);
+				$myredirect->redirect();
 			}
 			else
 			{

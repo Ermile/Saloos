@@ -242,20 +242,23 @@ trait twigAddons
 				$lang_string = '';
 				foreach ($langList as $key => $value)
 				{
-					$langPrefix  = \lib\define::get_current_language_string($key);
-					$href        = $urlRoot. $langPrefix;
-					$activeClass = '';
+					$langPrefix     = \lib\define::get_current_language_string($key);
+					$href           = $urlRoot. $langPrefix;
+					$activeClass    = '';
+					$urlPathCurrent = '';
 					if($key === $currentlang)
 					{
 						$activeClass = " class='active'";
 					}
+
 					if($urlContent)
 					{
-						$href .= '/'.$urlContent;
+						$href           .= '/'.$urlContent;
 					}
 					if($urlPath)
 					{
-						$href .= '/'.$urlPath;
+						$href           .= '/'.$urlPath;
+						$urlPathCurrent .= $urlPath;
 					}
 					$lang_string .= "<a href='". $href . "'$activeClass hreflang='$key' data-direct>";
 					$lang_string .= $value;
@@ -277,7 +280,7 @@ trait twigAddons
 						$class = ' '. $class;
 					}
 
-					$lang_string = "<nav class='langlist$class' data-xhr='langlist'>". $lang_string .'</nav>';
+					$lang_string = "<nav class='langlist$class' data-xhr='langlist' data-url='$urlPathCurrent'>". $lang_string .'</nav>';
 				}
 
 				echo $lang_string;
