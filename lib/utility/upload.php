@@ -419,7 +419,7 @@ class upload
 
 		if($duplicate->is_ok())
 		{
-			return \lib\debug::db_return(false)
+			return \lib\debug::db_return(true)
 					->set_result($duplicate->get_result())
 					->set_message(T_('Duplicate - File exist'));
 		}

@@ -5,6 +5,7 @@ class utility
 	public static $POST;
 	public static $GET;
 	public static $COOKIE;
+	public static $FILES;
 
 
 	/**
@@ -72,6 +73,33 @@ class utility
 		}
 
 		return null;
+	}
+
+
+	/**
+	 * get files
+	 *
+	 * @param      <type>  $_name  The name
+	 */
+	public static function files($_name = null)
+	{
+		if(!self::$FILES)
+		{
+			self::$FILES = $_FILES;
+		}
+
+		if($_name)
+		{
+			if(isset(self::$FILES[$_name]))
+			{
+				return self::$FILES[$_name];
+			}
+			else
+			{
+				return null;
+			}
+		}
+		return self::$FILES;
 	}
 
 
