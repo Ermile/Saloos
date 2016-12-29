@@ -351,7 +351,7 @@ class router
 		}
 		// if newUrl is exist and we must to redirect
 		// then complete url and redirect to this address
-		if($newUrl && !\lib\utility::get('force'))
+		if($newUrl && !\lib\utility::get('force') && $currentPath !== $newUrl)
 		{
 			// redirect to best protocol because we want it!
 			$redirector = new \lib\redirector($newUrl);
