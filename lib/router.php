@@ -343,11 +343,11 @@ class router
 			{
 				$newUrl .= router::get_root_domain(). '/'. self::$real_url_string;
 			}
-			if($mainSite)
-			{
-				// test new method for redirect, using option redirect url
-				$newUrl = $mainSite. '/'. self::$real_url_string;
-			}
+			// if($mainSite)
+			// {
+			// 	// test new method for redirect, using option redirect url
+			// 	$newUrl = $mainSite. '/'. self::$real_url_string;
+			// }
 		}
 		// if newUrl is exist and we must to redirect
 		// then complete url and redirect to this address
