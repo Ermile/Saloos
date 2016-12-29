@@ -315,6 +315,10 @@ class router
 				default:
 					break;
 			}
+			if($newUrl && router::get_url())
+			{
+				$newUrl .= '/'. router::get_url();
+			}
 		}
 		elseif($currentPath !== '/' && rtrim($currentPath, '/') !== $currentPath)
 		{
@@ -339,8 +343,12 @@ class router
 			{
 				$newUrl .= router::get_root_domain(). '/'. self::$real_url_string;
 			}
+			if($mainSite)
+			{
+				// test new method for redirect, using option redirect url
+				$newUrl = $mainSite. '/'. self::$real_url_string;
+			}
 		}
-
 		// if newUrl is exist and we must to redirect
 		// then complete url and redirect to this address
 		if($newUrl && !\lib\utility::get('force'))
