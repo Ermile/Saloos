@@ -90,7 +90,7 @@ class utility
 
 		if($_name)
 		{
-			if(isset(self::$FILES[$_name]))
+			if(isset(self::$FILES[$_name]) && (isset(self::$FILES[$_name]['error']) && self::$FILES[$_name]['error'] != 4))
 			{
 				return self::$FILES[$_name];
 			}

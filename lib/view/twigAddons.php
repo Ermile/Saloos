@@ -589,5 +589,58 @@ trait twigAddons
 			return $result;
 		});
 	}
+
+
+	/**
+	 * return tha attachment record of post
+	 *
+	 * @return     \     ( description_of_the_return_value )
+	 */
+	public function twig_function_attachment()
+	{
+		return new \Twig_SimpleFunction('attachment', function()
+		{
+			$attachment = [];
+			$args       = func_get_args();
+
+			if(isset($args[0]))
+			{
+				$args = $args[0];
+			}
+
+			$get_url = false;
+			if(isset($args['url']) && $args['url'] === true)
+			{
+				$get_url = true;
+			}
+
+			if(isset($args['id']))
+			{
+				$attachment = \lib\db\posts::get_one($args['id']);
+				if(isset($attachment['post_type']) && $attachment['post_type'] != 'attachment')
+				{
+					return [];
+				}
+
+				if(is_array($attachment))
+				{
+					$tmp_attachment = [];
+					foreach ($attachment as $key => $value)
+					{
+						$tmp_attachment[str_replace('post_', '', $key)] = $value;
+					}
+					$attachment = $tmp_attachment;
+				}
+			}
+			if($get_url)
+			{
+				if(isset($attachment['meta']['url']))
+				{
+					return $this->url('static'). '/'. $attachment['meta']['url'];
+				}
+			}
+			return $attachment;
+		});
+	}
 }
 ?>
