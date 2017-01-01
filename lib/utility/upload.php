@@ -60,7 +60,7 @@ class upload
 		}
 		else
 		{
-			self::$FILES = $_FILES;
+			self::$FILES = \lib\utility::files();
 		}
 
 		if(isset(self::$FILES[$_name]))

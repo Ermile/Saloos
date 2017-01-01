@@ -17,6 +17,7 @@ class debug
 	private static $property = array();
 	private static $form     = array();
 	private static $check    = true;
+	private static $result   = [];
 	private static $title;
 
 	/**
@@ -37,7 +38,7 @@ class debug
 	 * @param  string  $_group   [description]
 	 * @return [type]            [description]
 	 */
-	public static function static_error($_error, $_element = false, $_group = 'public')
+	private static function static_error($_error, $_element = false, $_group = 'public')
 	{
 		self::$check = false;
 		self::$status = 0;
@@ -52,7 +53,7 @@ class debug
 	 * @param  string  $_group   [description]
 	 * @return [type]            [description]
 	 */
-	public static function static_warn($_error, $_element = false, $_group = 'public')
+	private static function static_warn($_error, $_element = false, $_group = 'public')
 	{
 		if(self::$check)
 		{
@@ -69,7 +70,7 @@ class debug
 	 * @param  string  $_group   [description]
 	 * @return [type]            [description]
 	 */
-	public static function static_true($_error, $_element = false, $_group = 'public')
+	private static function static_true($_error, $_element = false, $_group = 'public')
 	{
 		array_push(self::$true,	array('title' => $_error, "element" => $_element, "group" => $_group));
 	}
@@ -80,7 +81,7 @@ class debug
 	 *
 	 * @param      <type>  $_title  The title
 	 */
-	public static function static_title($_title)
+	private static function static_title($_title)
 	{
 		self::$title = $_title;
 	}
@@ -93,7 +94,7 @@ class debug
 	 * @param  [bool]            $_reset
 	 * @return set global value
 	 */
-	public static function static_msg($_name, $_value = null, $_reset = null)
+	private static function static_msg($_name, $_value = null, $_reset = null)
 	{
 		if($_reset)
 		{
@@ -127,7 +128,7 @@ class debug
 	 * @param  boolean $_value    [description]
 	 * @return [type]             [description]
 	 */
-	public static function static_property($_property, $_value = false)
+	private static function static_property($_property, $_value = false)
 	{
 		if(is_array($_property))
 		{
@@ -149,13 +150,27 @@ class debug
 		}
 	}
 
+	/**
+	 * set result
+	 *
+	 * @param      array  $_result  The result
+	 */
+	private static function static_result($_result)
+	{
+		if(!is_array($_result))
+		{
+			$_result = [$_result];
+		}
+		self::$result = $_result;
+	}
+
 
 	/**
 	 * set form of messages
 	 * @param  [type] $_form [description]
 	 * @return [type]        [description]
 	 */
-	public static function static_form($_form)
+	private static function static_form($_form)
 	{
 		if(!array_search($_form, self::$form))
 		{
@@ -169,12 +184,12 @@ class debug
 	 * @param  boolean $_json convert return value to json or not
 	 * @return [string]       depending on condition return json or string
 	 */
-	public static function static_compile($_json = false)
+	private static function static_compile($_json = false)
 	{
-		$debug = array();
+		$debug           = array();
 		$debug['status'] = self::$status;
 		$debug['title']  = self::$title;
-		$messages = array();
+		$messages        = array();
 		if(count(self::$error) > 0) $messages['error'] = self::$error;
 		if(count(self::$warn) > 0)  $messages['warn']  = self::$warn;
 		if(count(self::$msg) > 0)   $debug['msg']      = self::$msg;
@@ -185,9 +200,12 @@ class debug
 				$debug[$key] = $value;
 			}
 		}
+
+		$debug['result'] = self::$result;
+
 		if(count(self::$form) > 0) $debug['msg']['form'] = self::$form;
-		if(count(self::$true) > 0 || count($debug)       == 0) $messages['true'] = self::$true;
-		if(count($messages) > 0) $debug['messages']       = $messages;
+		if(count(self::$true) > 0 || count($debug) == 0) $messages['true'] = self::$true;
+		if(count($messages) > 0) $debug['messages'] = $messages;
 		return ($_json)? json_encode($debug) : $debug;
 	}
 
@@ -207,7 +225,7 @@ class debug
 		}
 		else
 		{
-			throw new \RuntimeException("function $_func_name not exist");
+			\lib\error::internal("function ". __CLASS__. "::$_func_name() not exist");
 		}
 	}
 
@@ -245,6 +263,7 @@ class debug
 	private $dynamic_form     = array();
 	private $dynamic_title;
 	private $dynamic_check    = true;
+	private $dynamic_result   = [];
 
 	/**
 	 * STATUS
@@ -258,13 +277,6 @@ class debug
 
 
 	/**
-	 * construct for dynamic mode
-	 */
-	public function __construct()
-	{
-
-	}
-	/**
 	 * { function_description }
 	 *
 	 * @param      <type>  $_func_name  The function name
@@ -273,13 +285,22 @@ class debug
 	public function __call($_func_name, $_args)
 	{
 		$func_name = "dynamic_".$_func_name;
-		if(method_exists($this, $func_name))
+
+		if(preg_match("/^get_(.*)$/", $_func_name, $peroperty))
+		{
+			return $this->get($peroperty[1], ...$_args);
+		}
+		elseif(preg_match("/^is_(.*)$/", $_func_name, $peroperty))
+		{
+			return $this->is($peroperty[1], ...$_args);
+		}
+		elseif(method_exists($this, $func_name))
 		{
 			return $this->$func_name(...$_args);
 		}
 		else
 		{
-			throw new \RuntimeException("function $_func_name not exist");
+			\lib\error::internal("function ". __CLASS__. "->$_func_name() not exist");
 		}
 	}
 
@@ -291,7 +312,7 @@ class debug
 	 * @param  string  $_group   [description]
 	 * @return [type]            [description]
 	 */
-	public function dynamic_error($_error, $_element = false, $_group = 'public')
+	private function dynamic_error($_error, $_element = false, $_group = 'public')
 	{
 		$this->dynamic_check = false;
 		$this->dynamic_status = 0;
@@ -307,7 +328,7 @@ class debug
 	 * @param  string  $_group   [description]
 	 * @return [type]            [description]
 	 */
-	public function dynamic_warn($_error, $_element = false, $_group = 'public')
+	private function dynamic_warn($_error, $_element = false, $_group = 'public')
 	{
 		if($this->dynamic_check)
 		{
@@ -325,7 +346,7 @@ class debug
 	 * @param  string  $_group   [description]
 	 * @return [type]            [description]
 	 */
-	public function dynamic_true($_error, $_element = false, $_group = 'public')
+	private function dynamic_true($_error, $_element = false, $_group = 'public')
 	{
 		array_push($this->dynamic_true,	array('title' => $_error, "element" => $_element, "group" => $_group));
 		return $this;
@@ -337,7 +358,7 @@ class debug
 	 *
 	 * @param      <type>  $_title  The title
 	 */
-	public function dynamic_title($_title)
+	private function dynamic_title($_title)
 	{
 		$this->dynamic_title = $_title;
 		return $this;
@@ -351,7 +372,7 @@ class debug
 	 * @param  [bool]            $_reset
 	 * @return set global value
 	 */
-	public function dynamic_msg($_name, $_value = null, $_reset = null)
+	private function dynamic_msg($_name, $_value = null, $_reset = null)
 	{
 		if($_reset)
 		{
@@ -386,7 +407,7 @@ class debug
 	 * @param  boolean $_value    [description]
 	 * @return [type]             [description]
 	 */
-	public function dynamic_property($_property, $_value = false)
+	private function dynamic_property($_property, $_value = false)
 	{
 		if(is_array($_property))
 		{
@@ -411,11 +432,30 @@ class debug
 
 
 	/**
+	 * set result
+	 *
+	 * @param      array   $_result  The result
+	 *
+	 * @return     <type>  ( description_of_the_return_value )
+	 */
+	private function dynamic_result($_result)
+	{
+		if(!is_array($_result))
+		{
+			$_result = [$_result];
+		}
+		$this->dynamic_result = $_result;
+
+		return $this;
+	}
+
+
+	/**
 	 * set form of messages
 	 * @param  [type] $_form [description]
 	 * @return [type]        [description]
 	 */
-	public function dynamic_form($_form)
+	private function dynamic_form($_form)
 	{
 		if(!array_search($_form, $this->dynamic_form))
 		{
@@ -430,7 +470,7 @@ class debug
 	 * @param  boolean $_json convert return value to json or not
 	 * @return [string]       depending on condition return json or string
 	 */
-	public function dynamic_compile($_json = false)
+	private function dynamic_compile($_json = false)
 	{
 		$debug = array();
 		$debug['status'] = $this->dynamic_status;
@@ -446,11 +486,45 @@ class debug
 				$debug[$key] = $value;
 			}
 		}
+
+		$debug['result'] = $this->dynamic_result;
+
 		if(count($this->dynamic_form) > 0) $debug['msg']['form'] = $this->dynamic_form;
 		if(count($this->dynamic_true) > 0 || count($debug)       == 0) $messages['true'] = $this->dynamic_true;
 		if(count($messages) > 0) $debug['messages']       = $messages;
 		return ($_json)? json_encode($debug) : $debug;
 	}
 
+
+
+	public function is($_name, ...$_args)
+	{
+		if(!isset($_args[0]))
+		{
+			$_args[0] = true;
+		}
+		return $this->get($_name) == $_args[0];
+	}
+
+	/**
+	 * get value
+	 *
+	 * @param      <type>  $_name  The name
+	 * @param      ...     $_args  The arguments
+	 *
+	 * @return     <type>  ( description_of_the_return_value )
+	 */
+	public function get($_name, ...$_args)
+	{
+		$method = "dynamic_". $_name;
+		if(method_exists($this, $method))
+		{
+			return $this->$method;
+		}
+		else
+		{
+			return null;
+		}
+	}
 }
 ?>
