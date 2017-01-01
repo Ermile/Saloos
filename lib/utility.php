@@ -186,23 +186,38 @@ class utility
 	 */
 	public static function hasher($_plainPassword, $_hashedPassword = null)
 	{
+		$raw_password   = $_plainPassword;
 		// custom text to add in start and end of password
 		$mystart        = '^_^$~*~';
 		$myend          = '~_~!^_^';
 		$_plainPassword = $mystart. $_plainPassword. $myend;
 		$_plainPassword = md5($_plainPassword);
-
+		$myresult       = null;
 		// if requrest verify pass check with
 		if($_hashedPassword)
-			$myresult    = password_verify($_plainPassword, $_hashedPassword);
-
+		{
+			$myresult = password_verify($_plainPassword, $_hashedPassword);
+		}
 		else
 		{
-			// create option for creating hash cost
-			$myoptions   = array('cost' => 7 );
-			$myresult    = password_hash($_plainPassword, PASSWORD_BCRYPT, $myoptions);
+			$check = \lib\db\passwords::check($raw_password);
+			if($check === true)
+			{
+				// create option for creating hash cost
+				$myoptions   = array('cost' => 7 );
+				$myresult    = password_hash($_plainPassword, PASSWORD_BCRYPT, $myoptions);
+			}
+			elseif(is_string($check))
+			{
+				\lib\debug::error(T_(":status password, try another", ['status' => $check]));
+			}
+			else
+			{
+				return false;
+			}
 		}
 
+		\lib\db\passwords::cash($raw_password, $myresult);
 		return $myresult;
 	}
 
