@@ -1,4 +1,5 @@
 <?php
+namespace lib\utility;
 /*
 @ Kavenegar Api
 @ Version: 2.0
@@ -270,6 +271,36 @@ class kavenegar_api
 		$path = $this->get_path('info','account');
 		$json = $this->execute($path, null);
 
+		if(!is_array($json))
+			return $this->status;
+
+		return $json;
+	}
+
+
+	/**
+	 * lookup verification code
+	 *
+	 * @param      <type>  $_receptor  The receptor
+	 * @param      <type>  $_token     The token
+	 * @param      <type>  $_token2    The token 2
+	 * @param      <type>  $_token3    The token 3
+	 * @param      <type>  $_template  The template
+	 * @param      string  $_type      The type
+	 */
+	public function verify($_receptor, $_token, $_token2 = null, $_token3 = null, $_template, $_type = 'sms')
+	{
+		$path = $this->get_path('lookup','verify');
+		$parameters =
+		[
+			'receptor' => $_receptor,
+			'token'    => $_token,
+			'token2'   => $_token2,
+			'token3'   => $_token3,
+			'template' => $_template,
+			'type'     => $_type,
+		];
+		$json = $this->execute($path, $parameters);
 		if(!is_array($json))
 			return $this->status;
 

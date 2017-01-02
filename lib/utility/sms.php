@@ -252,5 +252,11 @@ class sms
 		// 	\lib\debug::{$_type}($_err);
 		// }
 	}
+
+
+	public static function verification($_mobile, $_args = [])
+	{
+
+	}
 }
 ?>
