@@ -17,7 +17,7 @@ class debug
 	private static $property = array();
 	private static $form     = array();
 	private static $check    = true;
-	private static $result   = [];
+	private static $result   = null;
 	private static $title;
 
 	/**
@@ -200,8 +200,10 @@ class debug
 				$debug[$key] = $value;
 			}
 		}
-
-		$debug['result'] = self::$result;
+		if(is_array(self::$result))
+		{
+			$debug['result'] = self::$result;
+		}
 
 		if(count(self::$form) > 0) $debug['msg']['form'] = self::$form;
 		if(count(self::$true) > 0 || count($debug) == 0) $messages['true'] = self::$true;
@@ -263,7 +265,7 @@ class debug
 	private $dynamic_form     = array();
 	private $dynamic_title;
 	private $dynamic_check    = true;
-	private $dynamic_result   = [];
+	private $dynamic_result   = null;
 
 	/**
 	 * STATUS
@@ -486,8 +488,10 @@ class debug
 				$debug[$key] = $value;
 			}
 		}
-
-		$debug['result'] = $this->dynamic_result;
+		if(is_array($this->dynamic_result))
+		{
+			$debug['result'] = $this->dynamic_result;
+		}
 
 		if(count($this->dynamic_form) > 0) $debug['msg']['form'] = $this->dynamic_form;
 		if(count($this->dynamic_true) > 0 || count($debug)       == 0) $messages['true'] = $this->dynamic_true;
