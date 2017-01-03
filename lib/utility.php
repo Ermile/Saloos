@@ -6,6 +6,7 @@ class utility
 	public static $GET;
 	public static $COOKIE;
 	public static $FILES;
+	public static $REQUEST;
 
 
 	/**
@@ -145,6 +146,15 @@ class utility
 		}
 
 		return null;
+	}
+
+	public static function request()
+	{
+		if(!self::$REQUEST)
+		{
+			self::$REQUEST = new utility\request();
+		}
+		return self::$REQUEST->get(...func_get_args());
 	}
 
 
