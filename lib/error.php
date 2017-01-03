@@ -87,8 +87,19 @@ class error
 	public static function make($STRING, $obj, $STATUS)
 	{
 		$HTTP_ERROR = self::string($STATUS);
-		header("HTTP/1.1 $STATUS ".$HTTP_ERROR);
-		require_once(lib."error_page.php");
+		if(\saloos::is_json_accept() || \lib\storage::get_api())
+		{
+			header('Content-Type: application/json');
+			\lib\debug::title($HTTP_ERROR);
+			\lib\debug::error($STRING, $STATUS, "HTTP");
+			echo \lib\debug::compile(true);
+			
+		}
+		else
+		{
+			header("HTTP/1.1 $STATUS ".$HTTP_ERROR);
+			require_once(lib."error_page.php");		
+		}
 		exit();
 	}
 

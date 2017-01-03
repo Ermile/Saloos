@@ -69,7 +69,7 @@ class router
 			$route = new router\route("/^api([^\/]*)/", function($reg)
 			{
 				router::remove_url($reg->url);
-				router::set_storage('api', true);
+				\lib\storage::set_api(true);
 			});
 		}
 
@@ -294,7 +294,6 @@ class router
 		$newUrl      = "";
 		$currentPath = $_SERVER['REQUEST_URI'];
 		$mainSite    = \lib\utility\option::get('config', 'meta', 'redirectURL');
-
 		// if redirect to main site is enable and all thing is okay
 		// then redirect to the target url
 		if(
@@ -356,6 +355,8 @@ class router
 			// redirect to best protocol because we want it!
 			$redirector = new \lib\redirector($newUrl);
 			$redirector->redirect();
+			echo $_SERVER['REQUEST_METHOD'];
+			exit();
 		}
 	}
 

@@ -110,7 +110,7 @@ class controller
 		{
 			$this->display = false;
 		}
-		if(!\lib\router::get_storage('api') && $this->method == 'get' && $this->display)
+		if(!\lib\storage::get_api() && $this->method == 'get' && $this->display)
 		{
 			$this->view();
 
@@ -139,7 +139,7 @@ class controller
 				$this->view()->corridor();
 			}
 		}
-		elseif(router::get_storage('api') || !$this->display)
+		elseif(\lib\storage::get_api() || !$this->display)
 		{
 			$mycallback = isset($this->api_callback)? $this->api_callback: null;
 			debug::msg('callback', $mycallback);
@@ -171,7 +171,7 @@ class controller
 			$this->controller()->redirector = false;
 
 
-		if(\saloos::is_json_accept() || $force_json)
+		if(\saloos::is_json_accept() || $force_json || \lib\storage::get_api())
 		{
 			header('Content-Type: application/json');
 			if(isset($this->controller()->redirector) && $this->controller()->redirector)
@@ -181,7 +181,7 @@ class controller
 			}
 			echo debug::compile(true);
 		}
-		elseif(!\lib\router::get_storage('api') && strtolower($_SERVER['REQUEST_METHOD']) == "post")
+		elseif(!\lib\storage::get_api() && strtolower($_SERVER['REQUEST_METHOD']) == "post")
 		{
 			$this->redirector();
 		}

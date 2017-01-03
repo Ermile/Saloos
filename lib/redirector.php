@@ -38,6 +38,13 @@ class redirector
 		if($_return)
 			return $newLocation;
 
+		if(\saloos::is_json_accept() || \lib\storage::get_api())
+		{
+			header('Content-Type: application/json');
+			echo json_encode(['redirect' => $newLocation]);
+			exit();
+		}
+
 		if($this->php)
 		{
 			header('Pragma: no-cache');
