@@ -53,7 +53,7 @@ class request
 				break;
 
 			case 'input_json':
-				$input = json_decode(file_get_contents('php://input'));
+				$input = json_decode(file_get_contents('php://input'), true);
 				$this->request = utility\safe::safe($input);
 				break;
 
