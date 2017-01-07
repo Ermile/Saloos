@@ -8,7 +8,7 @@ trait connect
 	public static $link;
 	public static $link_open    = [];
 	public static $link_default = null;
-
+	
 	// declare connection variables
 	public static $db_name      = null;
 	public static $db_user      = null;
@@ -16,6 +16,7 @@ trait connect
 	public static $db_host      = 'localhost';
 	public static $db_charset   = 'utf8';
 	public static $db_lang      = 'fa_IR';
+	public static $debug_error  = true;
 
 
 	/**

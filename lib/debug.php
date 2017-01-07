@@ -213,6 +213,34 @@ class debug
 
 
 	/**
+	 * get items
+	 *
+	 * @param      <type>  $_property  The property
+	 * @param      <type>  $_args      The arguments
+	 *
+	 * @return     <type>  ( description_of_the_return_value )
+	 */
+	private static function get($_property, $_args = null)
+	{
+		$return = [];
+		if(isset(self::${$_property}))
+		{	
+			$return = self::${$_property};
+		}
+		
+		if(is_null($_args))
+		{	
+			return $return;
+		}
+		elseif(isset($return[$_args]))
+		{
+			return $return[$_args];	
+		}
+		return null;
+	}
+
+
+	/**
 	 * { function_description }
 	 *
 	 * @param      <type>  $_func_name  The function name
@@ -221,7 +249,11 @@ class debug
 	public static function __callStatic($_func_name, $_args)
 	{
 		$func_name = "static_".$_func_name;
-		if(method_exists(get_class(), $func_name))
+		if(substr($_func_name, 0,4) == 'get_')
+		{
+			return self::get(substr($_func_name, 4), ...$_args);
+		}
+		elseif(method_exists(get_class(), $func_name))
 		{
 			return self::$func_name(...$_args);
 		}
@@ -508,27 +540,6 @@ class debug
 			$_args[0] = true;
 		}
 		return $this->get($_name) == $_args[0];
-	}
-
-	/**
-	 * get value
-	 *
-	 * @param      <type>  $_name  The name
-	 * @param      ...     $_args  The arguments
-	 *
-	 * @return     <type>  ( description_of_the_return_value )
-	 */
-	public function get($_name, ...$_args)
-	{
-		$method = "dynamic_". $_name;
-		if(method_exists($this, $method))
-		{
-			return $this->$method;
-		}
-		else
-		{
-			return null;
-		}
 	}
 }
 ?>

@@ -229,15 +229,15 @@ class upload
 
 			if(\lib\utility\file::move(self::$upload_from_path, $new_name, true))
 			{
-				return \lib\debug::db_return(true)
-								->set_result($file_name)
-								->set_file_name($master_name)
-								->set_link($link)
-								->set_new_name($new_name);
+				\lib\debug::msg("result", $file_name);
+				\lib\debug::msg("file_name", $master_name);
+				\lib\debug::msg("link", $link);
+				\lib\debug::msg("new_name", $new_name);
+				return \lib\debug::true(T_("file successful uploaded"));
 			}
 			else
 			{
-				return \lib\debug::db_return(false)->set_message(T_('Fail on tranfering file, move in temp'));
+				return \lib\debug::error(T_('Fail on tranfering file, when moving in temp'));
 			}
 		}
 	}
@@ -329,19 +329,19 @@ class upload
 		// check upload name
 		if(!$_options['upload_name'])
 		{
-			return \lib\debug::db_return(false)->set_message(T_("upload name not found"));
+			return \lib\debug::error(T_("upload name not found"));
 		}
 
 		// check foler prefix
 		if(!$_options['folder_prefix'])
 		{
-			return \lib\debug::db_return(false)->set_message(T_("folder prefix not found"));
+			return \lib\debug::error(T_("folder prefix not found"));
 		}
 
 		// check user id
 		if((!$_options['user_id'] || !is_numeric($_options['user_id'])) && $_options['save_as_tmp'] === false)
 		{
-			return \lib\debug::db_return(false)->set_message(T_("user id not set"));
+			return \lib\debug::error(T_("user id not set"));
 		}
 
 		// get the protocol
@@ -388,7 +388,7 @@ class upload
 		$invalid = self::invalid($_options['upload_name']);
 		if($invalid)
 		{
-			return \lib\debug::db_return(false)->set_message($invalid);
+			return \lib\debug::error($invalid, false, 'upload');
 		}
 
 		// save file as tmp in tmp_path
@@ -417,11 +417,10 @@ class upload
 		// 3. Check for record exist in db or not
 		$duplicate = self::duplicate(self::$fileMd5);
 
-		if($duplicate->is_ok())
+		if($duplicate)
 		{
-			return \lib\debug::db_return(true)
-					->set_result($duplicate->get_result())
-					->set_message(T_('Duplicate - File exist'));
+			// in duplicate mode debug 
+			return \lib\debug::true(T_("File successful uploaded"));
 		}
 
 		// 4. transfer file to project folder with new name
@@ -429,7 +428,7 @@ class upload
 		{
 			if(!\lib\utility\file::rename(self::$upload_from_path, $_options['move_to']. $url_full, true))
 			{
-				return \lib\debug::db_return(false)->set_message(T_('Fail on tranfering file, upload from path'));
+				return \lib\debug::error(T_('Fail on tranfering file, upload from path'));
 			}
 			$real_url_full = $_options['move_to']. $url_full;
 
@@ -442,7 +441,7 @@ class upload
 		{
 			if(!self::transfer($url_full, $folder_loc))
 			{
-				return \lib\debug::db_return(false)->set_message(T_('Fail on tranfering file'));
+				return \lib\debug::error(T_('Fail on tranfering file'));
 			}
 			$real_url_full = $url_full;
 		}
@@ -513,7 +512,8 @@ class upload
 		];
 
 		$post_new_id = \lib\db\posts::insert($insert_attachment);
-		return \lib\debug::db_return(true)->set_result(\lib\db::insert_id());
+		\lib\debug::msg("result", \lib\db::insert_id());
+		return \lib\debug::true("File successful uploaded");
 	}
 
 

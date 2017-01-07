@@ -151,6 +151,9 @@ trait install
 	 */
 	public static function execFile($_path, $_addons = false, $_db_name = true, $_db_version = 0)
 	{
+		// disable debug error to run all query
+		self::$debug_error = false;
+		
 		// default set version in db_name version
 		// the addons_version is false
 		$addons_version = false;

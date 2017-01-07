@@ -13,9 +13,16 @@
  <p>Welcome to saloos installation process.</p>
  <p>First of all set database connection detail on <b>config.php</b> then we do others!</p>
 <?php
-	if(isset($_GET['install']) && $_GET['install'] === 'go'
-		&& isset($_GET['time']) && $_GET['time'] === 'first_time')
+	if(isset($_POST['username']) && isset($_POST['password']))
 	{
+		if($_POST['username'] && $_POST['password'])
+		{
+			\lib\db::$db_user = $_POST['username'];
+			\lib\db::$db_pass = $_POST['password'];
+		}
+		// ignore error when installing...
+		\lib\db::$debug_error = false;
+
 		$result = \lib\db::install();
 		if($result)
 		{
@@ -42,11 +49,18 @@
 	{
 ?>
  <div class="btn">
-  <a href="?install=go&time=first_time">Install</a>
-  <span class="bottom">Just a seconds!</span>
+  <!-- <a>Install</a> -->
+ <!--  <span class="bottom">Just a seconds!</span> -->
+ <a>Enter username and password of database</a>
+	<form method="post">
+		<input type="text" name="username">
+		<input type="password" name="password">
+		<input type="submit" value="Install">
+	</form>
  </div>
 <?php
 	}
+	exit();
 ?>
 
  <div id="no"><img src="/static/images/logo.png" alt="Logo" id='logo'></div>

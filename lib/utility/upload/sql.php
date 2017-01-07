@@ -32,9 +32,10 @@ trait sql
 			// $link = '<a target="_blank" href=/cp/attachments/edit='. $id. '>'.
 			// T_('Duplicate - File exist').'</a>';
 			// \lib\debug::msg("link", $link);
-			return \lib\debug::db_return(true)->set_result($id);
+			\lib\debug::msg("result", $id);
+			return true;
 		}
-		return \lib\debug::db_return(false)->set_result($qry_count);
+		return false;
 	}
 }
 ?>
