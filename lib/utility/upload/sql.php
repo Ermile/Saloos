@@ -11,8 +11,8 @@ trait sql
 	 */
 	public static function attachment_count()
 	{
-		$query         = "SELECT COUNT(posts.id) AS 'count' FROM posts WHERE post_type = 'attachment' ";
-		$count     = \lib\db::get($query,'count', true);
+		$query = "SELECT COUNT(posts.id) AS 'count' FROM posts WHERE post_type = 'attachment' ";
+		$count = \lib\db::get($query,'count', true);
 		return $count;
 	}
 
