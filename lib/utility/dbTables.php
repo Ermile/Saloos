@@ -37,7 +37,11 @@ class dbTables
 
 
     // declare public variables for sql connection
-    $connect = mysqli_connect("localhost", db_user, db_pass, db_name);
+    $connect = @mysqli_connect("localhost", db_user, db_pass, db_name);
+    if($connect === false)
+    {
+      return false;
+    }
     $qTables = $connect->query("SHOW TABLES FROM ".db_name);
 
 
