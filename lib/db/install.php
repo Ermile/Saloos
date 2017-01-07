@@ -215,7 +215,8 @@ trait install
 						$qry = trim($qry);
 						if($qry)
 						{
-							if(!self::query($qry, $_db_name))
+							self::query($qry, $_db_name);
+							if(\lib\db::error())
 							{
 								$has_error = true;
 							}
@@ -223,10 +224,11 @@ trait install
 					}
 				}
 
-
-
-				// set the new version in database
-				self::set_db_version($file_version, $_db_name, $addons_version);
+				if(!$has_error)
+				{	
+					// set the new version in database
+					self::set_db_version($file_version, $_db_name, $addons_version);
+				}
 
 				// if command execute successfully
 				if(!$has_error)

@@ -108,7 +108,7 @@ trait info
 	 */
 	public static function error()
 	{
-		return mysqli_error(self::$link);
+		return @mysqli_error(self::$link);
 	}
 
 
