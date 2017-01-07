@@ -15,7 +15,7 @@
 <?php
 	if(isset($_POST['username']) && isset($_POST['password']))
 	{
-		if($_POST['username'] && $_POST['password'])
+		if($_POST['username'])
 		{
 			\lib\db::$db_user = $_POST['username'];
 			\lib\db::$db_pass = $_POST['password'];

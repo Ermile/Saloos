@@ -233,7 +233,7 @@ trait install
 				// if command execute successfully
 				if(!$has_error)
 				{
-					return T_('Empty query!');
+					return T_('Error!');
 				}
 				else
 				{
