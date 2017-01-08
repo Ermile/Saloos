@@ -21,7 +21,7 @@ class request
 		}
 		else
 		{
-			$this->request 		= $_options['request'];
+			$this->method 		= $_options['method'];
 		}
 
 		if(!isset($_options['request']))
