@@ -19,8 +19,13 @@ trait mvc
 		{
 			$this->Methods[$name][$event] = array();
 		}
-		array_push($this->Methods[$name][$event], $closure->bindTo($this));
+		$bound = @$closure->bindTo($this);
+		if($bound)
+		{
+			array_push($this->Methods[$name][$event], $bound);
+		}
 	}
+
 
 	public function __call($_name, $_args)
 	{
@@ -63,7 +68,10 @@ trait mvc
 		{
 			foreach ($this->Methods[$_call]['before'] as $key => $before_method)
 			{
-				$before_method(...$_args);
+				if($before_method)
+				{
+					$before_method(...$_args);
+				}
 			}
 		}
 
@@ -81,7 +89,10 @@ trait mvc
 		{
 			foreach ($this->Methods[$_call]['after'] as $key => $after_method)
 			{
-				$after_method(...$_args);
+				if($after_method)
+				{
+					$after_method(...$_args);
+				}
 			}
 		}
 		return $return;
