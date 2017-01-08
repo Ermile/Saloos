@@ -190,6 +190,13 @@ class router
 	{
 		// first get subdomain and if not exist get first url part as mysub
 		$mysub = router::get_sub_domain();
+
+		// if user set subDevelop use it and remove from repo check
+		if(defined('subDevelop') && $mysub === constant('subDevelop'))
+		{
+			$mysub = '';
+		}
+
 		if(!$mysub)
 		{
 			$mysub = router::get_url(0);
