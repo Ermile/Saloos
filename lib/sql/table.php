@@ -46,7 +46,7 @@ class table{
 						$options = new \lib\sql\options;
 						$func = new \ReflectionMethod($sName, $key);
 						$Closure = $func->getClosure($table_load);
-						$options->$key = \Closure::bind($Closure, $options);
+						$options->$key = @\Closure::bind($Closure, $options);
 
 						$options->table = $table_load;
 						$options->tableName = $table_load;
@@ -62,6 +62,7 @@ class table{
 				if(method_exists($table_load, $key)){
 					if(isset($table_load->{$key}->closure)){
 						$closure = $table_load->{$key}->closure;
+						var_dump($closure->$key);
 						call_user_func($closure->$key);
 					}
 				}
