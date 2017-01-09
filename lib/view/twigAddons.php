@@ -352,6 +352,7 @@ trait twigAddons
 				$location    = str_replace('-', ' ', $location);
 				$location    = ucwords($location);
 				$location    = str_replace('And', 'and', $location);
+				$location    = T_($location);
 
 				if(end($myurl) === $part)
 				{
@@ -359,7 +360,7 @@ trait twigAddons
 				}
 				else
 				{
-					$result .= "<a href='$anchorUrl' tabindex='-1'>". T_($location). "</a>";
+					$result .= "<a href='$anchorUrl' tabindex='-1'>". $location. "</a>";
 				}
 			}
 
