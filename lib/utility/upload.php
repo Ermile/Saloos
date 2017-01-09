@@ -122,7 +122,10 @@ class upload
 	public static function sp_fileSizeByte($_size)
 	{
 		$_size = trim($_size);
-		$last = strtolower($_size[strlen($_size)-1]);
+		$last  = $_size[strlen($_size)-1];
+		$_size = (float) str_replace($last, '', $_size);
+		$last  = strtolower($last);
+
 		switch($last)
 		{
 			case 'g':

@@ -208,7 +208,7 @@ class sms
 			return 'debug';
 		}
 		// create new instance from kavenegar api and call requested func of it
-		$api    = new \kavenegar_api($_apikey, $_line);
+		$api    = new \lib\utility\kavenegar_api($_apikey, $_line);
 		$result = $api->{$_request}($_mobile, $_msg, 0);
 
 		// $result = $api->select(27657835);
