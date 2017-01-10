@@ -405,7 +405,7 @@ class upload
 		$qry_count     = self::attachment_count();
 
 		$folder_prefix = $_options['folder_prefix'];
-		$folder_id     = ceil(($qry_count + 1) / $_options['folder_size']);
+		$folder_id     = ceil(((int) $qry_count + 1) / $_options['folder_size']);
 
 		$folder_loc    = $folder_prefix . $folder_id;
 
