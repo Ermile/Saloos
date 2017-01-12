@@ -58,7 +58,7 @@ class request
 				break;
 
 			default:
-				$this->request = utility::get();
+				$this->request = utility::get(null, 'raw');
 				break;
 		}
 	}
@@ -71,7 +71,7 @@ class request
 		{
 			return $request;
 		}
-
+		
 		foreach ($args as $key => $value) {
 			if(is_object($request))
 			{
