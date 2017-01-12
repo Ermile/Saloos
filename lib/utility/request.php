@@ -83,7 +83,7 @@ class request
 			}
 			elseif(is_array($request))
 			{
-				if(!isset($request[$value]))
+				if(!array_key_exists($value, $request))
 				{
 					return null;
 				}
