@@ -5,6 +5,7 @@ class utility
 	public static $POST;
 	public static $GET;
 	public static $COOKIE;
+	public static $HEADER;
 	public static $FILES;
 	public static $REQUEST;
 
@@ -187,6 +188,33 @@ class utility
 
 
 	/**
+	 * filter cookie and safe it
+	 * @param  string $_name unsafe cookie key
+	 * @return string        safe cookie
+	 */
+	public static function header($_name = null)
+	{
+		if(!self::$HEADER)
+		{
+			self::$HEADER = utility\safe::safe(apache_request_headers());
+		}
+		if($_name)
+		{
+			if(array_key_exists($_name, self::$HEADER))
+			{
+				return self::$HEADER[$_name];
+			}
+			else
+			{
+				return null;
+			}
+		}else
+		{
+			return self::$HEADER;
+		}
+	}
+
+	/**
 	 * Call this funtion for encode or decode your password.
 	 * If you pass hashed password func verify that,
 	 * else create a new pass to save in db
@@ -194,7 +222,7 @@ class utility
 	 * @param  [type] $_hashedPassword [description]
 	 * @return [type]                  [description]
 	 */
-	public static function hasher($_plainPassword, $_hashedPassword = null)
+	public static function hasher($_plainPassword, $_hashedPassword = null, $_onlyCheck = false)
 	{
 		$raw_password   = $_plainPassword;
 		// custom text to add in start and end of password
@@ -210,7 +238,12 @@ class utility
 		}
 		else
 		{
-			$check = \lib\db\passwords::check($raw_password);
+			$check = true;
+			if(!$_onlyCheck)
+			{
+				$check = \lib\db\passwords::check($raw_password);
+			}
+
 			if($check === true)
 			{
 				// create option for creating hash cost
