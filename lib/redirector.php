@@ -41,7 +41,8 @@ class redirector
 		if(\saloos::is_json_accept() || \lib\storage::get_api())
 		{
 			header('Content-Type: application/json');
-			echo json_encode(['redirect' => $newLocation]);
+			debug::msg('redirect', $newLocation);
+			echo json_encode(debug::compile());
 			exit();
 		}
 

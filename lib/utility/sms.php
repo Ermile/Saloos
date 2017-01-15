@@ -12,14 +12,14 @@ class sms
 	 * @param  [type] $_arg    [description]
 	 * @return [type]          [description]
 	 */
-	public static function send($_mobile, $_msg = null, $_arg = null, $_type = 0)
+	public static function send(array $_options, $_request = 'send')
 	{
+		$api_settings = [];
 		// declare variables
 		$tmp_obj     = \lib\main::$controller;
 		$settings    = $tmp_obj->option('sms', null);
-		$sms_apikey  = null;
-		$sms_line    = null;
-
+		$api_settings['global_settings'] = $settings;
+		$api_settings['request'] = $_request;
 		// if sms service is disable, go out
 		if(!$settings['status'] || !isset($settings['meta']))
 		{
@@ -28,7 +28,7 @@ class sms
 
 		// set restriction
 		if(isset($settings['meta']['iran']) && $settings['meta']['iran'] &&
-			substr($_mobile, 0, 2) !== '98')
+			substr($_options['mobile'], 0, 2) !== '98')
 		{
 			self::error(T_("We can't give service to this number"));
 			self::error(T_("now we only support Iran!"));
@@ -43,38 +43,18 @@ class sms
 			return false;
 		}
 
-		// set message and call related sms service
-		$sms_msg = self::message($_msg, $_arg, $settings);
-		if(!$sms_msg)
-		{
-			// message is empty
-			return false;
-		}
-
 		if(isset($settings['meta']['debug']) && $settings['meta']['debug'])
 		{
-			$_type = 'debug';
+			$api_settings['debug'] = true;
 		}
 
 		if(isset($settings['meta']['apikey']) && $settings['meta']['apikey'])
 		{
-			$sms_apikey = $settings['meta']['apikey'];
-		}
-		if(isset($settings['meta']['line1']) && $settings['meta']['line1'])
-		{
-			$sms_line = $settings['meta']['line1'];
+			$api_settings['api_key'] = $settings['meta']['apikey'];
 		}
 
 		// call related service with special parameters
-		$result = self::{$sms_service}
-			(
-				$sms_apikey,	// apikey
-				$sms_line,		// line number for sending message
-			 	__FUNCTION__,   // name of method want to call, for example send
-			 	$_mobile,       // target mobile number
-			 	$sms_msg,       // message to send
-			 	$_type          // type of call, 'debug' for simulate sending
-			 );
+		$result = self::{$sms_service}(['args' => $_options, 'settings' => $api_settings]);
 		return $result;
 	}
 
@@ -194,22 +174,44 @@ class sms
 	 * @param  integer $_type   [description]
 	 * @return [type]           [description]
 	 */
-	private static function kavenegar_api($_apikey, $_line, $_request, $_mobile = false, $_msg = false, $_type = 0)
+	private static function kavenegar_api($_options)
 	{
-		if($_type === 'debug')
+		$api_settings 	= $_options['settings'];
+		$settings    	= $api_settings['global_settings'];
+		$options 		= $_options['args'];
+		if(isset($settings['meta']['line1']) && $settings['meta']['line1'])
+		{
+			$sms_line = $settings['meta']['line1'];
+		}
+
+		switch ($api_settings['request']) {
+			case 'send':
+				// set message and call related sms service
+				$options['msg'] = self::message($options['msg'], $options['arg'], $settings);
+				if(!$options['msg'])
+				{
+					// message is empty
+					return false;
+				}
+
+				break;
+		}
+
+		if(array_key_exists('debug', $api_settings) && $api_settings['debug'] === true)
 		{
 			self::error(T_($_request). T_(' to '). $_mobile, 'true');
 			self::error(T_($_msg), 'true');
 			return 'debug';
 		}
-		if(!$_apikey || !$_line )
+		if(!$api_settings['api_key'] || !$sms_line )
 		{
 			self::error(T_('Please set apikey and linenumber'), 'error');
 			return 'debug';
 		}
 		// create new instance from kavenegar api and call requested func of it
-		$api    = new \lib\utility\kavenegar_api($_apikey, $_line);
-		$result = $api->{$_request}($_mobile, $_msg, 0);
+		$api    = new \lib\utility\kavenegar_api($api_settings['api_key'], $sms_line);
+
+		$result = $api->{$api_settings['request']}($options);
 
 		// $result = $api->select(27657835);
 		// $result = $api->cancel(27657835);
@@ -253,6 +255,11 @@ class sms
 		// }
 	}
 
+
+	public static function valid_number($_mobile)
+	{
+
+	}
 
 	public static function verification($_mobile, $_args = [])
 	{

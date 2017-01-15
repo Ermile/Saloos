@@ -109,17 +109,42 @@ class kavenegar_api
 		}
 	}
 
-	public function send($_receptor, $_message, $_type= 1, $_date= 0, $_LocalMessageid= null)
+	public function send()
 	{
-		$receptor 	= is_array($_receptor)? join(",", $_receptor): $_receptor;
+
+		$args = func_get_args();
+		$options = ['type' => 1, 'date' => 0, 'LocalMessageid' => null];
+		if(is_array($args[0]))
+		{
+			$options = array_merge($options, $args[0]);
+		}
+		else
+		{
+			$options['mobile'] 	= $args[0];
+			$options['msg'] 	= $args[1];
+			if(isset($args[2]))
+			{
+				$options['type'] = $args[2];
+			}
+			if(isset($args[3]))
+			{
+				$options['date'] = $args[3];
+			}
+			if(isset($args[4]))
+			{
+				$options['LocalMessageid'] = $args[4];
+			}
+		}
+
+		$receptor 	= is_array($options['mobile'])? join(",", $options['mobile']): $options['mobile'];
 		$path 		= $this->get_path(__FUNCTION__);
 		$params 	= array(
-								"receptor"       => $receptor,
+								"receptor"       => $options['mobile'],
 								"sender"         => $this->linenumber,
-								"message"        => $_message,
-								"type"           => $_type,
-								"date"           => $_date,
-								"LocalMessageid" => $_LocalMessageid
+								"message"        => $options['msg'],
+								"type"           => $options['type'],
+								"date"           => $options['date'],
+								"LocalMessageid" => $options['LocalMessageid']
 							);
 		$json 		= $this->execute($path, $params);
 
@@ -288,17 +313,45 @@ class kavenegar_api
 	 * @param      <type>  $_template  The template
 	 * @param      string  $_type      The type
 	 */
-	public function verify($_receptor, $_token, $_token2 = null, $_token3 = null, $_template, $_type = 'sms')
+	public function verify()
 	{
+		$args = func_get_args();
+		$options = ['type' => 'sms', 'token2' => null, 'token3'=> null];
+		if(is_array($args[0]))
+		{
+			$options = array_merge($options, $args[0]);
+		}
+		else
+		{
+			$options['mobile'] 	= $args[0];
+			$options['token'] 	= $args[1];
+			if(isset($args[2]))
+			{
+				$options['token2'] = $args[2];
+			}
+			if(isset($args[3]))
+			{
+				$options['token3'] = $args[3];
+			}
+			if(isset($args[4]))
+			{
+				$options['template'] = $args[4];
+			}
+			if(isset($args[5]))
+			{
+				$options['type'] = $args[5];
+			}
+		}
+
 		$path = $this->get_path('lookup','verify');
 		$parameters =
 		[
-			'receptor' => $_receptor,
-			'token'    => $_token,
-			'token2'   => $_token2,
-			'token3'   => $_token3,
-			'template' => $_template,
-			'type'     => $_type,
+			'receptor' => $options['mobile'],
+			'token'    => $options['token'],
+			'token2'   => $options['token2'],
+			'token3'   => $options['token3'],
+			'template' => $options['template'],
+			'type'     => $options['type'],
 		];
 		$json = $this->execute($path, $parameters);
 		if(!is_array($json))

@@ -243,7 +243,7 @@ class define
 				// set language
 				define::set_language($my_first_url);
 				// add this language to base url
-				router::$base .= '/'.router::get_url(0);
+				router::$prefix_base .= router::get_url(0);
 				// remove language from url and continue
 				router::remove_url($my_first_url);
 				if(\lib\utility\location\languages::check(\lib\router::get_url(0)))

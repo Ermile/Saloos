@@ -5,6 +5,7 @@ trait config
 	//protocol
 	static public $protocol           = "http";
 	static public $base               = null;
+	static public $prefix_base        = null;
 	static public $sub_is_fake        = null;
 
 	// original routers
@@ -320,6 +321,7 @@ trait config
 	{
 		$domain = self::get_domain(-1);
 		$result = $domain;
+		$prefix_base = self::get_class_static('prefix_base');
 		if(count($domain) === 3)
 		{
 			$sub = $domain[0];
@@ -327,11 +329,11 @@ trait config
 			array_shift($domain);
 			// add subdomain as part of url
 			array_push($domain, $sub);
-			$result = $domain[0].'.'. $domain[1].'/'.$domain[2];
+			$result = $domain[0].'.'. $domain[1].'/'. ($prefix_base ? $prefix_base .'/' : ''). $domain[2];
 		}
 		else
 		{
-			$result = self::get_domain();
+			$result = self::get_domain() . ($prefix_base ? '/'. $prefix_base : '');
 		}
 
 		return $result;
