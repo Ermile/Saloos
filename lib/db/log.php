@@ -8,7 +8,7 @@ trait log
 	 * @param  [type] $_text [description]
 	 * @return [type]        [description]
 	 */
-	public static function log($_text, $_time = null, $_name = 'db.sql')
+	public static function log($_text, $_time = null, $_name = 'log.sql')
 	{
 		$classes  = (array_column(debug_backtrace(), 'file'));
 		if(DEBUG)
