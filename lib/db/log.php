@@ -8,7 +8,7 @@ trait log
 	 * @param  [type] $_text [description]
 	 * @return [type]        [description]
 	 */
-	public static function log($_text)
+	public static function log($_text, $_time = null)
 	{
 		$classes  = (array_column(debug_backtrace(), 'file'));
 		if(DEBUG)
@@ -17,8 +17,12 @@ trait log
 			\lib\utility\file::makeDir($fileAddr, null, true);
 			// set file address
 			$fileAddr .= 'db.log';
-			$_text = str_repeat("-", 70). urldecode($_SERVER['REQUEST_URI']). "\n". $_text. "\r\n";
-			file_put_contents($fileAddr, $_text, FILE_APPEND);
+			$my_text  = "\n#". str_repeat("-", 70). ' '. urldecode($_SERVER['REQUEST_URI']);
+			$my_text .= "\n#". $_time. "s";
+			$my_text .= "\n#". round($_time*1000) . "ms";
+			$my_text .= "\n";
+			$my_text .= $_text. "\r\n";
+			file_put_contents($fileAddr, $my_text, FILE_APPEND);
 		}
 	}
 }

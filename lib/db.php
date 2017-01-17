@@ -57,13 +57,8 @@ class db
 		{
 			return null;
 		}
-
-		// if debug mod is true save all string query
-		if(DEBUG)
-		{
-			self::log($_qry);
-		}
-
+		// get time before execute query
+		$qry_exec_time = microtime(true);
 		/**
 		 * send the query to mysql engine
 		 */
@@ -75,7 +70,14 @@ class db
 		{
 			$result = mysqli_query(self::$link, $_qry);
 		}
+		// get diff of time after exec
+		$qry_exec_time = microtime(true) - $qry_exec_time;
 
+		// if debug mod is true save all string query
+		if(DEBUG)
+		{
+			self::log($_qry, $qry_exec_time);
+		}
 		// check the mysql result
 		if(!is_a($result, 'mysqli_result') && !$result)
 		{
