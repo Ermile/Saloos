@@ -285,7 +285,10 @@ trait twigAddons
 
 				echo $lang_string;
 			}
-			// return $langList;
+			else
+			{
+				return $langList;
+			}
 		});
 	}
 
