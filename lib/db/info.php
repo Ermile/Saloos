@@ -221,5 +221,38 @@ trait info
 
 		\lib\db::query($query);
 	}
+
+
+	/**
+	 * check version of db and custom version
+	 *
+	 * @param      <type>   $_condition  The condition
+	 * @param      <type>   $_version    The version
+	 * @param      boolean  $_db         The database
+	 *
+	 * @return     boolean  ( description_of_the_return_value )
+	 */
+	public static function check_version($_condition, $_version, $_db = true)
+	{
+		$version = '0.0.0';
+
+		if($_db === true)
+		{
+			$version = self::db_version();
+		}
+		else
+		{
+			$version = self::db_version(true, true);
+		}
+
+		if(version_compare($_version, $version, $_condition))
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
 }
 ?>
