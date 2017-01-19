@@ -153,7 +153,7 @@ trait install
 	{
 		// disable debug error to run all query
 		self::$debug_error = false;
-		
+
 		// default set version in db_name version
 		// the addons_version is false
 		$addons_version = false;
@@ -224,21 +224,9 @@ trait install
 					}
 				}
 
-				if(!$has_error)
-				{	
-					// set the new version in database
-					self::set_db_version($file_version, $_db_name, $addons_version);
-				}
-
-				// if command execute successfully
-				if(!$has_error)
-				{
-					return T_('Error!');
-				}
-				else
-				{
-					return T_('Successfully');
-				}
+				// set the new version in database
+				self::set_db_version($file_version, $_db_name, $addons_version);
+				return T_('executed');
 			}
 		}
 		else
