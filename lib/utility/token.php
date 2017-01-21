@@ -2,7 +2,21 @@
 namespace lib\utility;
 use \lib\utility;
 use \lib\debug;
-
+/**
+ * FUNCTION LIST:
+ *
+ * create_guest($_authorization)
+ * create_tmp_login($_authorization, $_guest_token = false)
+ * verify($_token, $_user_id)
+ * get_api_key($_user_id)
+ * create_api_key($_user_id)
+ * destroy_api_key($_user_id)
+ * destroy($_token)
+ *
+ * private create_token()
+ * private check()
+ * private get()
+ */
 class token
 {
 	/**
@@ -23,6 +37,11 @@ class token
 	 */
 	private static function create_token($_parent, $_type, $_guest_token = false)
 	{
+		if(!debug::$status)
+		{
+			return null;
+		}
+
 		self::$API_KEY = null;
 		$user_id       = null;
 		$key           = null;
@@ -45,7 +64,7 @@ class token
 
 		$date  = date("Y-m-d H:i:s");
 		$token = "~Saloos~_!_". $user_id . $key. time(). rand(1,1000). $date;
-		$token = utility::hasher($token);
+		$token = utility::hasher($token, null, true);
 		$meta  = [];
 
 		$meta['time'] = $date;
@@ -158,8 +177,8 @@ class token
 				return false;
 			}
 
-			$now         = time();
-			$token_time  = strtotime($token_time);
+			$now          = time();
+			$token_time   = strtotime($token_time);
 			$diff_seconds = $now - $token_time;
 
 			if($diff_seconds > $max_life_time)
@@ -192,7 +211,7 @@ class token
 					}
 					else
 					{
-						debug::error(T_("Invalid token"), 'authorization', 'access');
+						debug::error(T_("Invalid token value"), 'authorization', 'access');
 						return false;
 					}
 				}
@@ -226,7 +245,7 @@ class token
 		}
 		else
 		{
-			debug::error(T_("Invalid token (tmp_login)"), 'authorization', 'access');
+			debug::error(T_("Invalid token (tmp login)"), 'authorization', 'access');
 			return false;
 		}
 
@@ -358,7 +377,7 @@ class token
 		self::destroy_api_key($_user_id);
 
 		$api_key = "!~Saloos~!". $_user_id. ':_$_:'. time(). "*Ermile*". rand(2, 200);
-		$api_key = utility::hasher($api_key);
+		$api_key = utility::hasher($api_key, null, true);
 
 		$arg =
 		[
@@ -390,6 +409,24 @@ class token
 		];
 		$set = ['option_status' => 'disable'];
 		\lib\db\options::update_on_error($set, $where);
+	}
+
+
+	/**
+	 * destroy token when log out
+	 *
+	 * @param      <type>  $_token  The token
+	 */
+	public static function destroy($_token)
+	{
+		$where =
+		[
+			'option_cat'   => 'token',
+			'option_key'   => 'user_token',
+			'option_value' => $_token,
+		];
+		$set = ['option_status' => 'disable'];
+		return \lib\db\options::update_on_error($set, $where);
 	}
 }
 ?>
