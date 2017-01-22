@@ -10,6 +10,33 @@ class permission
 	 */
 
 	/**
+	 * permission array
+	 *
+	 * @var        array
+	 */
+	public static $PERMISSION = [];
+
+	public static $get_from_session = true;
+
+	/**
+	 * get permission data from session or from parametr
+	 *
+	 * @return     <type>  ( description_of_the_return_value )
+	 */
+	private static function permission_data()
+	{
+		if(self::$get_from_session)
+		{
+			return $_SESSION;
+		}
+		else
+		{
+			return self::$PERMISSION;
+		}
+	}
+
+
+	/**
 	 * return
 	 * @param  string $_loc  location
 	 * @param  string $_type type of permission needed
@@ -21,7 +48,7 @@ class permission
 		$su       = null;
 		// if user is superviser then set su to true
 		// permission id 1 is supervisior of system
-		if(isset($_SESSION['user']['permission']) && $_SESSION['user']['permission'] === "1")
+		if(isset(self::permission_data()['user']['permission']) && self::permission_data()['user']['permission'] === "1")
 		{
 			$su       = true;
 			$suStatus = self::permListFill('su');
@@ -41,9 +68,9 @@ class permission
 					}
 				}
 			}
-			elseif(isset($_SESSION['permission']))
+			elseif(isset(self::permission_data()['permission']))
 			{
-				foreach ($_SESSION['permission'] as $key => $value)
+				foreach (self::permission_data()['permission'] as $key => $value)
 				{
 					if(isset($value['enable']))
 					{
@@ -73,9 +100,9 @@ class permission
 			{
 				$myStatus = $suStatus[$_content]['modules'];
 			}
-			elseif(isset($_SESSION['permission'][$_content]['modules']))
+			elseif(isset(self::permission_data()['permission'][$_content]['modules']))
 			{
-				$myStatus = $_SESSION['permission'][$_content]['modules'];
+				$myStatus = self::permission_data()['permission'][$_content]['modules'];
 			}
 		}
 		elseif($_loc)
@@ -89,9 +116,9 @@ class permission
 						$myStatus = $suStatus[$_content]['modules'][$_loc][$_type];
 					}
 				}
-				elseif(isset($_SESSION['permission'][$_content]['modules'][$_loc][$_type]))
+				elseif(isset(self::permission_data()['permission'][$_content]['modules'][$_loc][$_type]))
 				{
-					$myStatus = $_SESSION['permission'][$_content]['modules'][$_loc][$_type];
+					$myStatus = self::permission_data()['permission'][$_content]['modules'][$_loc][$_type];
 				}
 			}
 			else
@@ -100,9 +127,9 @@ class permission
 				{
 					$myStatus = $suStatus[$_content]['modules'][$_loc];
 				}
-				elseif(isset($_SESSION['permission'][$_content]['modules'][$_loc]))
+				elseif(isset(self::permission_data()['permission'][$_content]['modules'][$_loc]))
 				{
-					$myStatus = $_SESSION['permission'][$_content]['modules'][$_loc];
+					$myStatus = self::permission_data()['permission'][$_content]['modules'][$_loc];
 				}
 			}
 		}
@@ -113,9 +140,9 @@ class permission
 			{
 				$myStatus = $suStatus[$_content]['enable'];
 			}
-			elseif(isset($_SESSION['permission'][$_content]['enable']))
+			elseif(isset(self::permission_data()['permission'][$_content]['enable']))
 			{
-				$myStatus = $_SESSION['permission'][$_content]['enable'];
+				$myStatus = self::permission_data()['permission'][$_content]['enable'];
 			}
 		}
 

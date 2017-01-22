@@ -115,6 +115,30 @@ class token
 
 
 	/**
+	 * check temp token is verified or no
+	 *
+	 * @param      <type>  $_temp_token  The temporary token
+	 */
+	public static function check_verify($_temp_token)
+	{
+		$where =
+		[
+			'option_value'  => $_temp_token,
+			'option_status' => 'enable',
+			'option_key'    => 'user_token',
+			'option_cat'    => 'token',
+			'limit'         => 1
+		];
+		$result = \lib\db\options::get($where);
+		if(isset($result['meta']) && $result['meta'] == 'verified')
+		{
+			return true;
+		}
+		return false;
+	}
+
+
+	/**
 	 * check authorization
 	 *
 	 * @param      <type>   $_authorization  The authorization
@@ -125,17 +149,22 @@ class token
 	{
 		$api_key_parent = null;
 
-		$where = ['option_value' => $_authorization, 'option_status' => 'enable'];
+		$where =
+		[
+			'option_value'  => $_authorization,
+			'option_status' => 'enable',
+			'limit'         => 1
+		];
 
-		$get   = \lib\db\options::get($where);
+		$get = \lib\db\options::get($where);
 
-		if(!$get || empty($get) || ( isset($get[0]) && !array_key_exists('parent_id', $get[0])))
+		if(!$get || empty($get) || !array_key_exists('parent_id', $get))
 		{
 			debug::error(T_("authorization faild (parent not found)"), 'authorization', 'access');
 			return false;
 		}
 
-		$parent_id = $get[0]['parent_id'];
+		$parent_id = $get['parent_id'];
 
 		if(!is_null($parent_id))
 		{
@@ -143,9 +172,9 @@ class token
 			return false;
 		}
 
-		if(isset($get[0]['id']))
+		if(isset($get['id']))
 		{
-			$api_key_parent = $get[0]['id'];
+			$api_key_parent = $get['id'];
 		}
 
 		return $api_key_parent;
@@ -212,8 +241,9 @@ class token
 				$where = ['id' => $guest_token, 'option_status' => 'enable'];
 				$arg =
 				[
-					'user_id'    => $_user_id,
-					'option_key' => 'user_token'
+					'user_id'     => $_user_id,
+					'option_key'  => 'user_token',
+					'option_meta' => 'verified'
 				];
 
 				$update = \lib\db\options::update_on_error($arg, $where);
@@ -223,7 +253,7 @@ class token
 					if(isset($user_token[0]['value']))
 					{
 						$user_token = $user_token[0]['value'];
-						return $user_token;
+						return true;
 					}
 					else
 					{
@@ -239,24 +269,15 @@ class token
 			}
 			else
 			{
-				$new_token =
-				[
-					'type'       => 'user_token',
-					'user_id'    => $_user_id,
-					'save_to_db' => false,
-				];
-
-				$new_token = self::create_token($new_token);
-
 				$where = ['option_value' => $_token, 'option_status' => 'enable'];
 				$arg =
 				[
 					'user_id'      => $_user_id,
-					'option_value' => $new_token,
-					'option_key'   => 'user_token'
+					'option_key'   => 'user_token',
+					'option_meta'  => 'verified'
 				];
 				\lib\db\options::update_on_error($arg, $where);
-				return $new_token;
+				return true;
 			}
 		}
 		else
@@ -287,10 +308,6 @@ class token
 				'limit'         => 1
 			];
 			$tmp = \lib\db\options::get($arg);
-			if(isset($tmp[0]))
-			{
-				$tmp = $tmp[0];
-			}
 			self::$API_KEY = $tmp;
 		}
 
@@ -375,9 +392,9 @@ class token
 		];
 		$api_key = \lib\db\options::get($where);
 
-		if($api_key && isset($api_key[0]['value']))
+		if($api_key && isset($api_key['value']))
 		{
-			return $api_key[0]['value'];
+			return $api_key['value'];
 		}
 	}
 
