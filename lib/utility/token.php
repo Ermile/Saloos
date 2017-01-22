@@ -35,7 +35,7 @@ class token
 	 *
 	 * @return     string   ( description_of_the_return_value )
 	 */
-	private static function create_token($_parent, $_type, $_guest_token = false)
+	private static function create_token($_parent, $_type, $_guest_token = null)
 	{
 		if(!debug::$status)
 		{
@@ -105,7 +105,7 @@ class token
 	 *
 	 * @return     boolean  ( description_of_the_return_value )
 	 */
-	private static function check($_authorization)
+	private static function check($_authorization, $_guest = false)
 	{
 		$api_key_parent = null;
 
@@ -149,7 +149,7 @@ class token
 	/**
 	 * Creates a temporary login.
 	 */
-	public static function create_tmp_login($_authorization, $_guest_token = false)
+	public static function create_tmp_login($_authorization, $_guest_token = null)
 	{
 		$parent = self::check($_authorization);
 		return self::create_token($parent, 'tmp_login', $_guest_token);
@@ -238,7 +238,7 @@ class token
 
 			if($parent)
 			{
-				$user_token = self::create_token($parent, $_user_id);
+				$user_token = self::create_token($parent, (int) $_user_id);
 			}
 
 			return $user_token;
@@ -265,9 +265,10 @@ class token
 		{
 			$arg =
 			[
-				'option_cat'   => 'token',
-				'option_value' => $_authorization,
-				'limit'        => 1
+				'option_cat'    => 'token',
+				'option_status' => 'enable',
+				'option_value'  => $_authorization,
+				'limit'         => 1
 			];
 			$tmp = \lib\db\options::get($arg);
 			if(isset($tmp[0]))
