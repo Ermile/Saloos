@@ -35,64 +35,80 @@ class token
 	 *
 	 * @return     string   ( description_of_the_return_value )
 	 */
-	private static function create_token($_parent, $_type, $_guest_token = null)
+	private static function create_token($_args = [])
 	{
 		if(!debug::$status)
 		{
 			return null;
 		}
 
+		$default_args =
+		[
+			'parent'      => null,
+			'type'        => null,
+			'user_id'     => 0,
+			'guest_token' => null,
+			'save_to_db'  => true,
+		];
+
+		$_args = array_merge($default_args, $_args);
+
 		self::$API_KEY = null;
 		$user_id       = null;
-		$key           = null;
+		$key           = 'undefined'; // to fix db error
 
-		if($_type == 'guest')
+		if($_args['type'] == 'guest')
 		{
 			$user_id = \lib\db\users::signup_inspection();
 			$key     = 'guest';
 		}
-		elseif(is_int($_type))
-		{
-			$user_id = $_type;
-			$key     = 'user_token';
-		}
-		elseif($_type == 'tmp_login')
+		elseif($_args['type'] == 'tmp_login')
 		{
 			$user_id = null;
 			$key     = 'tmp_login';
+		}
+		elseif($_args['type'] == 'user_token')
+		{
+			$user_id = $_args['user_id'];
+			$key     = 'user_token';
 		}
 
 		$date  = date("Y-m-d H:i:s");
 		$token = "~Saloos~_!_". $user_id . $key. time(). rand(1,1000). $date;
 		$token = utility::hasher($token, null, true);
-		$meta  = [];
 
-		$meta['time'] = $date;
-
-		$guest_id = null;
-
-
-		if($_guest_token)
+		if($_args['save_to_db'])
 		{
-			$guest_token_type = self::get_type($_guest_token);
-			if($guest_token_type == 'guest')
+
+			$meta  = [];
+			$meta['time'] = $date;
+
+			$guest_id = null;
+
+
+			if($_args['guest_token'])
 			{
-				$guest_id = self::get_id($_guest_token);
+				$guest_token_type = self::get_type($_args['guest_token']);
+				if($guest_token_type == 'guest')
+				{
+					$guest_id = self::get_id($_args['guest_token']);
+				}
 			}
+
+			$meta['guest'] = $guest_id;
+
+			$args  =
+			[
+				'user_id'      => $user_id,
+				'parent_id'    => $_args['parent'],
+				'option_cat'   => 'token',
+				'option_key'   => $key,
+				'option_value' => $token,
+				'option_meta'  => json_encode($meta, JSON_UNESCAPED_UNICODE),
+			];
+
+			\lib\db\options::insert($args);
 		}
-
-		$meta['guest'] = $guest_id;
-
-		$args  =
-		[
-			'user_id'      => $user_id,
-			'parent_id'    => $_parent,
-			'option_cat'   => 'token',
-			'option_key'   => $key,
-			'option_value' => $token,
-			'option_meta'  => json_encode($meta, JSON_UNESCAPED_UNICODE),
-		];
-		\lib\db\options::insert($args);
 
 		return $token;
 	}
@@ -142,7 +158,7 @@ class token
 	public static function create_guest($_authorization)
 	{
 		$parent = self::check($_authorization);
-		return self::create_token($parent, 'guest');
+		return self::create_token(['parent' => $parent, 'type' => 'guest']);
 	}
 
 
@@ -152,7 +168,7 @@ class token
 	public static function create_tmp_login($_authorization, $_guest_token = null)
 	{
 		$parent = self::check($_authorization);
-		return self::create_token($parent, 'tmp_login', $_guest_token);
+		return self::create_token(['parent' => $parent, 'type' => 'tmp_login', 'guest_token' => $_guest_token]);
 	}
 
 
@@ -221,27 +237,27 @@ class token
 					return false;
 				}
 			}
-			$parent     = null;
-			$parent_id  = self::get_parent_id($_token);
-			$get_parent = ['id' => $parent_id, 'option_status' => 'enable'];
-			$get_parent = \lib\db\options::get($get_parent);
-
-			if(isset($get_parent[0]['value']))
-			{
-				$parent = self::check($get_parent[0]['value']);
-			}
 			else
 			{
-				debug::error(T_("Invalid token (parent)"), 'authorization', 'access');
-				return false;
-			}
+				$new_token =
+				[
+					'type'       => 'user_token',
+					'user_id'    => $_user_id,
+					'save_to_db' => false,
+				];
 
-			if($parent)
-			{
-				$user_token = self::create_token($parent, (int) $_user_id);
-			}
+				$new_token = self::create_token($new_token);
 
-			return $user_token;
+				$where = ['option_value' => $_token, 'option_status' => 'enable'];
+				$arg =
+				[
+					'user_id'      => $_user_id,
+					'option_value' => $new_token,
+					'option_key'   => 'user_token'
+				];
+				\lib\db\options::update_on_error($arg, $where);
+				return $new_token;
+			}
 		}
 		else
 		{
