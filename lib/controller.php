@@ -143,6 +143,10 @@ class controller
 		{
 			$mycallback = isset($this->api_callback)? $this->api_callback: null;
 			debug::msg('callback', $mycallback);
+			if($mycallback !== false && $mycallback !== null)
+			{
+				debug::result($mycallback);
+			}
 			$processor_arg = object(array('force_json'=>true));
 		}
 		if($this->model)

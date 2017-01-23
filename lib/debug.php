@@ -110,7 +110,7 @@ class debug
 		}
 		else
 		{
-			if($_value)
+			if($_value !== false && $_value !== null)
 			{
 				self::$msg[$_name] = $_value;
 			}
@@ -157,10 +157,6 @@ class debug
 	 */
 	private static function static_result($_result)
 	{
-		if(!is_array($_result))
-		{
-			$_result = [$_result];
-		}
 		self::$result = $_result;
 	}
 
@@ -224,17 +220,17 @@ class debug
 	{
 		$return = [];
 		if(isset(self::${$_property}))
-		{	
+		{
 			$return = self::${$_property};
 		}
-		
+
 		if(is_null($_args))
-		{	
+		{
 			return $return;
 		}
 		elseif(isset($return[$_args]))
 		{
-			return $return[$_args];	
+			return $return[$_args];
 		}
 		return null;
 	}
