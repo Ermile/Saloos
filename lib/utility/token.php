@@ -2,6 +2,7 @@
 namespace lib\utility;
 use \lib\utility;
 use \lib\debug;
+use \lib\db;
 /**
  * FUNCTION LIST:
  *
@@ -25,6 +26,26 @@ class token
 	 * @var        <type>
 	 */
 	private static $API_KEY = null;
+
+
+	/**
+	 * Creates a guest.
+	 */
+	public static function create_guest($_authorization)
+	{
+		$parent = self::check($_authorization);
+		return self::create_token(['parent' => $parent, 'type' => 'guest']);
+	}
+
+
+	/**
+	 * Creates a temporary login.
+	 */
+	public static function create_tmp_login($_authorization, $_guest_token = null)
+	{
+		$parent = self::check($_authorization);
+		return self::create_token(['parent' => $parent, 'type' => 'tmp_login', 'guest_token' => $_guest_token]);
+	}
 
 
 	/**
@@ -55,11 +76,11 @@ class token
 
 		self::$API_KEY = null;
 		$user_id       = null;
-		$key           = 'undefined'; // to fix db error
+		$key           = 'undefined'; // to fix db error: Column key can not be null;
 
 		if($_args['type'] == 'guest')
 		{
-			$user_id = \lib\db\users::signup_inspection();
+			$user_id = db\users::signup_inspection();
 			$key     = 'guest';
 		}
 		elseif($_args['type'] == 'tmp_login')
@@ -91,6 +112,7 @@ class token
 				$guest_token_type = self::get_type($_args['guest_token']);
 				if($guest_token_type == 'guest')
 				{
+					$user_id  = self::get_user_id($_args['guest_token']);
 					$guest_id = self::get_id($_args['guest_token']);
 				}
 			}
@@ -107,7 +129,7 @@ class token
 				'option_meta'  => json_encode($meta, JSON_UNESCAPED_UNICODE),
 			];
 
-			\lib\db\options::insert($args);
+			db\options::insert($args);
 		}
 
 		return $token;
@@ -125,16 +147,37 @@ class token
 		[
 			'option_value'  => $_temp_token,
 			'option_status' => 'enable',
-			'option_key'    => 'user_token',
+			'option_key'    => 'tmp_login',
 			'option_cat'    => 'token',
 			'limit'         => 1
 		];
-		$result = \lib\db\options::get($where);
+		$result = db\options::get($where);
+
 		if(isset($result['meta']) && $result['meta'] == 'verified')
 		{
-			return true;
+			if(isset($result['user_id']) && $result['user_id'] && isset($result['parent_id']) && $result['parent_id'])
+			{
+				$arg =
+				[
+					'parent'  => $result['parent_id'],
+					'user_id' => $result['user_id'],
+					'type'    => 'user_token',
+				];
+
+				unset($where['limit']);
+				db\options::update_on_error(['option_status' => 'disable'], $where);
+				return self::create_token($arg);
+			}
+			else
+			{
+				debug::error(T_("Invalid user or parent"), 'user', 'system');
+			}
 		}
-		return false;
+		else
+		{
+			debug::error(T_("Token not verified"),'temp_token', 'argument');
+		}
+		return null;
 	}
 
 
@@ -156,7 +199,7 @@ class token
 			'limit'         => 1
 		];
 
-		$get = \lib\db\options::get($where);
+		$get = db\options::get($where);
 
 		if(!$get || empty($get) || !array_key_exists('parent_id', $get))
 		{
@@ -178,26 +221,6 @@ class token
 		}
 
 		return $api_key_parent;
-	}
-
-
-	/**
-	 * Creates a guest.
-	 */
-	public static function create_guest($_authorization)
-	{
-		$parent = self::check($_authorization);
-		return self::create_token(['parent' => $parent, 'type' => 'guest']);
-	}
-
-
-	/**
-	 * Creates a temporary login.
-	 */
-	public static function create_tmp_login($_authorization, $_guest_token = null)
-	{
-		$parent = self::check($_authorization);
-		return self::create_token(['parent' => $parent, 'type' => 'tmp_login', 'guest_token' => $_guest_token]);
 	}
 
 
@@ -232,53 +255,34 @@ class token
 				return false;
 			}
 
-			$guest_token = self::get_meta_guest($_token);
+			$guest_token_id      = self::get_meta_guest($_token);
+			$guest_token_user_id = self::get_user_id($_token);
+
+			if($guest_token_user_id && $guest_token_user_id != $_user_id)
+			{
+				debug::error(T_("Invalid token"), 'authorization', 'user');
+				return false;
+			}
 
 			$user_token  = null;
 
-			if($guest_token)
+			if($guest_token_user_id && $guest_token_id)
 			{
-				$where = ['id' => $guest_token, 'option_status' => 'enable'];
-				$arg =
-				[
-					'user_id'     => $_user_id,
-					'option_key'  => 'user_token',
-					'option_meta' => 'verified'
-				];
+				$where = ['id' => $guest_token_id];
+				$arg   = ['option_status' => 'disable'];
+				db\options::update_on_error($arg, $where);
+			}
 
-				$update = \lib\db\options::update_on_error($arg, $where);
-				if((int) \lib\db::affected_rows() == 1)
-				{
-					$user_token = \lib\db\options::get($where);
-					if(isset($user_token[0]['value']))
-					{
-						$user_token = $user_token[0]['value'];
-						return true;
-					}
-					else
-					{
-						debug::error(T_("Invalid token value"), 'authorization', 'access');
-						return false;
-					}
-				}
-				else
-				{
-					debug::error(T_("Invalid token"), 'authorization', 'access');
-					return false;
-				}
-			}
-			else
-			{
-				$where = ['option_value' => $_token, 'option_status' => 'enable'];
-				$arg =
-				[
-					'user_id'      => $_user_id,
-					'option_key'   => 'user_token',
-					'option_meta'  => 'verified'
-				];
-				\lib\db\options::update_on_error($arg, $where);
-				return true;
-			}
+			$where = ['option_value' => $_token, 'option_status' => 'enable'];
+			$arg =
+			[
+				'user_id'      => $_user_id,
+				'option_key'   => 'tmp_login',
+				'option_meta'  => 'verified'
+			];
+			db\options::update_on_error($arg, $where);
+			return true;
+
 		}
 		else
 		{
@@ -307,7 +311,7 @@ class token
 				'option_value'  => $_authorization,
 				'limit'         => 1
 			];
-			$tmp = \lib\db\options::get($arg);
+			$tmp = db\options::get($arg);
 			self::$API_KEY = $tmp;
 		}
 
@@ -390,7 +394,7 @@ class token
 			'option_status' => 'enable',
 			'limit'         => 1
 		];
-		$api_key = \lib\db\options::get($where);
+		$api_key = db\options::get($where);
 
 		if($api_key && isset($api_key['value']))
 		{
@@ -420,7 +424,7 @@ class token
 			'option_key'   => 'api_key',
 			'option_value' => $api_key
 		];
-		$set = \lib\db\options::insert($arg);
+		$set = db\options::insert($arg);
 		if($set)
 		{
 			return $api_key;
@@ -442,7 +446,7 @@ class token
 			'option_key' => 'api_key'
 		];
 		$set = ['option_status' => 'disable'];
-		\lib\db\options::update_on_error($set, $where);
+		db\options::update_on_error($set, $where);
 	}
 
 
@@ -460,7 +464,7 @@ class token
 			'option_value' => $_token,
 		];
 		$set = ['option_status' => 'disable'];
-		return \lib\db\options::update_on_error($set, $where);
+		return db\options::update_on_error($set, $where);
 	}
 }
 ?>
