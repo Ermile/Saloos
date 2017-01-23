@@ -196,7 +196,7 @@ class debug
 				$debug[$key] = $value;
 			}
 		}
-		if(is_array(self::$result))
+		if(self::$result !== null && self::$result !== false)
 		{
 			$debug['result'] = self::$result;
 		}
