@@ -98,6 +98,8 @@ class token
 		$token = "~Saloos~_!_". $user_id . $key. time(). rand(1,1000). $date;
 		$token = utility::hasher($token, null, true);
 
+		$token = utility\safe::safe($token);
+
 		if($_args['save_to_db'])
 		{
 
@@ -416,7 +418,7 @@ class token
 
 		$api_key = "!~Saloos~!". $_user_id. ':_$_:'. time(). "*Ermile*". rand(2, 200);
 		$api_key = utility::hasher($api_key, null, true);
-
+		$api_key = utility\safe::safe($api_key);
 		$arg =
 		[
 			'user_id'      => $_user_id,
