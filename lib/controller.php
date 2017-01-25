@@ -653,7 +653,9 @@ class controller
 
 			// full url except get parameter with http[s]
 			case 'full':
-				return $myprefix. router::get_domain(). '/'. router::get_url();
+				$url_language_string = \lib\define::get_current_language_string();
+				$myURL = $myprefix. router::get_root_domain(). $url_language_string. '/'. router::get_url();
+				return rtrim($myURL, '/');
 				break;
 
 			// return module info
