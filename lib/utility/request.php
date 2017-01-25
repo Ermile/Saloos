@@ -10,7 +10,7 @@ class request
 	{
 		if(!isset($_options['method']))
 		{
-			if(isset($_SERVER['CONTENT_TYPE']) && $_SERVER['CONTENT_TYPE'] == 'application/json')
+			if(empty($_GET) && isset($_SERVER['CONTENT_TYPE']) && $_SERVER['CONTENT_TYPE'] == 'application/json')
 			{
 				$this->method 		= 'input_json';
 			}
@@ -71,7 +71,7 @@ class request
 		{
 			return $request;
 		}
-		
+
 		foreach ($args as $key => $value) {
 			if(is_object($request))
 			{
