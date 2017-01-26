@@ -83,6 +83,12 @@ class error
 		self::make($str, $class, INTERNAL_SERVER_ERROR);
 	}
 
+	public static function method($str=null)
+	{
+		$class = debug_backtrace(true);
+		self::make($str, $class, METHOD_NOT_ALLOWED);
+	}
+
 
 	public static function make($STRING, $obj, $STATUS)
 	{
@@ -94,7 +100,6 @@ class error
 			\lib\debug::title($HTTP_ERROR);
 			\lib\debug::error($STRING, $STATUS, "HTTP");
 			echo \lib\debug::compile(true);
-			
 		}
 		else
 		{

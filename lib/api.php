@@ -10,26 +10,9 @@ class api
 		$this->controller = $controller_class;
 	}
 
-	public function get($model_api_name, $view_api_name){
-		// $this->controller->route_check_true = true;
-		return call_user_func_array(array($this, 'add_api'), array('get', $model_api_name, $view_api_name));
-	}
-
-	public function post($model_api_name, $view_api_name){
-		return call_user_func_array(array($this, 'add_api'), array('post', $model_api_name, $view_api_name));
-	}
-
-	public function put($model_api_name, $view_api_name){
-		return call_user_func_array(array($this, 'add_api'), array('put', $model_api_name, $view_api_name));
-
-	}
-
-	public function delete($model_api_name, $view_api_name){
-		return call_user_func_array(array($this, 'add_api'), array('delete', $model_api_name, $view_api_name));
-	}
-
-	private function add_api($name, $model_api_name, $view_api_name){
-		$api_config = saloos::lib('api')->config($this, $name, $model_api_name, $view_api_name);
+	public function __call($_name, $_args)
+	{
+		$api_config = saloos::lib('api')->config($this, $_name, $_args[0], $_args[1]);
 		return $api_config;
 	}
 }

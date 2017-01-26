@@ -384,7 +384,7 @@ class controller
 	 */
 	public function __call($_name, $_args)
 	{
-		if(preg_grep("/^$_name$/", array('get', 'post', 'put', 'delete')))
+		if(preg_grep("/^$_name$/", array('get', 'post', 'put', 'delete', 'patch', 'link', 'unlink')))
 		{
 			array_unshift($_args, $_name);
 			return call_user_func_array(array($this, 'check_api'), $_args);
