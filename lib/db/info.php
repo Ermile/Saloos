@@ -246,7 +246,7 @@ trait info
 		}
 
 
-		if(version_compare($version, $_version, $_condition))
+		if(version_compare($_version, $version, $_condition))
 		{
 			return true;
 		}
