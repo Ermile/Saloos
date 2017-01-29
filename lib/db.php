@@ -83,7 +83,9 @@ class db
 		{
 			// no result exist
 			// save mysql error
-			self::log("MYSQL ERROR ". mysqli_error(self::$link));
+			$temp_error = "#". date("Y-m-d H:i:s") . "\n$_qry\nMYSQL ERROR ". mysqli_error(self::$link);
+			self::log($temp_error, $qry_exec_time, 'error.sql');
+
 			if(self::$debug_error)
 			{
 				\lib\debug::error(mysqli_error(self::$link),false, 'sql');
