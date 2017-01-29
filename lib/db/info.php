@@ -245,6 +245,7 @@ trait info
 			$version = self::db_version(true, true);
 		}
 
+		return version_compare($version, $_version, $_condition);
 
 		if(version_compare($_version, $version, $_condition))
 		{
