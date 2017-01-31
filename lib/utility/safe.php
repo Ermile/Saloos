@@ -13,6 +13,15 @@ class safe
 		{
 			return self::walk($_string);
 		}
+		if(
+			gettype($string) == 'integer' ||
+			gettype($string) == 'double' ||
+			gettype($string) == 'boolean' ||
+			$string === null ||
+			)
+		{
+			return $string;
+		}
 		$string = htmlspecialchars($_string, ENT_QUOTES | ENT_HTML5);
 		$string = addcslashes($string, '\\');
 		return $string;
