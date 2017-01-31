@@ -14,13 +14,13 @@ class safe
 			return self::walk($_string);
 		}
 		if(
-			gettype($string) == 'integer' ||
-			gettype($string) == 'double' ||
-			gettype($string) == 'boolean' ||
-			$string === null
+			gettype($_string) == 'integer' ||
+			gettype($_string) == 'double' ||
+			gettype($_string) == 'boolean' ||
+			$_string === null
 			)
 		{
-			return $string;
+			return $_string;
 		}
 		$string = htmlspecialchars($_string, ENT_QUOTES | ENT_HTML5);
 		$string = addcslashes($string, '\\');
