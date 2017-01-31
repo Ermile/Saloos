@@ -198,7 +198,7 @@ trait install
 				{
 					if($qry_list)
 					{
-						if(!self::query($qry_list, $_db_name, true))
+						if(!self::query($qry_list, $_db_name, ['multi_query' => true]))
 						{
 							$has_error = true;
 						}

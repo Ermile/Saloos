@@ -23,22 +23,24 @@ class db
 	 * @param  [type] $_qry [description]
 	 * @return [type]       [description]
 	 */
-	public static function query($_qry, $_db_name = true, $_multi_query = false)
+	public static function query($_qry, $_db_name = true, $_options = [])
 	{
-		$args = [
-				'force_error' => false
-				];
-		if (is_array($_qry) && isset($_qry['query']))
-		{
-			$args = array_merge($args, func_get_arg(0));
-			$_qry = $args['query'];
-		}
+		$default_options =
+		[
+			// set mysql error in debug error
+			'debug_error'     => self::$debug_error,
+			// return false when debug status is 0
+			'resume_on_error' => false,
+			// run mysqli_multi_query
+			'multi_query'     => false,
+		];
+		$_options = array_merge($default_options, $_options);
 
 		// on default system connect to default db
 		$different_db = false;
 
 		// check debug status
-		if(!\lib\debug::$status && !$args['force_error'])
+		if(!\lib\debug::$status && !$_options['resume_on_error'])
 		{
 			return false;
 		}
@@ -71,7 +73,7 @@ class db
 		/**
 		 * send the query to mysql engine
 		 */
-		if($_multi_query === true)
+		if($_options['multi_query'] === true)
 		{
 			$result = mysqli_multi_query(self::$link, $_qry);
 		}
@@ -95,7 +97,7 @@ class db
 			$temp_error = "#". date("Y-m-d H:i:s") . "\n$_qry\nMYSQL ERROR ". mysqli_error(self::$link);
 			self::log($temp_error, $qry_exec_time, 'error.sql');
 
-			if(self::$debug_error)
+			if($_options['debug_error'])
 			{
 				\lib\debug::error(mysqli_error(self::$link),false, 'sql');
 			}
