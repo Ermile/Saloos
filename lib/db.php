@@ -25,11 +25,24 @@ class db
 	 */
 	public static function query($_qry, $_db_name = true, $_multi_query = false)
 	{
+		$args = [
+				'db_name' => true,
+				'multi_query' => false,
+				'force_error' => false
+				];
+		if (is_array($_qry) && func_num_args() == 1)
+		{
+			$args = array_merge($args, func_get_arg(0));
+			$_qry = $args['query'];
+			$_db_name = $args['db_name'];
+			$_multi_query = $args['multi_query'];
+		}
+
 		// on default system connect to default db
 		$different_db = false;
 
 		// check debug status
-		if(!\lib\debug::$status)
+		if(!\lib\debug::$status && !$args['force_error'])
 		{
 			return false;
 		}
