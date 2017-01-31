@@ -17,7 +17,7 @@ class safe
 			gettype($string) == 'integer' ||
 			gettype($string) == 'double' ||
 			gettype($string) == 'boolean' ||
-			$string === null ||
+			$string === null
 			)
 		{
 			return $string;
