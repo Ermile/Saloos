@@ -160,6 +160,22 @@ class utility
 
 
 	/**
+	 * Sets the request array.
+	 *
+	 * @param      array  $_array  The array
+	 */
+	public static function set_request_array($_array)
+	{
+		$_array =
+		[
+			'method'  => 'array',
+			'request' => $_array,
+		];
+		self::$REQUEST = new utility\request($_array);
+	}
+
+
+	/**
 	 * filter cookie and safe it
 	 * @param  string $_name unsafe cookie key
 	 * @return string        safe cookie
