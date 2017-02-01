@@ -320,7 +320,7 @@ trait twigAddons
 				$baseURL    = $this->data->url->base;
 				if(\lib\router::get_repository_name() === 'content')
 				{
-					$result = '<a href="'. $baseURL. '" tabindex="-1" '. $direct.'><i class="fa fa-home"></i> '.T_('Homepage').'</a>';
+					$result = '<a href="'. $baseURL. '" tabindex="-1" '. $direct.'><span class="fa fa-home"></span> '.T_('Homepage').'</a>';
 				}
 				else
 				{
@@ -335,7 +335,7 @@ trait twigAddons
 					{
 						$myContentName = 'Control Panel';
 					}
-					$result = '<a href="'. $baseURL. '" tabindex="-1" '. $direct.'><i class="fa fa-home"></i> '.T_('Home').'</a>';
+					$result = '<a href="'. $baseURL. '" tabindex="-1" '. $direct.'><span class="fa fa-home"></span> '.T_('Home').'</a>';
 					$result .= '<a href="'. $baseURL.'/'. $myContent. '" tabindex="-1" '. $direct.'>'.T_($myContentName).'</a>';
 				}
 
