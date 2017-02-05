@@ -142,6 +142,18 @@ trait twigAddons
 
 
 	/**
+	 * twig custom filter for convert date to jalai with custom format like php date func format
+	 */
+	public function twig_filter_fitNumber()
+	{
+		return new \Twig_SimpleFilter('fitNumber', function ($_number)
+		{
+			return \lib\utility\human::number($_number, $this->data->site['currentlang']);
+		});
+	}
+
+
+	/**
 	 * [twig_filter_exist description]
 	 * @return [type] [description]
 	 */
