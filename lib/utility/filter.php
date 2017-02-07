@@ -20,15 +20,27 @@ class filter
 
 		// if user enter plus in start of number delete it
 		if(substr($mymobile, 0, 1) === '+')
+		{
 			$mymobile = substr($mymobile, 1);
+		}
+
+		// if user enter 00 in start of number delete it
+		if(substr($mymobile, 0, 2) === '00')
+		{
+			$mymobile = substr($mymobile, 2);
+		}
 
 		// if start with zero then remove it
 		if(strlen($mymobile) === 11 && substr($mymobile, 0, 2) === '09')
+		{
 			$mymobile = substr($mymobile, 1);
+		}
 
 		// if user type 10 number like 935 726 9759 and number start with 9 append 98 at first
 		if(strlen($mymobile) === 10 && substr($mymobile, 0, 1) === '9')
+		{
 			$mymobile = '98'.$mymobile;
+		}
 
 		return $mymobile;
 	}
