@@ -24,12 +24,25 @@ trait sql
 	public static function duplicate($_md5)
 	{
 
-		$qry_count = "SELECT posts.id AS 'id' FROM posts WHERE post_slug = '$_md5' LIMIT 1";
-		$qry_count = \lib\db::get($qry_count, 'id', true);
+		$qry_count = "SELECT * FROM posts WHERE post_slug = '$_md5' LIMIT 1";
+		$qry_count = \lib\db::get($qry_count, null, true);
 		if($qry_count || !empty($qry_count))
 		{
-			$id = (int) $qry_count;
-			\lib\storage::set_upload(["id" =>  $id]);
+			$meta = [];
+			if(isset($qry_count['post_meta']) && substr($qry_count['post_meta'], 0, 1) == '{')
+			{
+				$meta = json_decode($qry_count['post_meta'], true);
+			}
+			if(isset($meta['url']))
+			{
+				\lib\storage::set_upload(["url" =>  $meta['url']]);
+			}
+
+			if(isset($qry_count['id']))
+			{
+				$id = (int) $qry_count['id'];
+				\lib\storage::set_upload(["id" =>  $id]);
+			}
 			return true;
 		}
 		return false;

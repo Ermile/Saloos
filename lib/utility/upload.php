@@ -183,6 +183,7 @@ class upload
 
 		if(move_uploaded_file(self::_FILES(self::$fieldName)['tmp_name'], $_url))
 		{
+			\lib\storage::set_upload(['url' => $_url]);
 			return true;
 		}
 		else
@@ -518,7 +519,7 @@ class upload
 		];
 
 		$post_new_id = \lib\db\posts::insert($insert_attachment);
-		\lib\storage::set_upload(["id" => \lib\db::insert_id()]);
+		\lib\storage::set_upload(["id" => \lib\db::insert_id(), 'url' => \lib\storage::get_upload('url')]);
 		return \lib\debug::true("File successful uploaded");
 	}
 
