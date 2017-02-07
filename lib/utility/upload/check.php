@@ -39,13 +39,20 @@ trait check
 			}
 
 			$fileInfo           = pathinfo(self::_FILES(self::$fieldName)['name']);
-			self::$fileName     = $fileInfo['filename'];
+			if(isset($fileInfo['filename']))
+			{
+				self::$fileName     = $fileInfo['filename'];
+			}
+			if(isset($fileInfo['extension']))
+			{
+				self::$fileExt      = strtolower($fileInfo['extension']);
+			}
 
-			self::$fileExt      = strtolower($fileInfo['extension']);
 			$extCheck           = self::extCheck(self::$fileExt);
-			self::$fileType     = $extCheck['type'];
-			self::$fileMime     = $extCheck['mime'];
-			self::$fileDisallow = $extCheck['disallow'];
+
+			self::$fileType     = isset($extCheck['type']) ? $extCheck['type'] : null;
+			self::$fileMime     = isset($extCheck['mime']) ? $extCheck['mime'] : null;
+			self::$fileDisallow = isset($extCheck['disallow']) ? $extCheck['disallow'] : null;
 
 			if(!$_maxSize)
 			{

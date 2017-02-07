@@ -29,10 +29,7 @@ trait sql
 		if($qry_count || !empty($qry_count))
 		{
 			$id = (int) $qry_count;
-			// $link = '<a target="_blank" href=/cp/attachments/edit='. $id. '>'.
-			// T_('Duplicate - File exist').'</a>';
-			// \lib\debug::msg("link", $link);
-			\lib\debug::msg("result", $id);
+			\lib\storage::set_upload(["id" =>  $id]);
 			return true;
 		}
 		return false;

@@ -232,10 +232,13 @@ class upload
 
 			if(\lib\utility\file::move(self::$upload_from_path, $new_name, true))
 			{
-				\lib\debug::msg("result", $file_name);
-				\lib\debug::msg("file_name", $master_name);
-				\lib\debug::msg("link", $link);
-				\lib\debug::msg("new_name", $new_name);
+				\lib\storage::set_upload([
+					'result'    => $file_name,
+					'file_name' => $master_name,
+					'new_name'  => $new_name,
+					'link'      => $link,
+					]);
+
 				return \lib\debug::true(T_("file successful uploaded"));
 			}
 			else
@@ -422,7 +425,7 @@ class upload
 
 		if($duplicate)
 		{
-			// in duplicate mode debug 
+			// in duplicate mode debug
 			return \lib\debug::true(T_("File successful uploaded"));
 		}
 
@@ -515,7 +518,7 @@ class upload
 		];
 
 		$post_new_id = \lib\db\posts::insert($insert_attachment);
-		\lib\debug::msg("result", \lib\db::insert_id());
+		\lib\storage::set_upload(["id" => \lib\db::insert_id()]);
 		return \lib\debug::true("File successful uploaded");
 	}
 
