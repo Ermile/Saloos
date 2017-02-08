@@ -19,19 +19,17 @@ class filter
 		$mymobile = str_replace(' ', '', $_mobile);
 
 		// if user enter plus in start of number delete it
-		if(substr($mymobile, 0, 1) === '+')
+		if(substr($mymobile, 0, 1) === '+' && strlen($mymobile) === 13)
 		{
 			$mymobile = substr($mymobile, 1);
 		}
-
 		// if user enter 00 in start of number delete it
-		if(substr($mymobile, 0, 2) === '00')
+		elseif(substr($mymobile, 0, 2) === '00' && strlen($mymobile) === 14)
 		{
 			$mymobile = substr($mymobile, 2);
 		}
-
 		// if start with zero then remove it
-		if(strlen($mymobile) === 11 && substr($mymobile, 0, 2) === '09')
+		elseif(strlen($mymobile) === 11 && substr($mymobile, 0, 2) === '09')
 		{
 			$mymobile = substr($mymobile, 1);
 		}
@@ -40,6 +38,11 @@ class filter
 		if(strlen($mymobile) === 10 && substr($mymobile, 0, 1) === '9')
 		{
 			$mymobile = '98'.$mymobile;
+		}
+		// Juest support Iranain mobile
+		elseif(strlen($mymobile) !== 10)
+		{
+			$mymobile = null;
 		}
 
 		return $mymobile;
