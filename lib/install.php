@@ -50,7 +50,7 @@
 ?>
   <form method="post">
    <input type="text" name="username" placeholder='Username of db admin'>
-   <input type="password" name="password" placeholder='Password'>
+   <input type="password" name="password" placeholder='Password' autocomplete="new-password">
    <input type="submit" value="Install">
   </form>
  </div>
