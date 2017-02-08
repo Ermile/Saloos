@@ -32,11 +32,10 @@ class filter
 		}
 
 		// if user enter 00 in start of number delete it
-		if(!is_int($mymobile))
+		if(!ctype_digit($mymobile))
 		{
 			return false;
 		}
-
 		// check max and min number
 		if(strlen($mymobile) > 15 || strlen($mymobile) < 8)
 		{
