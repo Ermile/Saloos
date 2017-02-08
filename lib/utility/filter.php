@@ -19,30 +19,42 @@ class filter
 		$mymobile = str_replace(' ', '', $_mobile);
 
 		// if user enter plus in start of number delete it
-		if(substr($mymobile, 0, 1) === '+' && strlen($mymobile) === 13)
+		if(substr($mymobile, 0, 1) === '+')
 		{
 			$mymobile = substr($mymobile, 1);
 		}
-		// if user enter 00 in start of number delete it
-		elseif(substr($mymobile, 0, 2) === '00' && strlen($mymobile) === 14)
+		elseif(substr($mymobile, 0, 2) === '00')
 		{
 			$mymobile = substr($mymobile, 2);
+		}elseif(substr($mymobile, 0, 1) === '0')
+		{
+			$mymobile = substr($mymobile, 1);
 		}
+
+		// if user enter 00 in start of number delete it
+		if(!is_int($mymobile))
+		{
+			return false;
+		}
+
+		// check max and min number
+		if(strlen($mymobile) > 15 || strlen($mymobile) < 8)
+		{
+			return false;
+		}
+
 		// if start with zero then remove it
-		elseif(strlen($mymobile) === 11 && substr($mymobile, 0, 2) === '09')
+		elseif(substr($mymobile, 0, 1) === '0')
 		{
 			$mymobile = substr($mymobile, 1);
 		}
 
 		// if user type 10 number like 935 726 9759 and number start with 9 append 98 at first
+		// Juest support Iranain mobile
+
 		if(strlen($mymobile) === 10 && substr($mymobile, 0, 1) === '9')
 		{
 			$mymobile = '98'.$mymobile;
-		}
-		// Juest support Iranain mobile
-		elseif(strlen($mymobile) !== 10)
-		{
-			$mymobile = null;
 		}
 
 		return $mymobile;
