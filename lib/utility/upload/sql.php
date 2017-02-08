@@ -29,20 +29,23 @@ trait sql
 		if($qry_count || !empty($qry_count))
 		{
 			$meta = [];
+			$url  = null;
+			$id   = null;
+
 			if(isset($qry_count['post_meta']) && substr($qry_count['post_meta'], 0, 1) == '{')
 			{
 				$meta = json_decode($qry_count['post_meta'], true);
 			}
 			if(isset($meta['url']))
 			{
-				\lib\storage::set_upload(["url" =>  $meta['url']]);
+				$url = $meta['url'];
 			}
 
 			if(isset($qry_count['id']))
 			{
 				$id = (int) $qry_count['id'];
-				\lib\storage::set_upload(["id" =>  $id]);
 			}
+			\lib\storage::set_upload(["id" =>  $id, 'url' => $url]);
 			return true;
 		}
 		return false;

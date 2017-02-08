@@ -237,6 +237,7 @@ class upload
 					'result'    => $file_name,
 					'file_name' => $master_name,
 					'new_name'  => $new_name,
+					'url'       => $new_name,
 					'link'      => $link,
 					]);
 
@@ -519,7 +520,18 @@ class upload
 		];
 
 		$post_new_id = \lib\db\posts::insert($insert_attachment);
-		\lib\storage::set_upload(["id" => \lib\db::insert_id(), 'url' => \lib\storage::get_upload('url')]);
+
+		$url = \lib\storage::get_upload();
+
+		if(isset($url['url']))
+		{
+			$url = $url['url'];
+		}
+		else
+		{
+			$url = null;
+		}
+		\lib\storage::set_upload(["id" => \lib\db::insert_id(), 'url' => $url]);
 		return \lib\debug::true("File successful uploaded");
 	}
 
