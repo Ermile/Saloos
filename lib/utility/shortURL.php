@@ -77,7 +77,7 @@ class shortURL
 	 *
 	 * @return     boolean  True if short url, False otherwise.
 	 */
-	public static function is_shortURL($_string)
+	public static function is($_string)
 	{
 		return preg_match("/^[".self::ALPHABET."]+$/", $_string);
 	}
