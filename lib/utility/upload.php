@@ -420,7 +420,7 @@ class upload
 		}
 
 		$file_id       = $qry_count % $_options['folder_size'] + 1;
-		$url_full      = "$folder_loc". DIRECTORY_SEPARATOR. "$file_id-" . self::$fileFullName;
+		$url_full      = "$folder_loc/$file_id-" . self::$fileFullName;
 
 		// 3. Check for record exist in db or not
 		$duplicate = self::duplicate(self::$fileMd5);
