@@ -68,4 +68,17 @@ class shortURL
 		}
 		return $num;
 	}
+
+
+	/**
+	 * Determines if short url.
+	 *
+	 * @param      <type>   $_string  The string
+	 *
+	 * @return     boolean  True if short url, False otherwise.
+	 */
+	public static function is_shortURL($_string)
+	{
+		return preg_match("/^[".self::ALPHABET."]+$/", $_string);
+	}
 }
