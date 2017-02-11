@@ -19,7 +19,8 @@ class shortURL
 	 * Source: https://github.com/delight-im/ShortURL (Apache License 2.0)
 	 */
 
-	const ALPHABET = '23456789bcdfghjkmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ';
+	// const ALPHABET = '23456789bcdfghjkmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ';
+	const ALPHABET = SHORTURL_ALPHABET;
 
 
 	/**

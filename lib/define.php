@@ -10,7 +10,18 @@ class define
 	{
 		// check php version to upper than 5.6
 		if(version_compare(phpversion(), '5.6', '<'))
+		{
 			die("<p>For using Saloos you must update php version to 5.6 or higher!</p>");
+		}
+
+		/**
+		 * define short url alphabet
+		 */
+		if(!defined('SHORTURL_ALPHABET'))
+		{
+			define('SHORTURL_ALPHABET', '23456789bcdfghjkmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ');
+		}
+
 
 		/**
 		 * If DEBUG is TRUE you can see the full error description, If set to FALSE show userfriendly messages

@@ -543,6 +543,7 @@ trait twigAddons
 		{
 			$similar_post = [];
 			$args = func_get_args();
+
 			if(isset($args[0]))
 			{
 				$args = $args[0];
@@ -556,16 +557,28 @@ trait twigAddons
 				}
 			}
 
+			$options = [];
+
 			// count of show similar
-			$limit = 5;
-			if(isset($args['limit']))
+			$options['limit'] = 5;
+			if(isset($args['limit']) && is_numeric($args['limit']))
 			{
-				$limit = $args['limit'];
+				$options['limit'] = $args['limit'];
+			}
+
+			if(isset($args['term_type']) && is_string($args['term_type']))
+			{
+				$options['term_type'] = $args['term_type'];
+			}
+
+			if(isset($args['termusage_foreign']) && is_string($args['termusage_foreign']))
+			{
+				$options['termusage_foreign'] = $args['termusage_foreign'];
 			}
 
 			if(isset($args['post_id']))
 			{
-				$similar_post = \lib\db\tags::get_post_similar($args['post_id'], $limit);
+				$similar_post = \lib\db\tags::get_post_similar($args['post_id'], $options);
 			}
 
 			if(isset($args['html']))
