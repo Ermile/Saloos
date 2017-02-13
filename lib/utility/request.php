@@ -10,7 +10,7 @@ class request
 	{
 		if(!isset($_options['method']))
 		{
-			if(empty($_GET) && isset($_SERVER['CONTENT_TYPE']) && $_SERVER['CONTENT_TYPE'] == 'application/json')
+			if(isset($_SERVER['CONTENT_TYPE']) && $_SERVER['CONTENT_TYPE'] == 'application/json')
 			{
 				$this->method 		= 'input_json';
 			}
@@ -32,6 +32,7 @@ class request
 		{
 			$this->request 		= $_options['request'];
 		}
+
 		$this->method = strtolower($this->method);
 
 		switch ($this->method) {
