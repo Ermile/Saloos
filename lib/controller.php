@@ -625,7 +625,14 @@ class controller
 
 			// like raw plus http[s]:// domain name except subdomain like 'http://ermile.com/'
 			case 'root':
-				return $myprefix. router::get_root_domain();
+				$myurl = $myprefix;
+				if(router::get_sub_domain() && defined("subDevelop"))
+				{
+					$myurl .= constant("subDevelop").".";
+				}
+				$myurl .= router::get_root_domain();
+
+				return $myurl;
 				break;
 
 			// use main protocol and give it from config file if not exist use root url
