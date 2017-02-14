@@ -626,7 +626,7 @@ class controller
 			// like raw plus http[s]:// domain name except subdomain like 'http://ermile.com/'
 			case 'root':
 				$myurl = $myprefix;
-				if(router::get_sub_domain() === defined("subDevelop"))
+				if(defined("subDevelop") && router::get_sub_domain() === constant("subDevelop"))
 				{
 					$myurl .= constant("subDevelop").".";
 				}
