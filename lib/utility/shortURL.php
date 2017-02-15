@@ -59,6 +59,12 @@ class shortURL
 		{
 			$_alphabet = self::ALPHABET;
 		}
+
+		if(!self::is($_str, $_alphabet))
+		{
+			return false;
+		}
+
 		$lenght = strlen($_alphabet);
 
 		$num    = 0;
@@ -78,8 +84,12 @@ class shortURL
 	 *
 	 * @return     boolean  True if short url, False otherwise.
 	 */
-	public static function is($_string)
+	public static function is($_string, $_alphabet = null)
 	{
-		return preg_match("/^[".self::ALPHABET."]+$/", $_string);
+		if($_alphabet == null)
+		{
+			$_alphabet = self::ALPHABET;
+		}
+		return preg_match("/^[". $_alphabet. "]+$/", $_string);
 	}
 }
