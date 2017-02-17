@@ -385,7 +385,7 @@ class utility
     	}
 
         // if need persian use it else use default date function
-    	if($_type === true || $_type === 'fa')
+    	if($_type === true || $_type === 'fa' || $_type === 'fa_IR')
     	{
     		$result = \lib\utility\jdate::date($_format, $_stamp, $_persianChar);
     	}
