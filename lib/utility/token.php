@@ -21,7 +21,7 @@ use \lib\db;
 class token
 {
 	/**
-	 * the api key
+	 * the api key or token
 	 *
 	 * @var        <type>
 	 */
@@ -29,11 +29,19 @@ class token
 
 
 	/**
+	 * the parent api key
+	 *
+	 * @var        <type>
+	 */
+	public static $PARENT  = null;
+
+
+	/**
 	 * Creates a guest.
 	 */
 	public static function create_guest($_authorization)
 	{
-		$parent = self::check($_authorization);
+		$parent = self::check($_authorization, 'api_key');
 		return self::create_token(['parent' => $parent, 'type' => 'guest']);
 	}
 
@@ -43,7 +51,7 @@ class token
 	 */
 	public static function create_tmp_login($_authorization, $_guest_token = null)
 	{
-		$parent = self::check($_authorization);
+		$parent = self::check($_authorization, 'api_key');
 		return self::create_token(['parent' => $parent, 'type' => 'tmp_login', 'guest_token' => $_guest_token]);
 	}
 
@@ -190,13 +198,14 @@ class token
 	 *
 	 * @return     boolean  ( description_of_the_return_value )
 	 */
-	private static function check($_authorization, $_guest = false)
+	public static function check($_authorization, $_type = 'token')
 	{
 		$api_key_parent = null;
 
 		$where =
 		[
 			'option_value'  => $_authorization,
+			'option_cat'    => 'token',
 			'option_status' => 'enable',
 			'limit'         => 1
 		];
@@ -211,10 +220,36 @@ class token
 
 		$parent_id = $get['parent_id'];
 
-		if(!is_null($parent_id))
+		switch ($_type)
 		{
-			debug::error(T_("authorization faild (this authorization is not a api key)"), 'authorization', 'access');
-			return false;
+			case 'token':
+				if(is_null($parent_id))
+				{
+					debug::error(T_("authorization faild (this authorization is not a valid token)"), 'authorization', 'access');
+					return false;
+				}
+
+				self::get($_authorization);
+
+				if(!self::$PARENT)
+				{
+					return debug::error(T_("The api key is expired"), 'authorization', 'access');
+				}
+
+				break;
+
+			case 'api_key':
+				if(!is_null($parent_id))
+				{
+					debug::error(T_("authorization faild (this authorization is not a api key)"), 'authorization', 'access');
+					return false;
+				}
+				break;
+
+			default:
+				debug::error(T_("Invalid type"), 'authorization', 'system');
+				return false;
+				break;
 		}
 
 		if(isset($get['id']))
@@ -234,7 +269,15 @@ class token
 	 */
 	public static function verify($_token, $_user_id)
 	{
+		self::check($_token, 'token');
+
+		if(!debug::$status)
+		{
+			return;
+		}
+
 		self::$API_KEY = null;
+
 		$type = self::get_type($_token);
 		if($type == 'tmp_login')
 		{
@@ -372,6 +415,17 @@ class token
 			if($field == 'type')
 			{
 				$field = 'key';
+			}
+
+			if(isset(self::$API_KEY['parent_id']))
+			{
+				$arg =
+				[
+					'id'            => self::$API_KEY['parent_id'],
+					'option_status' => 'enable',
+					'limit'         => 1
+				];
+				self::$PARENT = db\options::get($arg);
 			}
 
 			if(isset(self::$API_KEY[$field]))
