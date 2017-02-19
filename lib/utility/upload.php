@@ -30,6 +30,12 @@ class upload
 		'jar', 'txt', 	'css', 	'js', 	'htm', 'html',
 		'swf', 'xml', 	'xlsx', 'pptx'
 	];
+	/**
+	 * default set the file name as md5
+	 *
+	 * @var        boolean
+	 */
+	public static $md5Name = true;
 
 
 	/**
@@ -329,7 +335,6 @@ class upload
 			'save_as_tmp'   => false,
 			// the tmp_path
 			'tmp_path'      => implode(DIRECTORY_SEPARATOR, ['files','tmp']). DIRECTORY_SEPARATOR,
-
 		];
 
 		$_options = array_merge($default_options, $_options);
@@ -420,7 +425,17 @@ class upload
 		}
 
 		$file_id       = $qry_count % $_options['folder_size'] + 1;
-		$url_full      = "$folder_loc/$file_id-" . self::$fileFullName;
+
+		if(self::$md5Name)
+		{
+			$new_file_name = md5(self::$fileFullName). '.'. self::$fileExt;
+		}
+		else
+		{
+			$new_file_name = self::$fileFullName;
+		}
+
+		$url_full      = "$folder_loc/$file_id-" . $new_file_name;
 
 		// 3. Check for record exist in db or not
 		$duplicate = self::duplicate(self::$fileMd5);
