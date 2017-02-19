@@ -117,6 +117,7 @@ class view
 		$this->add_twig_function('comments');
 		$this->add_twig_function('similar_post');
 		$this->add_twig_function('attachment');
+		$this->add_twig_function('post_search');
 
 		require_once core.'Twig/lib/Twig/Autoloader.php';
 		\Twig_Autoloader::register();

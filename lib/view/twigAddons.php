@@ -537,6 +537,27 @@ trait twigAddons
 	 * [twig_function_posts description]
 	 * @return [type] [description]
 	 */
+	public function twig_function_post_search()
+	{
+		return new \Twig_SimpleFunction('post_search', function()
+		{
+			$post_search = [];
+			$args = func_get_args();
+			if(isset($args[0]))
+			{
+				$args = $args[0];
+			}
+			$post_search = \lib\db\posts::search(null, $args);
+			return $post_search;
+
+		});
+	}
+
+
+	/**
+	 * [twig_function_posts description]
+	 * @return [type] [description]
+	 */
 	public function twig_function_similar_post()
 	{
 		return new \Twig_SimpleFunction('similar_post', function()
