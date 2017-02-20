@@ -6,7 +6,7 @@ class human
 {
 	/**
 	 * this library allow to change values to human type!
-	 * v1.3
+	 * v1.4
 	 */
 
 
@@ -16,7 +16,7 @@ class human
 	 * @param  string $_from [description]
 	 * @return [type]        [description]
 	 */
-	public static function time($_time, $_resultType = 'text', $_from = 'min')
+	public static function time($_time, $_resultType = 'text', $_lang = 'en', $_from = 'min')
 	{
 		// change from sec to min
 		if($_from === 'sec')
@@ -31,7 +31,11 @@ class human
 		switch ($_resultType)
 		{
 			case 'number':
-				$result = $hour. ':'. $min;
+				if($hour)
+				{
+					$result = $hour. ':';
+				}
+				$result .= $min;
 				break;
 
 			case 'text':
@@ -56,7 +60,7 @@ class human
 		}
 
 		// change numbers to selected language
-		switch ($_resultType)
+		switch ($_lang)
 		{
 			case 'persian':
 			case 'fa':
@@ -64,7 +68,7 @@ class human
 			case 'en':
 			case 'arabic':
 			case 'ar':
-				$result = self::number($result, $_resultType);
+				$result = self::number($result, $_lang);
 				break;
 
 			default:
