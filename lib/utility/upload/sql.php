@@ -41,11 +41,17 @@ trait sql
 				$url = $meta['url'];
 			}
 
+			$size = null;
+			if(isset($meta['size']))
+			{
+				$size = $meta['size'];
+			}
+
 			if(isset($qry_count['id']))
 			{
 				$id = (int) $qry_count['id'];
 			}
-			\lib\storage::set_upload(["id" =>  $id, 'url' => $url]);
+			\lib\storage::set_upload(["id" =>  $id, 'url' => $url, 'size' => $size]);
 			return true;
 		}
 		return false;

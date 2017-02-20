@@ -335,6 +335,9 @@ class upload
 			'save_as_tmp'   => false,
 			// the tmp_path
 			'tmp_path'      => implode(DIRECTORY_SEPARATOR, ['files','tmp']). DIRECTORY_SEPARATOR,
+			// use max size remaining
+			'user_size_remaining'  => self::MAX_SIZE,
+
 		];
 
 		$_options = array_merge($default_options, $_options);
@@ -402,6 +405,11 @@ class upload
 		if($invalid)
 		{
 			return \lib\debug::error($invalid, false, 'upload');
+		}
+
+		if(self::$fileSize > $_options['user_size_remaining'])
+		{
+			return \lib\debug::error(T_("This file larger than your space in service"), 'file', 'size');
 		}
 
 		// save file as tmp in tmp_path
@@ -546,7 +554,7 @@ class upload
 		{
 			$url = null;
 		}
-		\lib\storage::set_upload(["id" => \lib\db::insert_id(), 'url' => $url]);
+		\lib\storage::set_upload(["id" => \lib\db::insert_id(), 'url' => $url, 'size' => self::$fileSize]);
 		return \lib\debug::true("File successful uploaded");
 	}
 
