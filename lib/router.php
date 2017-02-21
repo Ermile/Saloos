@@ -193,7 +193,7 @@ class router
 		$mysub = router::get_sub_domain();
 
 		// if user set subDevelop use it and remove from repo check
-		if(defined('subDevelop') && $mysub === constant('subDevelop') && \lib\utility::get('dev') !== null)
+		if(defined('subDevelop') && $mysub === constant('subDevelop'))
 		{
 			$mysub = '';
 		}
