@@ -23,7 +23,12 @@ class zarinpal
         ];
 
         $_args = array_merge($default_args, $_args);
-
+        // if soap is not exist return false
+        if(!class_exists("soapclient"))
+        {
+            debug::error(T_("Can not connect to zarinpal gateway. Install it!"));
+            return false;
+        }
 
         if(!$_args['MerchantID'])
         {
