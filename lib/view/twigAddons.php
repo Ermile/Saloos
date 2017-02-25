@@ -364,10 +364,26 @@ trait twigAddons
 				{
 					$location = $this->data->breadcrumb[$location];
 				}
-				$location    = str_replace('-', ' ', $location);
-				$location    = ucwords($location);
-				$location    = str_replace('And', 'and', $location);
-				$location    = T_($location);
+
+				// if trans of exact text is exist use it
+				if($location != T_($location))
+				{
+					$location = T_($location);
+				}
+				// else change all chars to lower and check to find trans, if exist use it
+				elseif($location != T_(mb_strtolower($location)))
+				{
+					$location = T_(mb_strtolower($location));
+					$location = ucwords($location);
+				}
+				// else change it to good text
+				else
+				{
+					$location    = str_replace('-', ' ', $location);
+					$location    = ucwords($location);
+					$location    = str_replace('And', 'and', $location);
+					$location    = T_($location);
+				}
 
 				if(end($myurl) === $part)
 				{
