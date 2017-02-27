@@ -158,6 +158,15 @@ class utility
 		return self::$REQUEST->get(...func_get_args());
 	}
 
+	public static function isset_request()
+	{
+		if(!self::$REQUEST)
+		{
+			self::$REQUEST = new utility\request();
+		}
+		return self::$REQUEST->isset(...func_get_args());
+	}
+
 
 	/**
 	 * Sets the request array.

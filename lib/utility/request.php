@@ -97,5 +97,40 @@ class request
 		}
 		return $request;
 	}
+
+	public function isset()
+	{
+		$args = func_get_args();
+		$request =  $this->request;
+		$return = true;
+		if(empty($args) && empty($request))
+		{
+			return false;
+		}
+
+		foreach ($args as $key => $value) {
+			if(is_object($request))
+			{
+				if(!isset($request->$value))
+				{
+					return false;
+				}
+				$request = $request->$value;
+			}
+			elseif(is_array($request))
+			{
+				if(!array_key_exists($value, $request))
+				{
+					return false;
+				}
+				$request = $request[$value];
+			}
+			else
+			{
+				return false;
+			}
+		}
+		return $return;
+	}
 }
 ?>
