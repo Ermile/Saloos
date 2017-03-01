@@ -608,6 +608,18 @@ trait twigAddons
 				$options['term_type'] = $args['term_type'];
 			}
 
+
+			if(isset($args['post_privacy']) && is_string($args['post_privacy']))
+			{
+				$options['post_privacy'] = $args['post_privacy'];
+			}
+
+
+			if(isset($args['post_status']) && is_string($args['post_status']))
+			{
+				$options['post_status'] = $args['post_status'];
+			}
+
 			if(isset($args['termusage_foreign']) && is_string($args['termusage_foreign']))
 			{
 				$options['termusage_foreign'] = $args['termusage_foreign'];
