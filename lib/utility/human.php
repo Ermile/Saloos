@@ -84,11 +84,16 @@ class human
 	 * @param  [type] $_txt input text or numbers
 	 * @return [type]       [description]
 	 */
-	public static function number($_txt, $_lang = 'english')
+	public static function number($_txt, $_lang = null)
 	{
 		$persian = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
 		$arabic  = ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'];
 		$english = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+		// if language is not set use default language
+		if(!$_lang)
+		{
+			$_lang = \lib\define::get_language();
+		}
 
 		switch ($_lang)
 		{
