@@ -88,7 +88,7 @@ class token
 
 		if($_args['type'] == 'guest')
 		{
-			$user_id = db\users::signup_inspection();
+			$user_id = db\users::signup(['type' => 'inspection', 'port' => 'api']);
 			$key     = 'guest';
 		}
 		elseif($_args['type'] == 'tmp_login')
