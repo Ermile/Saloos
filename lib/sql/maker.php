@@ -123,10 +123,10 @@ class maker
 
 	private function orderCaller($name, $args){
 		if($name){
-			$order = (isset($args[0]) && strtolower($args[0]) == "desc")? 'DESC' : 'ASC';
+			$order = (isset($args[0]) && mb_strtolower($args[0]) == "desc")? 'DESC' : 'ASC';
 		}else{
 			$name = $args[0];
-			$order = (isset($args[1]) && strtolower($args[1]) == "desc")? 'DESC' : 'ASC';
+			$order = (isset($args[1]) && mb_strtolower($args[1]) == "desc")? 'DESC' : 'ASC';
 		}
 		if(!is_array($this->order)){
 			$this->order = array();
@@ -201,7 +201,7 @@ class maker
 
 	private function syntaxCaller($name, $args){
 		if(isset($args[1])){
-			$this->syntaxArgs = strtoupper($args[1]);
+			$this->syntaxArgs = mb_strtoupper($args[1]);
 		}
 		$sql = $this->makeSql();
 		$syntax = $args[0];
@@ -304,7 +304,7 @@ class maker
 				break;
 		}
 
-		$sName = isset($caller[2]) ? strtolower($caller[2]) : null;
+		$sName = isset($caller[2]) ? mb_strtolower($caller[2]) : null;
 		if(!method_exists($this, $sCaller))
 		{
 			\lib\error::page("maker method $sCaller not found");

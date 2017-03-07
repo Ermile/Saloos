@@ -7,7 +7,7 @@ return function()
 {
 	$year = $this->value;
 
-	if(strlen($year) === 4)
+	if(mb_strlen($year) === 4)
 	{
 		if(substr($year, 0, 2) == '19' || substr($year, 0, 2) == '20')
 			return true;
@@ -20,7 +20,7 @@ return function()
 		else
 			return false;
 	}
-	elseif(strlen($year) === 2)
+	elseif(mb_strlen($year) === 2)
 	{
 		$this->value = (1300 + $year) + 622;
 		return true;

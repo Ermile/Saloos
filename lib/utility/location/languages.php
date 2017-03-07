@@ -62,7 +62,7 @@ class languages
 	{
 		$result = null;
 		// if pass more than 2 character, then only use 2 char
-		if(strlen($_key)> 2)
+		if(mb_strlen($_key)> 2)
 		{
 			$_key = substr($_key, 0, 2);
 		}

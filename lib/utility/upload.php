@@ -128,9 +128,9 @@ class upload
 	public static function sp_fileSizeByte($_size)
 	{
 		$_size = trim($_size);
-		$last  = $_size[strlen($_size)-1];
+		$last  = $_size[mb_strlen($_size)-1];
 		$_size = (float) str_replace($last, '', $_size);
-		$last  = strtolower($last);
+		$last  = mb_strtolower($last);
 
 		switch($last)
 		{
@@ -489,7 +489,7 @@ class upload
 			case 'gif':
 				if($_options['crop'] === true)
 				{
-					$extlen     = strlen(self::$fileExt);
+					$extlen     = mb_strlen(self::$fileExt);
 					$url_file   = substr($url_full, 0, -$extlen-1);
 					$url_thumb  = $url_file.'-thumb.'.self::$fileExt;
 					$url_normal = $url_file.'-normal.'.self::$fileExt;

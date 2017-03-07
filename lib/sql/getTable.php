@@ -89,8 +89,8 @@ class getTable
 				if(substr($value->type, 0, 5) === 'enum@')
 				{
 					$myfield = $key;
-					if( substr($_table, 0, -1) === substr($key, 0, strlen($_table)-1) )
-						$myfield = substr($key, strlen($_table));
+					if( substr($_table, 0, -1) === substr($key, 0, mb_strlen($_table)-1) )
+						$myfield = substr($key, mb_strlen($_table));
 
 					$myvalues                 = substr($value->type, 5);
 					$mydefault                = null;

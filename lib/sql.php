@@ -337,9 +337,9 @@ class sql{
 				foreach ($value as $ckey => $cvalue)
 				{
 					if($ckey == 0){
-						$string .= $key != 0 ? " ".strtoupper($cvalue["condition"])."(" : "(";
+						$string .= $key != 0 ? " ".mb_strtoupper($cvalue["condition"])."(" : "(";
 					}else{
-						$string .= " ".strtoupper($cvalue["condition"])." ";
+						$string .= " ".mb_strtoupper($cvalue["condition"])." ";
 					}
 					$string .= $this->conditionString($cvalue, $maker->table);
 				}
@@ -350,7 +350,7 @@ class sql{
 			}
 			else
 			{
-				$string .= $key != 0 ? " ".strtoupper($value["condition"])." " : " ";
+				$string .= $key != 0 ? " ".mb_strtoupper($value["condition"])." " : " ";
 				$string .= $this->conditionString($value, $maker->table);
 			}
 		}
@@ -367,7 +367,7 @@ class sql{
 		$string = "";
 		if(preg_match("/^#(.*)$/", $condition['field'], $field))
 		{
-			if(strtolower($condition['operator']) == "like")
+			if(mb_strtolower($condition['operator']) == "like")
 			{
 				$op = "";
 				if(preg_match("/^%(.*)$/", $condition['value'], $v))

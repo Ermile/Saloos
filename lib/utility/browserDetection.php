@@ -339,10 +339,10 @@ static function browser_detection( $_which_test = 'full_assoc', $_test_excludes=
 		strstr instead of stristr, which drops overhead slightly.
 		**/
 		if ( $_external_ua_string ) {
-			$browser_user_agent = strtolower( $_external_ua_string );
+			$browser_user_agent = mb_strtolower( $_external_ua_string );
 		}
 		elseif ( isset( $_SERVER['HTTP_USER_AGENT'] ) ) {
-			$browser_user_agent = strtolower( $_SERVER['HTTP_USER_AGENT'] );
+			$browser_user_agent = mb_strtolower( $_SERVER['HTTP_USER_AGENT'] );
 		}
 		else {
 			$browser_user_agent = '';
@@ -357,7 +357,7 @@ static function browser_detection( $_which_test = 'full_assoc', $_test_excludes=
 		array[0] = id string for useragent, array[1] is if dom capable, array[2] is working name
 		for browser, array[3] identifies navigator useragent type
 
-		Note: all browser strings are in lower case to match the strtolower output, this avoids
+		Note: all browser strings are in lower case to match the mb_strtolower output, this avoids
 		possible detection errors
 
 		Note: These are the navigator user agent types:
@@ -1216,7 +1216,7 @@ static function get_item_version( $pv_browser_user_agent, $pv_search_string, $pv
 		//start the search after the first string occurrence
 		if ( strpos( $pv_browser_user_agent, $pv_search_string, $start_pos ) !== false ) {
 			// update start position if position found
-			$start_pos = strpos( $pv_browser_user_agent, $pv_search_string, $start_pos ) + strlen( $pv_search_string );
+			$start_pos = strpos( $pv_browser_user_agent, $pv_search_string, $start_pos ) + mb_strlen( $pv_search_string );
 			/**
 			msie (and maybe other userAgents requires special handling because some apps inject
 			a second msie, usually at the beginning, custom modes allow breaking at first instance
@@ -1243,7 +1243,7 @@ static function get_item_version( $pv_browser_user_agent, $pv_search_string, $pv
 	$string_working_number = substr( $string_working_number, 0, strcspn($string_working_number, ' );/') );
 	//make sure the returned value is actually the id number and not a string
 	// otherwise return ''
-	// strcspn( $string_working_number, '0123456789.') == strlen( $string_working_number)
+	// strcspn( $string_working_number, '0123456789.') == mb_strlen( $string_working_number)
 	//	if ( preg_match("/\\d/", $string_working_number) == 0 )
  	if ( !is_numeric( substr( $string_working_number, 0, 1 ) ) ) {
 		$string_working_number = '';

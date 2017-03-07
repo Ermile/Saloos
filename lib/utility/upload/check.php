@@ -45,7 +45,7 @@ trait check
 			}
 			if(isset($fileInfo['extension']))
 			{
-				self::$fileExt      = strtolower($fileInfo['extension']);
+				self::$fileExt      = mb_strtolower($fileInfo['extension']);
 			}
 
 			$extCheck           = self::extCheck(self::$fileExt);
@@ -69,13 +69,13 @@ trait check
 			//check file extention with allowed extention list
 			// set file data like name, ext, mime
 			// file with long name does not allowed in our system
-			if(strlen(self::$fileName) > 200 || strpos(self::$fileName, 'htaccess') !== false)
-			// if(strlen(self::$fileName) > 200)
+			if(mb_strlen(self::$fileName) > 200 || strpos(self::$fileName, 'htaccess') !== false)
+			// if(mb_strlen(self::$fileName) > 200)
 			{
 				throw new \RuntimeException(T_('Exceeded file name limit'));
 			}
 			// file with long extension does not allowed in our system
-			if(strlen(self::$fileExt) > 10 || self::$fileDisallow )
+			if(mb_strlen(self::$fileExt) > 10 || self::$fileDisallow )
 			{
 				throw new \RuntimeException(T_('Exceeded file extension limit'));
 			}

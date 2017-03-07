@@ -7,7 +7,7 @@ return function()
 {
 	$mycode   = $this->value;
 	$is_valid = false;
-	if (strlen($mycode) == 10)
+	if (mb_strlen($mycode) == 10)
 	{
 		$main_place = array();
 		$i          = 10;

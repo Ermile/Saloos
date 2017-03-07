@@ -19,7 +19,7 @@ foreach ($obj as $key => $value):?>
   $fileaddr = isset($obj[$key]['file'])? $obj[$key]['file']: null;
   if($fileaddr)
   {
-  	$fileaddr = substr($fileaddr ,strlen(core)-strlen(core_name)-1);
+  	$fileaddr = substr($fileaddr ,mb_strlen(core)-mb_strlen(core_name)-1);
     $FILE = '<span class="addr">'.$fileaddr;
     $FILE = str_replace("/", "<span class='slash'>/</span>", $FILE);
     $FILE = preg_replace("/([^\/<>]+)$/", "</span>$1", $FILE);

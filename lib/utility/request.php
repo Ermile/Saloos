@@ -33,7 +33,7 @@ class request
 			$this->request 		= $_options['request'];
 		}
 
-		$this->method = strtolower($this->method);
+		$this->method = mb_strtolower($this->method);
 
 		switch ($this->method) {
 			case 'post':

@@ -17,7 +17,7 @@ trait ext
         if(file_exists($_ext))
         {
         	$fileInfo = pathinfo($_ext);
-        	$_ext     = strtolower($fileInfo['extension']);
+        	$_ext     = mb_strtolower($fileInfo['extension']);
         }
 
 		$mimes =
@@ -92,9 +92,9 @@ trait ext
 		];
 
 		// if exist in list return it
-		if(array_key_exists(strtolower($_ext), $mimes))
+		if(array_key_exists(mb_strtolower($_ext), $mimes))
 		{
-			$myResult = $mimes[strtolower($_ext)];
+			$myResult = $mimes[mb_strtolower($_ext)];
 		}
 		else
 		{

@@ -23,7 +23,7 @@ class config
 			$this->REST = func_get_args();
 		}
 		$this->REST = !is_array($this->REST) ? array('') : $this->REST;
-		if(\lib\storage::get_api() && $this->api_method == strtolower($_SERVER['REQUEST_METHOD'])){
+		if(\lib\storage::get_api() && $this->api_method == mb_strtolower($_SERVER['REQUEST_METHOD'])){
 			$this->check(...$this->REST);
 		}
 		return $this;
@@ -42,7 +42,7 @@ class config
 			if(
 				(preg_match("/^post|put$/", $this->api_method) && $_SERVER['REQUEST_METHOD'] == "POST") ||
 				(preg_match("/^get|delete$/", $this->api_method) && $_SERVER['REQUEST_METHOD'] == "GET") ||
-				($this->api_method == strtolower($_SERVER['REQUEST_METHOD']))
+				($this->api_method == mb_strtolower($_SERVER['REQUEST_METHOD']))
 			)
 			{
 				$this->check(...$this->SERVER);

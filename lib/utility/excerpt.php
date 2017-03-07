@@ -12,7 +12,7 @@ class excerpt
 		$locations = array();
 		if(!is_array($_words))
 		{
-			if(strlen($_words)>7)
+			if(mb_strlen($_words)>7)
 				$_words = explode(' ', $_words);
 			else
 				$_words = [$_words];
@@ -20,7 +20,7 @@ class excerpt
 
 		foreach($_words as $word)
 		{
-			$wordlen = strlen($word);
+			$wordlen = mb_strlen($word);
 			$loc = stripos($_fulltext, $word);
 			while($loc !== FALSE) {
 				$locations[] = $loc;
@@ -81,7 +81,7 @@ class excerpt
 			$_fulltext = preg_replace('/\s+/', ' ', $_fulltext);
 		}
 
-		$textlength = strlen($_fulltext);
+		$textlength = mb_strlen($_fulltext);
 		if($textlength <= $_rellength) {
 			return $_fulltext;
 		}
@@ -126,7 +126,7 @@ class excerpt
 			$_str = preg_replace('/\s+/', ' ', $_str);
 		}
 
-		if(strlen($_str) > $_maxLength)
+		if(mb_strlen($_str) > $_maxLength)
 		{
 			$excerpt   = substr($_str, $_startPos, $_maxLength-3);
 			$lastSpace = strrpos($excerpt, ' ');

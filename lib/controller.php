@@ -185,7 +185,7 @@ class controller
 			}
 			echo debug::compile(true);
 		}
-		elseif(!\lib\storage::get_api() && strtolower($_SERVER['REQUEST_METHOD']) == "post")
+		elseif(!\lib\storage::get_api() && mb_strtolower($_SERVER['REQUEST_METHOD']) == "post")
 		{
 			$this->redirector();
 		}

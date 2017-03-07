@@ -129,7 +129,7 @@ class form
 			$value = $this->$v;
 
 			// if element has label set hint on label hover
-			if(isset($value->label) && strlen($value->label)>0)
+			if(isset($value->label) && mb_strlen($value->label)>0)
 			{
 				$myLabel = $value->label;
 				$value->label = [];
@@ -146,7 +146,7 @@ class form
 						$myHintPos = 'hint--' . $myHintPos;
 					}
 				}
-				if(isset($value->attr['desc']) && strlen($value->attr['desc']) >0 )
+				if(isset($value->attr['desc']) && mb_strlen($value->attr['desc']) >0 )
 				{
 					$value->label['hint'] = $value->attr['desc'];
 					unset($value->attr['desc']);

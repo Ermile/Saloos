@@ -37,7 +37,7 @@ class filter
 			return false;
 		}
 		// check max and min number
-		if(strlen($mymobile) > 15 || strlen($mymobile) < 8)
+		if(mb_strlen($mymobile) > 15 || mb_strlen($mymobile) < 8)
 		{
 			return false;
 		}
@@ -51,7 +51,7 @@ class filter
 		// if user type 10 number like 935 726 9759 and number start with 9 append 98 at first
 		// Juest support Iranain mobile
 
-		if(strlen($mymobile) === 10 && substr($mymobile, 0, 1) === '9')
+		if(mb_strlen($mymobile) === 10 && substr($mymobile, 0, 1) === '9')
 		{
 			$mymobile = '98'.$mymobile;
 		}
@@ -87,10 +87,21 @@ class filter
 	 */
 	public static function slug($_string, $_splitor = null, $_rules = true)
 	{
-		$slugify = new \lib\utility\slugify();
-		if($_rules)
+
+		if($_rules === true)
 		{
+			$slugify = new \lib\utility\slugify();
 			$slugify->activateRuleset('persian');
+		}
+		elseif($_rules === 'persian')
+		{
+			$regex = "/([^ضصثقفغعهخحجچشسیبلاتنمکگظطزرذدپوآأیإيئؤكژة]|[‌])+/";
+			$slugify = new \lib\utility\slugify($regex);
+			$slugify->activateRuleset('persian_soft');
+		}
+		else
+		{
+			$slugify = new \lib\utility\slugify();
 		}
 		if($_splitor)
 			return $slugify->slugify($_string, $_splitor);

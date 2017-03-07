@@ -81,7 +81,7 @@ class languageDetection
 
 		//check to see if language is set
 		if ( isset( $_SERVER["HTTP_ACCEPT_LANGUAGE"] ) ) {
-			$languages = strtolower( $_SERVER["HTTP_ACCEPT_LANGUAGE"] );
+			$languages = mb_strtolower( $_SERVER["HTTP_ACCEPT_LANGUAGE"] );
 			if ($b_debugger_2 === true){
 				$languages = ' fr-ch;q=0.3, da, en-us;q=0.8, en;q=0.5, fr;q=0.3';
 			}

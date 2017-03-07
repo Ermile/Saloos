@@ -4,7 +4,7 @@ namespace lib\saloos;
 class is
 {
 	public static function ajax(){
-		return isset($_SERVER['HTTP_X_REQUESTED_WITH'])  && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest';
+		return isset($_SERVER['HTTP_X_REQUESTED_WITH'])  && mb_strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest';
 	}
 
 	public static function accept($name)

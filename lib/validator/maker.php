@@ -25,7 +25,7 @@ class maker
 		if(preg_match("/^(form|sql)([A-Z].*)$/", $name, $txterr))
 		{
 			$method = $txterr[1];
-			$this->{$method}[strtolower($txterr[2])] = $arg[0];
+			$this->{$method}[mb_strtolower($txterr[2])] = $arg[0];
 			return $this;
 		}
 		if(!is_object($this->validtorFunctions))

@@ -35,7 +35,7 @@ class shortURL
 		{
 			$_alphabet = self::ALPHABET;
 		}
-		$lenght = strlen($_alphabet);
+		$lenght = mb_strlen($_alphabet);
 
 		$str = '';
 		while ($_num > 0)
@@ -65,10 +65,10 @@ class shortURL
 			return false;
 		}
 
-		$lenght = strlen($_alphabet);
+		$lenght = mb_strlen($_alphabet);
 
 		$num    = 0;
-		$len    = strlen($_str);
+		$len    = mb_strlen($_str);
 		for ($i = 0; $i < $len; $i++)
 		{
 			$num = $num * $lenght + strpos($_alphabet, $_str[$i]);

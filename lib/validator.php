@@ -173,7 +173,7 @@ class validator
 	 */
 	public static function field_userFriendly($_fieldname, $_export = 'name')
 	{
-		$_fieldname = strtolower($_fieldname);
+		$_fieldname = mb_strtolower($_fieldname);
 
 		// check for _ exist in name or not
 		$tmp_pos = strpos($_fieldname, '_');

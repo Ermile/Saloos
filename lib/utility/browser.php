@@ -83,7 +83,7 @@ class browser
 		$browser_name = '';
 		$browser_number = '';
 		// get userAgent string
-		$browser_user_agent = ( isset( $_SERVER['HTTP_USER_AGENT'] ) ) ? strtolower( $_SERVER['HTTP_USER_AGENT'] ) : '';
+		$browser_user_agent = ( isset( $_SERVER['HTTP_USER_AGENT'] ) ) ? mb_strtolower( $_SERVER['HTTP_USER_AGENT'] ) : '';
 		//pack browser array
 		// values [0]= user agent identifier, lowercase, [1] = dom browser, [2] = shorthand for browser,
 		$a_browser_types = array(
@@ -152,7 +152,7 @@ class browser
 		$start_pos = strpos( $browser_user_agent, $search_string );
 
 		// start the substring slice 1 space after the search string
-		$start_pos += strlen( $search_string ) + 1;
+		$start_pos += mb_strlen( $search_string ) + 1;
 
 		// slice out the largest piece that is numeric, going down to zero, if zero, function returns ''.
 		for ( $i = $string_length; $i > 0 ; $i-- )

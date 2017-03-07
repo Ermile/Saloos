@@ -61,7 +61,7 @@ class utility
 				{
 					$myvalue = self::hasher($myvalue);
 				}
-				elseif(strlen($myvalue) > 4 && strlen(strlen($myvalue) < 50))
+				elseif(mb_strlen($myvalue) > 4 && mb_strlen(mb_strlen($myvalue) < 50))
 				{
 					$myvalue = self::hasher($myvalue);
 				}
@@ -309,7 +309,7 @@ class utility
 			$mycharacters = "23456789ABCDEFHJKLMNPRTVWXYZ";
 
 		for ($p = 0; $p < $_length; $p++)
-			$mystring .= $mycharacters[mt_rand(0, strlen($mycharacters)-1)];
+			$mystring .= $mycharacters[mt_rand(0, mb_strlen($mycharacters)-1)];
 
 		return $mystring;
 	}
@@ -378,7 +378,7 @@ class utility
     {
     	$result = null;
 
-    	if(strlen($_stamp) < 2)
+    	if(mb_strlen($_stamp) < 2)
     	{
     		$_stamp = false;
     	}

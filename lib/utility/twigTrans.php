@@ -38,11 +38,11 @@ class twigTrans
 			switch ($_path)
 			{
 				case 'addons':
-					$trans_key = substr($file, strpos($file, core_name)+strlen(core_name)+1 );
+					$trans_key = substr($file, strpos($file, core_name)+mb_strlen(core_name)+1 );
 					break;
 
 				default:
-					$trans_key = substr($file, strpos($file, db_name)+strlen(db_name)+1 );
+					$trans_key = substr($file, strpos($file, db_name)+mb_strlen(db_name)+1 );
 					break;
 			}
 			$file_name = basename($file,'.html');
@@ -100,14 +100,14 @@ class twigTrans
 		{
 			if($value=='New File')
 			{
-				@$translation_output .= "\n\t//".str_repeat('-', 80-strlen($key))."$key\n";
+				@$translation_output .= "\n\t//".str_repeat('-', 80-mb_strlen($key))."$key\n";
 				echo("</ul>");
 				echo("<li>".$key.'</li>');
 				echo("<ul style='margin-bottom:10px;'>");
 			}
 			else
 			{
-				@$translation_output .= "\t".'echo T_("'.$key.'");'.str_repeat(' ',70-strlen($key)).'// '.$value."\n";
+				@$translation_output .= "\t".'echo T_("'.$key.'");'.str_repeat(' ',70-mb_strlen($key)).'// '.$value."\n";
 				echo("<li style='list-style-type:square;'>".$key.'</li>');
 			}
 		}

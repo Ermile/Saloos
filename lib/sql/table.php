@@ -92,7 +92,7 @@ class table
 	{
 		if(preg_match("/^get([A-Z].*)$/", $name, $db))
 		{
-			return call_user_func_array('self::load', array(strtolower($db[1]), $args));
+			return call_user_func_array('self::load', array(mb_strtolower($db[1]), $args));
 		}
 	}
 }

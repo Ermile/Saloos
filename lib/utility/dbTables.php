@@ -70,11 +70,11 @@ class dbTables
       while ($mycrow1 = $qCOL1->fetch_object())
       {
         $tmp_type = self::type_checker($mycrow1->Type, $mycrow1->Default, $TableName);
-        if(strlen($tmp_type) > $counter_type)
-          $counter_type = strlen($tmp_type);
+        if(mb_strlen($tmp_type) > $counter_type)
+          $counter_type = mb_strlen($tmp_type);
 
-        if(strlen($mycrow1->Field) > $counter_name)
-          $counter_name = strlen($mycrow1->Field);
+        if(mb_strlen($mycrow1->Field) > $counter_name)
+          $counter_name = mb_strlen($mycrow1->Field);
       }
 
 
@@ -199,13 +199,13 @@ class dbTables
 
 
         // create variables list on top of each file
-        $variable = 'public $' . $myfield . str_repeat(' ', $counter_name + 1 - strlen($myfield)). '= [';
+        $variable = 'public $' . $myfield . str_repeat(' ', $counter_name + 1 - mb_strlen($myfield)). '= [';
         $myspace  = 2;
         foreach ($varProp as $prop => $value)
         {
           $myspace = $myspace *2;
           if($value)
-            @$variable .= "'".$prop."'=>'".$value."'".str_repeat(' ', $myspace - strlen($value)).",";
+            @$variable .= "'".$prop."'=>'".$value."'".str_repeat(' ', $myspace - mb_strlen($value)).",";
         }
         $variable = "\t". rtrim(substr($variable, 0, -1)) . "];\n";
         $content .=  $variable ;
@@ -247,7 +247,7 @@ class dbTables
       if(substr($key, 0, 6)=='Table ')
         $translation_output .= "\n\t// ". str_repeat('-', 60). " $key\n";
 
-      @$translation_output .= "\t".'echo T_'.'("'.$value.'");'.str_repeat(' ',20-strlen($value)).'// '.$key."\n";
+      @$translation_output .= "\t".'echo T_'.'("'.$value.'");'.str_repeat(' ',20-mb_strlen($value)).'// '.$key."\n";
     }
     $translation_output .= "\n}\n?>";
     file_put_contents($folder."/translation.php", $translation_output);
@@ -310,7 +310,7 @@ class dbTables
     preg_match("/^([^(]*)(\((.*)\))?/", $f_type, $tmp_type);
     $f_length    = isset($tmp_type[3]) ? $tmp_type[3] : null;
     $f_dotpos    = strpos($f_length,',');
-    $f_dotpos    = $f_dotpos?$f_dotpos:strlen($f_length);
+    $f_dotpos    = $f_dotpos?$f_dotpos:mb_strlen($f_length);
     $f_len       = substr($f_length, 0, $f_dotpos);
     $f_length    = $f_length;
     // $mymax    = "->maxlength('".$f_length."')";
@@ -342,12 +342,12 @@ class dbTables
       case 'decimal':
       case 'float':
         $result['type'] = 'number';
-        if($_name === 'barcode' || substr($f_type, strlen($f_type)-8) == "zerofill")
+        if($_name === 'barcode' || substr($f_type, mb_strlen($f_type)-8) == "zerofill")
         {
           $result['min'] = '1'.str_repeat("0",$f_len-1);
           // $result['pattern'] = ".{$f_len,}";
         }
-        elseif( substr($f_type, strlen($f_type)-8) == "unsigned")
+        elseif( substr($f_type, mb_strlen($f_type)-8) == "unsigned")
           $result['min'] = 0;
 
         $result['max'] = str_repeat("9",$f_len);
@@ -405,7 +405,7 @@ class dbTables
    */
   public static function field_userFriendly($_fieldname, $_export = 'name')
   {
-    $_fieldname = strtolower($_fieldname);
+    $_fieldname = mb_strtolower($_fieldname);
 
     // check for _ exist in name or not
     $tmp_pos    = strpos($_fieldname, '_');

@@ -822,7 +822,65 @@ class slugify
 			'ه'        => 'h',
 			'و'        => 'o',
 			'ي'        => 'y',
+		),
+
+		'persian_soft' => array(
+			/* Persian_soft */
+			'ج'        => 'ج',
+			'ث'        => 'ث',
+			'ذ'        => 'ذ',
+			'ض'        => 'ض',
+			'ظ'        => 'ظ',
+			'ق'        => 'ق',
+			'و'        => 'و',
+			'پ'        => 'پ',
+			'ژ'        => 'ژ',
+			'گ'        => 'گ',
+			'چ'        => 'چ',
+			'ی'        => 'ی',
+			'ا'        => 'ا',
+			'۱'        => '۱',
+			'۲'        => '۲',
+			'۳'        => '۳',
+			'۴'        => '۴',
+			'۵'        => '۵',
+			'۶'        => '۶',
+			'۷'        => '۷',
+			'۸'        => '۸',
+			'۹'        => '۹',
+			'۰'        => '۰',
+
+			/* Arabic */
+			'أ'        => 'أ',
+			'ب'        => 'ب',
+			'ت'        => 'ت',
+			'ث'        => 'ث',
+			'ج'        => 'ج',
+			'ح'        => 'ح',
+			'خ'        => 'خ',
+			'د'        => 'د',
+			'ذ'        => 'ذ',
+			'ر'        => 'ر',
+			'ز'        => 'ز',
+			'س'        => 'س',
+			'ش'        => 'ش',
+			'ص'        => 'ص',
+			'ض'        => 'ض',
+			'ط'        => 'ط',
+			'ظ'        => 'ظ',
+			'ع'        => 'ع',
+			'غ'        => 'غ',
+			'ف'        => 'ف',
+			'ق'        => 'ق',
+			'ك'        => 'ك',
+			'ل'        => 'ل',
+			'م'        => 'م',
+			'ن'        => 'ن',
+			'ه'        => 'ه',
+			'و'        => 'و',
+			'ي'        => 'ي',
 		)
+
 	);
 
 	/** @var string */
@@ -847,10 +905,9 @@ class slugify
 	 */
 	public function slugify($string, $separator = '-')
 	{
-		$string = strtolower(strtr($string, $this->rules));
+		$string = mb_strtolower(strtr($string, $this->rules));
 		$string = preg_replace($this->regExp, $separator, $string);
-		$string = strtolower($string);
-
+		$string = mb_strtolower($string);
 		return trim($string, $separator);
 	}
 
