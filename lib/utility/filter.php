@@ -95,9 +95,10 @@ class filter
 		}
 		elseif($_rules === 'persian')
 		{
-			$regex = "/([^ضصثقفغعهخحجچشسیبلاتنمکگظطزرذدپوآأیإيئؤكژة]|[‌])+/";
-			$slugify = new \lib\utility\slugify($regex);
-			$slugify->activateRuleset('persian_soft');
+			$_string = mb_strtolower($_string);
+			$_string = mb_ereg_replace('([^ا-ی۰-۹a-z0-9]|-)+', '-', $_string);
+			$_string = mb_strtolower($_string);
+			return $_string;
 		}
 		else
 		{
