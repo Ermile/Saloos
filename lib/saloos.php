@@ -6,7 +6,7 @@ namespace lib;
 class saloos
 {
 	// @var saloos core current version
-	const version = '9.0.1';
+	const version = '9.0.2';
 
 	// @var saloos core current commit number
 	// now get it automatically from git commands

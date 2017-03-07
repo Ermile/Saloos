@@ -283,7 +283,7 @@ class gettext_reader {
     $expr .= ';';
     $res = '';
     $p = 0;
-    for ($i = 0; $i < mb_strlen($expr); $i++) {
+    for ($i = 0; $i < strlen($expr); $i++) {
       $ch = $expr[$i];
       switch ($ch) {
       case '?':
