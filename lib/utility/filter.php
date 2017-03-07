@@ -96,7 +96,7 @@ class filter
 		elseif($_rules === 'persian')
 		{
 			$_string = mb_strtolower($_string);
-			$_string = mb_ereg_replace('([^ا-ی۰-۹a-z0-9]|-)+', '-', $_string);
+			$_string = mb_ereg_replace('([^آا-ی۰-۹a-z0-9]|-)+', '-', $_string);
 			$_string = mb_strtolower($_string);
 			return $_string;
 		}
