@@ -311,7 +311,7 @@ trait twigAddons
 	 */
 	public function twig_function_breadcrumb()
 	{
-		return new \Twig_SimpleFunction('breadcrumb', function ($_path = null, $_direct = null, $_homepage = true)
+		return new \Twig_SimpleFunction('breadcrumb', function ($_path = null, $_direct = null, $_homepage = true, $_hideLast = null)
 		{
 			// if user dont pass a path give it from controller
 			if(!$_path)
@@ -387,7 +387,14 @@ trait twigAddons
 
 				if(end($myurl) === $part)
 				{
-					$result .= "<a>$location</a>";
+					if($_hideLast)
+					{
+						// do nothing
+					}
+					else
+					{
+						$result .= "<a>$location</a>";
+					}
 				}
 				else
 				{
