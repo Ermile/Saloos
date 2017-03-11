@@ -76,6 +76,14 @@ class db
 		if($_options['multi_query'] === true)
 		{
 			$result = mysqli_multi_query(self::$link, $_qry);
+			do {
+				if ($r = mysqli_use_result(self::$link)) {
+					while ($row = $r->fetch_row()) {
+		            }
+					$r->close();
+				}
+				mysqli_more_results(self::$link);
+			} while (mysqli_next_result(self::$link));
 		}
 		else
 		{
