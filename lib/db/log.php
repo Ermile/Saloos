@@ -8,7 +8,7 @@ trait log
 	 * @param  [type] $_text [description]
 	 * @return [type]        [description]
 	 */
-	public static function log($_text, $_time = null, $_name = 'log.sql')
+	public static function log($_text, $_time = null, $_name = 'log.sql', $_type = 'sql')
 	{
 		$classes  = (array_column(debug_backtrace(), 'file'));
 
@@ -20,9 +20,12 @@ trait log
 		// set file address
 		$fileAddr .= $_name;
 		$my_text  = "\n#". str_repeat("-", 70). ' '. urldecode($_SERVER['REQUEST_URI']);
-		$my_text .= "\n#". $_time. "s";
-		$my_text .= "\t---". $date_now->format("Y-m-d H:i:s");
-		$my_text .= "\n". $time_ms . "ms";
+		$my_text .= "\n---". $date_now->format("Y-m-d H:i:s");
+		if($_time)
+		{
+			$my_text .= "\t---". $_time. "s";
+			$my_text .= "\t\t---". $time_ms . "ms";
+		}
 		if($time_ms > 50)
 		{
 			$my_text .= "\n"."--- CRITICAL!";
@@ -35,8 +38,31 @@ trait log
 		{
 			$my_text .= "\n"."--- CHECK!";
 		}
+		// switch for special type of text
+		switch ($_type)
+		{
+			case 'sql':
+				if(strlen($_text) > 250)
+				{
+					// simplify this query in multi line
+					$_text = str_replace("\t\t\t", "\t", $_text);
+					$_text = str_replace('   ', ' ', $_text);
+				}
+				else
+				{
+					$_text = trim($_text);
+					$_text = preg_replace('!\s+!', ' ', $_text);
+				}
+				// add tab before it
+				// trim input text
+				$_text = trim($_text);
+				$_text = "\t". $_text;
+				break;
+		}
+		// add final text
 		$my_text .= "\n";
-		$my_text .= $_text. "\r\n";
+		$my_text .= $_text;
+		$my_text .= "\r\n";
 
 		file_put_contents($fileAddr, $my_text, FILE_APPEND);
 	}
