@@ -58,6 +58,12 @@ trait log
 				$_text = trim($_text);
 				$_text = "\t". $_text;
 				break;
+			case 'json' :
+				if(is_array($_text) || is_object($_text))
+				{
+					$_text = json_encode($_text, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+				}
+			break;
 		}
 		// add final text
 		$my_text .= "\n";
