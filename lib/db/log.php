@@ -23,17 +23,17 @@ trait log
 		$my_text .= "\n#". $_time. "s";
 		$my_text .= "\t---". $date_now->format("Y-m-d H:i:s");
 		$my_text .= "\n". $time_ms . "ms";
-		if($time_ms > 3)
+		if($time_ms > 50)
 		{
-			$my_text .= "\n"."--- CHECK!";
+			$my_text .= "\n"."--- CRITICAL!";
 		}
 		elseif($time_ms > 10)
 		{
 			$my_text .= "\n"."--- WARN!";
 		}
-		elseif($time_ms > 50)
+		elseif($time_ms > 3)
 		{
-			$my_text .= "\n"."--- CRITICAL!";
+			$my_text .= "\n"."--- CHECK!";
 		}
 		$my_text .= "\n";
 		$my_text .= $_text. "\r\n";

@@ -100,17 +100,17 @@ class db
 		// calc exex time in ms
 		$qry_exec_time_ms = round($qry_exec_time*1000);
 		// if spend more time, save it in special file
-		if($qry_exec_time_ms > 3)
+		if($qry_exec_time_ms > 50)
 		{
-			self::log($_qry, $qry_exec_time, 'log-check.sql');
+			self::log($_qry, $qry_exec_time, 'log-critical.sql');
 		}
 		elseif($qry_exec_time_ms > 10)
 		{
 			self::log($_qry, $qry_exec_time, 'log-warn.sql');
 		}
-		elseif($qry_exec_time_ms > 50)
+		elseif($qry_exec_time_ms > 3)
 		{
-			self::log($_qry, $qry_exec_time, 'log-critical.sql');
+			self::log($_qry, $qry_exec_time, 'log-check.sql');
 		}
 
 
