@@ -176,12 +176,15 @@ class router
 
 		if(router::$sub_is_fake)
 		{
-
 			router::$base .= Service.(router::$prefix_base ? '/'. router::$prefix_base : '') .(SubDomain? '/'.SubDomain: null);
 		}
 		else
 		{
-			router::$base .= SubDomain.'.'.Service .(router::$prefix_base ? '/'. router::$prefix_base : '');
+			if(SubDomain)
+			{
+				router::$base .= SubDomain. '.';
+			}
+			router::$base .= Service .(router::$prefix_base ? '/'. router::$prefix_base : '');
 		}
 
 		if(count(explode('.', SubDomain)) > 1)
