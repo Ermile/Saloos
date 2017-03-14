@@ -71,6 +71,14 @@ trait log
 		$my_text .= "\r\n";
 
 		file_put_contents($fileAddr, $my_text, FILE_APPEND);
+
+		// add to start of file
+		// $fileContent = '';
+		// if(file_exists($fileAddr))
+		// {
+		// 	$fileContent = file_get_contents ($fileAddr);
+		// }
+		// file_put_contents ($fileAddr, $my_text . "\n" . $fileContent);
 	}
 }
 ?>

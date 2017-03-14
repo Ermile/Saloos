@@ -162,6 +162,18 @@ class router
 		}
 
 		router::$base = Protocol.'://';
+		if(defined('subDevelop'))
+		{
+			if(self::$sub_real === constant('subDevelop'))
+			{
+				router::$base .= constant('subDevelop'). '.';
+			}
+			elseif(SubDomain === constant('subDevelop'))
+			{
+
+			}
+		}
+
 		if(router::$sub_is_fake)
 		{
 
@@ -178,7 +190,7 @@ class router
 		}
 		elseif(SubDomain === 'www')
 		{
-			   header('Location: '.router::get_storage('url_site'), true, 301);
+			header('Location: '.router::get_storage('url_site'), true, 301);
 		}
 	}
 
@@ -201,7 +213,10 @@ class router
 		if(!$mysub)
 		{
 			$mysub = router::get_url(0);
-			router::$sub_is_fake = true;
+			if($mysub)
+			{
+				router::$sub_is_fake = true;
+			}
 		}
 
 		if($mysub)
@@ -245,6 +260,9 @@ class router
 				// if url is fake, show it like subdomain and remove from url
 				if(router::$sub_is_fake)
 				{
+					// set real sub for use in other part of code
+					self::$sub_real = router::get_sub_domain();
+
 					router::remove_url($mysub_real);
 					router::set_sub_domain($mysub_real);
 				}
