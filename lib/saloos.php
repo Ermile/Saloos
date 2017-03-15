@@ -6,7 +6,7 @@ namespace lib;
 class saloos
 {
 	// @var saloos core current version
-	const version = '9.0.8';
+	const version = '9.0.9';
 
 	// @var saloos core current commit number
 	// now get it automatically from git commands
@@ -15,18 +15,25 @@ class saloos
 	// @var current version last update date
 	// now get it automatically from git last commit date
 
+	public static $protocol_type = 'http';
+
 	/**
 	 * constractor
 	 */
 	public function __construct()
 	{
-		// if(php_sapi_name() == "cli"){
-		// 	return;
-		// }
-		self::lib()->router();
-		self::lib()->define();
+		$creator = stream_resolve_include_path('creator.php');
+		if($creator)
+		{
+			require_once $creator;
+		}
+		else
+		{
+			self::lib()->router();
+			self::lib()->define();
 
-		self::lib()->main();
+			self::lib()->main();
+		}
 	}
 
 
