@@ -66,7 +66,7 @@ class visitor
 	 * create final query string to add new record to visitors table
 	 * @return [string] contain insert query string
 	 */
-	public static function create_query()
+	public static function create_query($_array = false)
 	{
 		// declare variables
 		self::$visitor['`visitor_ip`']       = ClientIP;
@@ -79,12 +79,40 @@ class visitor
 		self::$visitor['`visitor_date`']     = "'".date('Y-m-d')."'";
 		self::$visitor['`visitor_time`']     = "'".date('H:i:s')."'";
 
+		if($_array === true)
+		{
+			return self::$visitor;
+		}
+
 		// create query string
 		$qry_fields = implode(', ', array_keys(self::$visitor));
 		$qry_values = implode(', ', self::$visitor);
 		$qry = "INSERT INTO visitors ( $qry_fields ) VALUES ( $qry_values );";
 		// return query
 		return $qry;
+	}
+
+
+	/**
+	 * get visitor data
+	 *
+	 * @param      <type>  $_type  The type
+	 *
+	 * @return     <type>  ( description_of_the_return_value )
+	 */
+	public static function get($_type = null)
+	{
+		switch ($_type)
+		{
+			case 'agent':
+				$return = self::checkDetailExist('agent',   self::agent());
+				break;
+
+			default:
+				$return = self::create_query(true);
+				break;
+		}
+		return $return;
 	}
 
 
