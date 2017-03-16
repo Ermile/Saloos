@@ -199,8 +199,11 @@ class sms
 
 		if(array_key_exists('debug', $api_settings) && $api_settings['debug'] === true)
 		{
-			self::error(T_($_request). T_(' to '). $_mobile, 'true');
-			self::error(T_($_msg), 'true');
+			if(isset($_options['args']['mobile']) && isset($_options['settings']['request']) && isset($_options['args']['token']))
+			{
+				self::error(T_($_options['settings']['request']). T_(' to '). $_options['args']['mobile'], 'true');
+				self::error(T_($_options['args']['token']), 'true');
+			}
 			return 'debug';
 		}
 		if(!$api_settings['api_key'] || !$sms_line )
