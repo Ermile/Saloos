@@ -251,7 +251,7 @@ class upload
 			}
 			else
 			{
-				return \lib\debug::error(T_('Fail on tranfering file, when moving in temp'));
+				return \lib\debug::error(T_('Failed to transfer file while moving to temp'));
 			}
 		}
 	}
@@ -409,7 +409,7 @@ class upload
 
 		if(self::$fileSize > $_options['user_size_remaining'])
 		{
-			return \lib\debug::error(T_("This file larger than your space in service"), 'file', 'size');
+			return \lib\debug::error(T_("The size of file is larger than the upload space you have"), 'file', 'size');
 		}
 
 		// save file as tmp in tmp_path
