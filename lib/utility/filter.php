@@ -25,17 +25,24 @@ class filter
 		}
 		elseif(substr($mymobile, 0, 2) === '00')
 		{
+			// if user enter 00 in start of number delete it
 			$mymobile = substr($mymobile, 2);
-		}elseif(substr($mymobile, 0, 1) === '0')
+		}
+		elseif(substr($mymobile, 0, 1) === '0')
 		{
 			$mymobile = substr($mymobile, 1);
 		}
 
-		// if user enter 00 in start of number delete it
 		if(!ctype_digit($mymobile))
 		{
 			return false;
 		}
+
+		if(intval($mymobile) < 0)
+		{
+			return false;
+		}
+
 		// check max and min number
 		if(mb_strlen($mymobile) > 15 || mb_strlen($mymobile) < 8)
 		{
