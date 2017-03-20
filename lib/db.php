@@ -126,7 +126,7 @@ class db
 		{
 			// no result exist
 			// save mysql error
-			$temp_error = "#". date("Y-m-d H:i:s") . "\n$_qry\n#ERROR\t--- MYSQL ERROR ". mysqli_error(self::$link);
+			$temp_error = "#". date("Y-m-d H:i:s") . "\n$_qry\n/* ERROR\tMYSQL ERROR\n". mysqli_error(self::$link)." */";
 			self::log($temp_error, $qry_exec_time, 'error.sql');
 
 			if($_options['debug_error'])
