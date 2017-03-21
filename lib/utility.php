@@ -378,7 +378,7 @@ class utility
     {
     	$result = null;
 
-    	if(mb_strlen($_stamp) < 2)
+    	if(is_string($_stamp) && mb_strlen($_stamp) < 2)
     	{
     		$_stamp = false;
     	}
