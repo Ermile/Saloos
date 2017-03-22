@@ -5,6 +5,8 @@ use \lib\debug;
 class zarinpal
 {
 
+    public static $save_log = false;
+
     /**
      * pay price
      *
@@ -12,6 +14,15 @@ class zarinpal
      */
     public static function pay($_args = [])
     {
+        $log_meta =
+        [
+            'data' => null,
+            'meta' =>
+            [
+                'args' => func_get_args()
+            ],
+        ];
+
         $default_args =
         [
             'MerchantID'  => null,
@@ -26,27 +37,47 @@ class zarinpal
         // if soap is not exist return false
         if(!class_exists("soapclient"))
         {
+            if(self::$save_log)
+            {
+                \lib\db\logs::set('payment:zarinpal:soapclient:not:install', null, $log_meta);
+            }
             debug::error(T_("Can not connect to zarinpal gateway. Install it!"));
             return false;
         }
 
         if(!$_args['MerchantID'])
         {
+            if(self::$save_log)
+            {
+                \lib\db\logs::set('payment:zarinpal:merchantid:not:set', null, $log_meta);
+            }
             return debug::error(T_("The MerchantID is required"), 'MerchantID', 'arguments');
         }
 
         if(!$_args['Amount'])
         {
+            if(self::$save_log)
+            {
+                \lib\db\logs::set('payment:zarinpal:amount:not:set', null, $log_meta);
+            }
             return debug::error(T_("The Amount is required"), 'Amount', 'arguments');
         }
 
         if(!$_args['Description'])
         {
+            if(self::$save_log)
+            {
+                \lib\db\logs::set('payment:zarinpal:description:not:set', null, $log_meta);
+            }
             return debug::error(T_("The Description is required"), 'Description', 'arguments');
         }
 
         if(!$_args['CallbackURL'])
         {
+            if(self::$save_log)
+            {
+                \lib\db\logs::set('payment:zarinpal:callbackurl:not:set', null, $log_meta);
+            }
             return debug::error(T_("The CallbackURL is required"), 'CallbackURL', 'arguments');
         }
 
@@ -58,6 +89,10 @@ class zarinpal
         }
         else
         {
+            if(self::$save_log)
+            {
+                \lib\db\logs::set('payment:zarinpal:amount:lessthan:0', null, $log_meta);
+            }
             return debug::error(T_("Amount must be larger than 0"), 'Amount', 'arguments');
         }
 
@@ -80,22 +115,37 @@ class zarinpal
         {
             $client = @new \soapclient('https://de.zarinpal.com/pg/services/WebGate/wsdl');
 
-            $result = $client->PaymentRequest($request);
+            $result                         = $client->PaymentRequest($request);
+            $msg                            = self::msg($result->Status);
 
-            $msg = self::msg($result->Status);
+            $log_meta['meta']['soapclient'] = $result;
+            $log_meta['meta']['msg']        = $msg;
 
             if ($result->Status == 100)
             {
+                if(self::$save_log)
+                {
+                    $log_meta['data']               = (string) $result->Authority;
+                    \lib\db\logs::set('payment:zarinpal:redirect', null, $log_meta);
+                }
                 $url = "https://www.zarinpal.com/pg/StartPay/" . $result->Authority;
                 $redirect = (new \lib\redirector($url, false))->redirect();
             }
             else
             {
+                if(self::$save_log)
+                {
+                    \lib\db\logs::set('payment:zarinpal:error', null, $log_meta);
+                }
                 return debug::error($msg);
             }
         }
         catch (SoapFault $e)
         {
+            if(self::$save_log)
+            {
+                \lib\db\logs::set('payment:zarinpal:error:load:web:services', null, $log_meta);
+            }
             return debug::error(T_("Error in load web services"));
         }
     }
@@ -109,6 +159,15 @@ class zarinpal
     public static function verify($_args = [])
     {
 
+        $log_meta =
+        [
+            'data' => null,
+            'meta' =>
+            [
+                'args' => func_get_args()
+            ],
+        ];
+
         $default_args =
         [
             'MerchantID' => null,
@@ -119,27 +178,41 @@ class zarinpal
 
         $_args = array_merge($default_args, $_args);
 
-
         if(!$_args['MerchantID'])
         {
+            if(self::$save_log)
+            {
+                \lib\db\logs::set('payment:zarinpal:merchantid:not:set', null, $log_meta);
+            }
             return debug::error(T_("The MerchantID is required"), 'MerchantID', 'arguments');
         }
 
         if(!$_args['Amount'])
         {
+            if(self::$save_log)
+            {
+                \lib\db\logs::set('payment:zarinpal:amount:not:set', null, $log_meta);
+            }
             return debug::error(T_("The Amount is required"), 'Amount', 'arguments');
         }
 
         if(!$_args['Authority'])
         {
+            if(self::$save_log)
+            {
+                \lib\db\logs::set('payment:zarinpal:authority:not:set', null, $log_meta);
+            }
             return debug::error(T_("The Authority is required"), 'Authority', 'arguments');
         }
 
-        // if($_args['Status'] == 'NOK')
-        // {
-        //     return debug::error(T_("The user cancel the transaction or transaction is faild"), 'Status', 'arguments');
-        // }
-
+        if($_args['Status'] == 'NOK')
+        {
+            if(self::$save_log)
+            {
+                \lib\db\logs::set('payment:zarinpal:user:cancel:operation', null, $log_meta);
+            }
+            return debug::error(T_("The user cancel the transaction or transaction is faild"), 'Status', 'arguments');
+        }
 
         $request               = [];
         $request['MerchantID'] = $_args['MerchantID'];
@@ -150,21 +223,34 @@ class zarinpal
         {
             $client = @new \soapclient('https://de.zarinpal.com/pg/services/WebGate/wsdl');
 
-            $result = $client->PaymentVerification($request);
-            $msg = self::msg($result->Status);
+            $result                         = $client->PaymentVerification($request);
+            $msg                            = self::msg($result->Status);
+            $log_meta['meta']['soapclient'] = $result;
 
-            if ($result->Status == 100)
+            if($result->Status == 100)
+            {
+                return true;
+            }
+            elseif($result->Status == 101)
             {
                 return true;
             }
             else
             {
+                if(self::$save_log)
+                {
+                    \lib\db\logs::set('payment:zarinpal:verify:error', null, $log_meta);
+                }
                 debug::error($msg);
                 return false;
             }
         }
         catch (SoapFault $e)
         {
+            if(self::$save_log)
+            {
+                \lib\db\logs::set('payment:zarinpal:verify:error:load:web:services', null, $log_meta);
+            }
             return debug::error(T_("Error in load web services"));
         }
     }
