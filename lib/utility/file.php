@@ -224,8 +224,8 @@ class file
 		elseif(!filter_var($_path, FILTER_VALIDATE_URL) === false)
 		{
 			// read header of file and if exist return true
-			$headers = get_headers($_path);
-			if(stripos($headers[0], "200 OK"))
+			$headers = @get_headers($_path);
+			if($headers && stripos($headers[0], "200 OK"))
 			{
 				return true;
 			}
