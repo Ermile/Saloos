@@ -66,7 +66,7 @@ class languages
 		{
 			$_key = substr($_key, 0, 2);
 		}
-		if(isset(self::$data[$_key]))
+		if(!empty(self::$data) && isset(self::$data[$_key]))
 		{
 			if($_request === 'all' || !$_request)
 			{
