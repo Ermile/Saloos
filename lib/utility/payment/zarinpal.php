@@ -5,7 +5,14 @@ use \lib\debug;
 class zarinpal
 {
 
+    /**
+     * auto save logs
+     *
+     * @var        boolean
+     */
     public static $save_log = false;
+    // to save log for this user
+    public static $user_id  = null;
 
     /**
      * pay price
@@ -39,7 +46,7 @@ class zarinpal
         {
             if(self::$save_log)
             {
-                \lib\db\logs::set('payment:zarinpal:soapclient:not:install', null, $log_meta);
+                \lib\db\logs::set('payment:zarinpal:soapclient:not:install', self::$user_id, $log_meta);
             }
             debug::error(T_("Can not connect to zarinpal gateway. Install it!"));
             return false;
@@ -49,7 +56,7 @@ class zarinpal
         {
             if(self::$save_log)
             {
-                \lib\db\logs::set('payment:zarinpal:merchantid:not:set', null, $log_meta);
+                \lib\db\logs::set('payment:zarinpal:merchantid:not:set', self::$user_id, $log_meta);
             }
             return debug::error(T_("The MerchantID is required"), 'MerchantID', 'arguments');
         }
@@ -58,7 +65,7 @@ class zarinpal
         {
             if(self::$save_log)
             {
-                \lib\db\logs::set('payment:zarinpal:amount:not:set', null, $log_meta);
+                \lib\db\logs::set('payment:zarinpal:amount:not:set', self::$user_id, $log_meta);
             }
             return debug::error(T_("The Amount is required"), 'Amount', 'arguments');
         }
@@ -67,7 +74,7 @@ class zarinpal
         {
             if(self::$save_log)
             {
-                \lib\db\logs::set('payment:zarinpal:description:not:set', null, $log_meta);
+                \lib\db\logs::set('payment:zarinpal:description:not:set', self::$user_id, $log_meta);
             }
             return debug::error(T_("The Description is required"), 'Description', 'arguments');
         }
@@ -76,7 +83,7 @@ class zarinpal
         {
             if(self::$save_log)
             {
-                \lib\db\logs::set('payment:zarinpal:callbackurl:not:set', null, $log_meta);
+                \lib\db\logs::set('payment:zarinpal:callbackurl:not:set', self::$user_id, $log_meta);
             }
             return debug::error(T_("The CallbackURL is required"), 'CallbackURL', 'arguments');
         }
@@ -91,7 +98,7 @@ class zarinpal
         {
             if(self::$save_log)
             {
-                \lib\db\logs::set('payment:zarinpal:amount:lessthan:0', null, $log_meta);
+                \lib\db\logs::set('payment:zarinpal:amount:lessthan:0', self::$user_id, $log_meta);
             }
             return debug::error(T_("Amount must be larger than 0"), 'Amount', 'arguments');
         }
@@ -126,7 +133,7 @@ class zarinpal
                 if(self::$save_log)
                 {
                     $log_meta['data']               = (string) $result->Authority;
-                    \lib\db\logs::set('payment:zarinpal:redirect', null, $log_meta);
+                    \lib\db\logs::set('payment:zarinpal:redirect', self::$user_id, $log_meta);
                 }
                 $url = "https://www.zarinpal.com/pg/StartPay/" . $result->Authority;
                 $redirect = (new \lib\redirector($url, false))->redirect();
@@ -135,7 +142,7 @@ class zarinpal
             {
                 if(self::$save_log)
                 {
-                    \lib\db\logs::set('payment:zarinpal:error', null, $log_meta);
+                    \lib\db\logs::set('payment:zarinpal:error', self::$user_id, $log_meta);
                 }
                 return debug::error($msg);
             }
@@ -144,7 +151,7 @@ class zarinpal
         {
             if(self::$save_log)
             {
-                \lib\db\logs::set('payment:zarinpal:error:load:web:services', null, $log_meta);
+                \lib\db\logs::set('payment:zarinpal:error:load:web:services', self::$user_id, $log_meta);
             }
             return debug::error(T_("Error in load web services"));
         }
@@ -182,7 +189,7 @@ class zarinpal
         {
             if(self::$save_log)
             {
-                \lib\db\logs::set('payment:zarinpal:merchantid:not:set', null, $log_meta);
+                \lib\db\logs::set('payment:zarinpal:merchantid:not:set', self::$user_id, $log_meta);
             }
             return debug::error(T_("The MerchantID is required"), 'MerchantID', 'arguments');
         }
@@ -191,7 +198,7 @@ class zarinpal
         {
             if(self::$save_log)
             {
-                \lib\db\logs::set('payment:zarinpal:amount:not:set', null, $log_meta);
+                \lib\db\logs::set('payment:zarinpal:amount:not:set', self::$user_id, $log_meta);
             }
             return debug::error(T_("The Amount is required"), 'Amount', 'arguments');
         }
@@ -200,7 +207,7 @@ class zarinpal
         {
             if(self::$save_log)
             {
-                \lib\db\logs::set('payment:zarinpal:authority:not:set', null, $log_meta);
+                \lib\db\logs::set('payment:zarinpal:authority:not:set', self::$user_id, $log_meta);
             }
             return debug::error(T_("The Authority is required"), 'Authority', 'arguments');
         }
@@ -209,7 +216,7 @@ class zarinpal
         {
             if(self::$save_log)
             {
-                \lib\db\logs::set('payment:zarinpal:user:cancel:operation', null, $log_meta);
+                \lib\db\logs::set('payment:zarinpal:user:cancel:operation', self::$user_id, $log_meta);
             }
             return debug::error(T_("The user cancel the transaction or transaction is faild"), 'Status', 'arguments');
         }
@@ -239,7 +246,7 @@ class zarinpal
             {
                 if(self::$save_log)
                 {
-                    \lib\db\logs::set('payment:zarinpal:verify:error', null, $log_meta);
+                    \lib\db\logs::set('payment:zarinpal:verify:error', self::$user_id, $log_meta);
                 }
                 debug::error($msg);
                 return false;
@@ -249,7 +256,7 @@ class zarinpal
         {
             if(self::$save_log)
             {
-                \lib\db\logs::set('payment:zarinpal:verify:error:load:web:services', null, $log_meta);
+                \lib\db\logs::set('payment:zarinpal:verify:error:load:web:services', self::$user_id, $log_meta);
             }
             return debug::error(T_("Error in load web services"));
         }
