@@ -36,6 +36,7 @@ class autoload
 			if($file_addr !== false)
 			{
 				self::$require[$name] = 1;
+				$file_addr = stream_resolve_include_path($file_addr);
 				include_once($file_addr);
 			}
 			else
