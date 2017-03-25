@@ -157,7 +157,7 @@ class upload
 		//select memory limit
 		$memory_limit = self::sp_fileSizeByte(ini_get('memory_limit'));
 		// find the smallest of them, this defines the real limit
-		$min = min($max_upload, $max_post, $memory_limit);
+		$min = min($max_upload, $max_post, $memory_limit, self::MAX_SIZE);
 		// if user want can get raw value for use in another func
 		if($_raw)
 		{
@@ -387,7 +387,7 @@ class upload
 				case 'https':
 				case 'ftp':
 				case 'sftp':
-					$file_path = \lib\utility\file::open($_options['file_path']);
+					$file_path = \lib\utility\file::open($_options['file_path'], ['MAX_SIZE' => $_options['user_size_remaining']]);
 					break;
 
 				default:
@@ -404,7 +404,8 @@ class upload
 		$invalid = self::invalid($_options['upload_name']);
 		if($invalid)
 		{
-			return \lib\debug::error($invalid, false, 'upload');
+			// we have error in file
+			return false;
 		}
 
 		if(self::$fileSize > $_options['user_size_remaining'])

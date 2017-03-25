@@ -489,28 +489,52 @@ class file
 	 */
 	public static function open($_path, $_options = [])
 	{
+		$max_size = \lib\utility\upload::max_file_upload_in_bytes(true);
 		$default_options =
 		[
-			'read_size'  => 1024 * 5, // 5 MB
-			'tmp_path'   => '/tmp'
+			'read_size' => 1024 * 5, // 5 MB
+			'tmp_path'  => '/tmp',
+			'max_size'  => $max_size,
 		];
 
 		$_options = array_merge($default_options, $_options);
-
 		$new_path = tempnam($_options['tmp_path'], 'SALOOS_');
 
 		$file     = @fopen($_path, 'r');
 
 		if(!$file)
 		{
-			throw new \RuntimeException(T_('File not exist'));
+			\lib\debug::error(T_('File not exist'));
+			// throw new \RuntimeException(T_('File not exist'));
 		}
 
 		$tmp_file = fopen($new_path, 'w');
 
+		$uploaded_size = 0;
+
+		$break = false;
 		while(!feof($file))
 		{
 			fwrite($tmp_file, fread($file, $_options['read_size']));
+			$uploaded_size += $_options['read_size'];
+			if($uploaded_size > $_options['max_size'])
+			{
+				$break = true;
+			}
+
+			if($break)
+			{
+				break;
+			}
+		}
+
+		if($break)
+		{
+			fclose($file);
+			fclose($tmp_file);
+			\lib\debug::error(T_('Exceeded filesize limit'));
+			// throw new \RuntimeException(T_('Exceeded filesize limit'));
+			return false;
 		}
 
 		fclose($file);
