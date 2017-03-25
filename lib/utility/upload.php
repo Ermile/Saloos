@@ -409,7 +409,7 @@ class upload
 
 		if(self::$fileSize > $_options['user_size_remaining'])
 		{
-			return \lib\debug::error(T_("The size of file is larger than the upload space you have"), 'file', 'size');
+			return \lib\debug::error(T_("The size of file is larger than the upload space you have, your space is :space", ['space' => $_options['user_size_remaining']]), 'file', 'size');
 		}
 
 		// save file as tmp in tmp_path
