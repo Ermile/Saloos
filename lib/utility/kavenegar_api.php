@@ -2,7 +2,7 @@
 namespace lib\utility;
 /*
 @ Kavenegar Api
-@ Version: 2.0
+@ Version: 2.1
 @ Author: Javad Evazzadeh | Evazzadeh.com
 
 Quick Start:
@@ -83,6 +83,10 @@ class kavenegar_api
 			curl_setopt($handle, CURLOPT_SSL_VERIFYPEER, false);
 			curl_setopt($handle, CURLOPT_POST, true);
 			curl_setopt($handle, CURLOPT_POSTFIELDS, $fields_string);
+			// add timer to ajax request
+			curl_setopt($handle, CURLOPT_CONNECTTIMEOUT, 10);
+			curl_setopt($handle, CURLOPT_TIMEOUT, 20  );
+
 			$response = curl_exec($handle);
 			$mycode   = curl_getinfo($handle, CURLINFO_HTTP_CODE);
 			// check mycode in special situation, if has default code with status handle it
