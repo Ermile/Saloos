@@ -28,7 +28,7 @@ class upload
 		'png', 'jpeg', 	'jpg', 	'zip', 	'rar', 'mp3',
 		'mp4', 'pdf', 	'doc', 	'docx', 'apk', 'chm',
 		'jar', 'txt', 	'css', 	'js', 	'htm', 'html',
-		'swf', 'xml', 	'xlsx', 'pptx'
+		'swf', 'xml', 	'xlsx', 'pptx', 'ogg', 'mov'
 	];
 	/**
 	 * default set the file name as md5

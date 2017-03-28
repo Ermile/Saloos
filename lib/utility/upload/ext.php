@@ -32,6 +32,8 @@ trait ext
 			// audio
 			'mp3'      => [ 'type' => 'audio',      'mime' => 'audio/mpeg'],
 			'wav'      => [ 'type' => 'audio',      'mime' => 'audio/x-wav'],
+			'ogg'      => [ 'type' => 'audio',      'mime' => 'audio/ogg'],
+
 			// image
 			'bmp'      => [ 'type' => 'image',      'mime' => 'image/bmp'],
 			'gif'      => [ 'type' => 'image',      'mime' => 'image/gif'],
