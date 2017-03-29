@@ -7,11 +7,11 @@ class safe
 	 * @param  string $_string unsafe string
 	 * @return string          safe string
 	 */
-	public static function safe($_string)
+	public static function safe($_string, $_remove_inject = null)
 	{
 		if(is_array($_string) || is_object($_string))
 		{
-			return self::walk($_string);
+			return self::walk($_string, $_remove_inject);
 		}
 		if(
 			gettype($_string) == 'integer' ||
@@ -21,6 +21,18 @@ class safe
 			)
 		{
 			return $_string;
+		}
+		if(is_string($_remove_inject))
+		{
+			switch ($_remove_inject) {
+				case 'sqlinjection':
+					$_remove_inject = ["'", '"', '\\\\\\', '/' , '`', '\*', "\\?", ';'];
+					break;
+			}
+		}
+		if(is_array($_remove_inject))
+		{
+			$_string = preg_replace("/\s?[" . join('', $_remove_inject) . "]/", "", $_string);
 		}
 		$string = htmlspecialchars($_string, ENT_QUOTES | ENT_HTML5);
 		$string = addcslashes($string, '\\');
@@ -32,7 +44,7 @@ class safe
 	 * @param  array or object $_value unpack array or object
 	 * @return array or object         safe array or object
 	 */
-	private static function walk($_value)
+	private static function walk($_value, $_remove_inject = null)
 	{
 		foreach ($_value as $key => $value)
 		{
@@ -40,22 +52,22 @@ class safe
 			{
 				if(is_array($_value))
 				{
-					$_value[$key] = self::walk($value);
+					$_value[$key] = self::walk($value, $_remove_inject);
 				}
 				elseif(is_object($_value))
 				{
-					$_value->$key = self::walk($value);
+					$_value->$key = self::walk($value, $_remove_inject);
 				}
 			}
 			else
 			{
 				if(is_array($_value))
 				{
-					$_value[$key] = self::safe($value);
+					$_value[$key] = self::safe($value, $_remove_inject);
 				}
 				elseif(is_object($_value))
 				{
-					$_value->$key = self::safe($value);
+					$_value->$key = self::safe($value, $_remove_inject);
 				}
 			}
 		}
