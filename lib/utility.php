@@ -21,7 +21,7 @@ class utility
 	{
 		if(!self::$POST)
 		{
-			self::$POST = utility\safe::safe($_POST);
+			self::$POST = utility\safe::safe($_POST, 'sqlinjection');
 		}
 		$myvalue = null;
 		if(!$_name)
@@ -115,7 +115,7 @@ class utility
 	{
 		if(!self::$GET)
 		{
-			self::$GET = utility\safe::safe($_GET);
+			self::$GET = utility\safe::safe($_GET, 'sqlinjection');
 		}
 		$myget = array();
 		foreach (self::$GET as $key => &$value)
