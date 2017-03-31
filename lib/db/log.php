@@ -26,15 +26,15 @@ trait log
 			$my_text .= "\t---". $_time. "s";
 			$my_text .= "\t\t---". $time_ms . "ms";
 		}
-		if($time_ms > 500)
+		if($time_ms > 1000)
 		{
 			$my_text .= "\n"."--- CRITICAL!";
 		}
-		elseif($time_ms > 100)
+		elseif($time_ms > 500)
 		{
 			$my_text .= "\n"."--- WARN!";
 		}
-		elseif($time_ms > 50)
+		elseif($time_ms > 200)
 		{
 			$my_text .= "\n"."--- CHECK!";
 		}
