@@ -25,7 +25,6 @@ class sms
 		{
 			return false;
 		}
-
 		// set restriction
 		if(isset($settings['meta']['iran']) && $settings['meta']['iran'] &&
 			substr($_options['mobile'], 0, 2) !== '98')
@@ -187,7 +186,7 @@ class sms
 		switch ($api_settings['request']) {
 			case 'send':
 				// set message and call related sms service
-				$options['msg'] = self::message($options['msg'], $options['arg'], $settings);
+				$options['msg'] = self::message($options['msg'], $options['args'], $settings);
 				if(!$options['msg'])
 				{
 					// message is empty
