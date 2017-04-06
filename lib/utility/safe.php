@@ -26,7 +26,7 @@ class safe
 		{
 			switch ($_remove_inject) {
 				case 'sqlinjection':
-					$_remove_inject = ["'", '"', '\\\\\\', '/' , '`', '\*', "\\?", ';'];
+					$_remove_inject = ["'", '"', '\\\\\\', '`', '\*', "\\?", ';'];
 					break;
 			}
 		}
