@@ -12,6 +12,7 @@ trait backup
 	 */
 	public static function backup($_period = null, $_tables = '*')
 	{
+
 		self::connect(true, false);
 		mysqli_select_db(self::$link, self::$db_name);
 
@@ -26,6 +27,7 @@ trait backup
 		{
 			$_tables = is_array($_tables) ? $_tables : explode(',',$_tables);
 		}
+
 		$return = null;
 
 		//cycle through
@@ -33,15 +35,15 @@ trait backup
 		{
 			$result     = mysqli_query(self::$link, 'SELECT * FROM '.$table);
 			$num_fields = mysqli_num_fields($result);
-			$return     .= 'DROP TABLE '.$table.';';
-			$row2       = mysqli_fetch_row(mysqli_query(self::$link, 'SHOW CREATE TABLE '.$table));
+			$return     .= "DROP TABLE `$table`; ";
+			$row2       = mysqli_fetch_row(mysqli_query(self::$link, "SHOW CREATE TABLE `$table` "));
 			$return     .= "\n\n".$row2[1].";\n\n";
 
 			for ($i = 0; $i < $num_fields; $i++)
 			{
 				while($row = mysqli_fetch_row($result))
 				{
-					$return.= 'INSERT INTO '.$table.' VALUES(';
+					$return.= 'INSERT INTO `'.$table.'` VALUES(';
 					for($j=0; $j < $num_fields; $j++)
 					{
 						$row[$j] = addslashes($row[$j]);
@@ -65,6 +67,7 @@ trait backup
 			}
 			$return.="\n\n\n";
 		}
+
 		// if user pass true in period we call clean func
 		if($_period === true)
 		{
@@ -107,30 +110,53 @@ trait backup
 	 * @param  [type] $_period the name of subfolder or type of backup
 	 * @return [type]          status of running commad
 	 */
-	public static function backup_dump($_period = null)
+	public static function backup_dump($_period = null, $_options = [])
 	{
+		$default_options =
+		[
+			'lock_tables'   => false,
+		];
+
+		if(!is_array($_options))
+		{
+			$_options = [];
+		}
+
+		$_options = array_merge($default_options, $_options);
+
 		$_period    = $_period? $_period.'/':null;
 		$db_host    = self::$db_host;
 		$db_charset = self::$db_charset;
-		$dest_file  = self::$db_name.'.'. date('d-m-Y_H-i-s'). '.sql';
+		$dest_file  = self::$db_name.'.'. date('d-m-Y_H-i-s'). '.sql.bz2';
 		$dest_dir   = database."backup/$_period";
 		// create folder if not exist
 		if(!is_dir($dest_dir))
 			mkdir($dest_dir, 0755, true);
 
 		$cmd  = "mysqldump --single-transaction --add-drop-table";
+		if(!$_options['lock_tables'])
+		{
+			$cmd  .= " --skip-lock-tables ";
+		}
+
 		$cmd .= " --host='$db_host' --set-charset='$db_charset'";
 		$cmd .= " --user='".self::$db_user."'";
 		$cmd .= " --password='".self::$db_pass."' '". self::$db_name."'";
-		$cmd .= " | bzip2 -c > $dest_dir.$dest_file";
-
+		$cmd .= " | bzip2 -c > $dest_dir$dest_file";
+		// to import this file
+		// bunzip2 < filename.sql.bz2 | mysql -u root -p db_name
 		$return_var = NULL;
 		$output     = NULL;
 		$result     = exec($cmd, $output, $return_var);
-		if($return_var === 0)
-			return true;
 
-		return false;
+		if($return_var === 0)
+		{
+			\lib\utility\file::download($dest_dir. $dest_file);
+
+			return T_("Back up database complete"). ' '. $dest_file;
+		}
+
+		return T_("Error in backup database");
 	}
 
 
