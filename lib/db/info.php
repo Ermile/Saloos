@@ -10,9 +10,13 @@ trait info
 	 * read query info and analyse it and return array contain result
 	 * @return [type] [description]
 	 */
-	public static function qry_info($_needle = null)
+	public static function qry_info($_needle = null, $_link = null)
 	{
-		preg_match_all ('/(\S[^:]+): (\d+)/', mysqli_info(self::$link), $matches);
+		if($_link === null)
+		{
+			$_link = self::$link;
+		}
+		preg_match_all ('/(\S[^:]+): (\d+)/', mysqli_info($_link), $matches);
 		$info = array_combine ($matches[1], $matches[2]);
 		if($_needle && isset($info[$_needle]))
 		{
@@ -27,9 +31,9 @@ trait info
 	 *
 	 * @return     <type>  ( description_of_the_return_value )
 	 */
-	public static function rows_matched()
+	public static function rows_matched($_link = null)
 	{
-		return self::qry_info("Rows matched");
+		return self::qry_info("Rows matched", $_link);
 	}
 
 
@@ -38,9 +42,9 @@ trait info
 	 *
 	 * @return     <type>  ( description_of_the_return_value )
 	 */
-	public static function changed()
+	public static function changed($_link = null)
 	{
-		return self::qry_info("Changed");
+		return self::qry_info("Changed", $_link);
 	}
 
 
@@ -49,9 +53,9 @@ trait info
 	 *
 	 * @return     <type>  ( description_of_the_return_value )
 	 */
-	public static function warnings()
+	public static function warnings($_link = null)
 	{
-		return self::qry_info("Warnings");
+		return self::qry_info("Warnings", $_link);
 	}
 
 
@@ -60,9 +64,13 @@ trait info
 	 *
 	 * @return     <type>  ( description_of_the_return_value )
 	 */
-	public static function insert_id()
+	public static function insert_id($_link = null)
 	{
-		$last_id = @mysqli_insert_id(self::$link);
+		if($_link === null)
+		{
+			$_link = self::$link;
+		}
+		$last_id = @mysqli_insert_id($_link);
 		return $last_id;
 	}
 
@@ -71,11 +79,15 @@ trait info
 	 * return version of mysql used on server
 	 * @return [type] [description]
 	 */
-	public static function version()
+	public static function version($_link = null)
 	{
+		if($_link === null)
+		{
+			$_link = self::$link;
+		}
 		// mysqli_get_client_info();
 		// mysqli_get_client_version();
-		return mysqli_get_server_version(self::$link);
+		return mysqli_get_server_version($_link);
 	}
 
 
@@ -84,9 +96,13 @@ trait info
 	 *
 	 * @return     <int>  ( description_of_the_return_value )
 	 */
-	public static function num()
+	public static function num($_link = null)
 	{
-		$num = @mysqli_num_rows(self::$link);
+		if($_link === null)
+		{
+			$_link = self::$link;
+		}
+		$num = @mysqli_num_rows($_link);
 		// $num = self::$link->affected_rows;
 		return $num;
 	}
@@ -97,18 +113,26 @@ trait info
 	 *
 	 * @return     <type>  ( description_of_the_return_value )
 	 */
-	public static function affected_rows()
+	public static function affected_rows($_link = null)
 	{
-		return mysqli_affected_rows(self::$link);
+		if($_link === null)
+		{
+			$_link = self::$link;
+		}
+		return mysqli_affected_rows($_link);
 	}
 
 
 	/**
 	 * return the mysql error
 	 */
-	public static function error()
+	public static function error($_link = null)
 	{
-		return @mysqli_error(self::$link);
+		if($_link === null)
+		{
+			$_link = self::$link;
+		}
+		return @mysqli_error($_link);
 	}
 
 
