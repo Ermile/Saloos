@@ -21,6 +21,8 @@ trait log
 		$fileAddr .= $_name;
 		$my_text  = "\n#". str_repeat("-", 70). ' '. urldecode($_SERVER['REQUEST_URI']);
 		$my_text .= "\n---". $date_now->format("Y-m-d H:i:s");
+		$my_text .= "\n---". @self::$link->stat;
+		$my_text .= "\n";
 		if($_time)
 		{
 			$my_text .= "\t---". $_time. "s";
