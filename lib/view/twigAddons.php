@@ -676,6 +676,32 @@ trait twigAddons
 	}
 
 
+	public function twig_filter_filemtime()
+	{
+		return new \Twig_SimpleFilter('filemtime', function ($_url, $_withReturn = null)
+		{
+			$result       = '';
+			$complete_url = root.'public_html/';
+			if($_withReturn)
+			{
+				$complete_url .= 'static/';
+			}
+			$complete_url .= $_url;
+			if($_url && \lib\utility\file::exists($complete_url))
+			{
+				$result = filemtime($complete_url);
+			}
+
+			if($_withReturn)
+			{
+				$result = $_url. '?'. $result;
+			}
+
+			return $result;
+		});
+	}
+
+
 	/**
 	 * return tha attachment record of post
 	 *
