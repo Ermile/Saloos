@@ -95,7 +95,7 @@ class file
 		}
 		if(!file_exists($_dirpath))
 		{
-			return mkdir( $_dirpath, $_mode, $_recursive );
+			return @mkdir( $_dirpath, $_mode, $_recursive );
 		}
 		return null;
 	}

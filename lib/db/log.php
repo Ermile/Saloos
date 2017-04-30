@@ -73,7 +73,7 @@ trait log
 		$my_text .= $_text;
 		$my_text .= "\r\n";
 
-		file_put_contents($fileAddr, $my_text, FILE_APPEND);
+		@file_put_contents($fileAddr, $my_text, FILE_APPEND);
 
 		// add to start of file
 		// $fileContent = '';
