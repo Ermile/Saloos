@@ -34,6 +34,12 @@ class db
 			// run mysqli_multi_query
 			'multi_query'     => false,
 		];
+
+		if(!is_array($_options))
+		{
+			$_options = [];
+		}
+
 		$_options = array_merge($default_options, $_options);
 
 		// on default system connect to default db
