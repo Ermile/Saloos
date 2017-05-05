@@ -88,22 +88,54 @@ trait tools
 			{
 				if($_field2 == "localname" && $value['localname'] == '')
 				{
-					$result[$value[$_field]] = $value['name'];
+					if(array_key_exists($_field, $value) && array_key_exists('name', $value))
+					{
+						$result[$value[$_field]] = $value['name'];
+					}
+				}
+				elseif(preg_match("/^.*(name).*(localname).*$/", $_field2))
+				{
+					if($value['localname'] == '')
+					{
+						if(array_key_exists($_field, $value) && array_key_exists('name', $value) && array_key_exists('localname', $value))
+						{
+							$result[$value[$_field]] = str_replace('localname', $value['name'], $_field2);
+							$result[$value[$_field]] = str_replace('name', $value['name'], $_field2);
+						}
+					}
+					else
+					{
+						if(array_key_exists($_field, $value) && array_key_exists('name', $value) && array_key_exists('localname', $value))
+						{
+							$tmep = str_replace('localname', $value['localname'], $_field2);
+							$tmep = str_replace('name', $value['name'], $tmep);
+							$result[$value[$_field]] = $tmep;
+						}
+					}
 				}
 				else
 				{
-					$result[$value[$_field]] = $value[$_field2];
+					if(array_key_exists($_field2, $value) && array_key_exists($_field, $value))
+					{
+						$result[$value[$_field]] = $value[$_field2];
+					}
 				}
 			}
 			else
 			{
 				if($_field == "localname" && $value['localname'] == '')
 				{
-					$result[] = $value['name'];
+					if(array_key_exists('name', $value))
+					{
+						$result[] = $value['name'];
+					}
 				}
 				else
 				{
-					$result[] = $value[$_field];
+					if(array_key_exists($_field, $value))
+					{
+						$result[] = $value[$_field];
+					}
 				}
 			}
 		}
@@ -132,6 +164,41 @@ trait tools
 			return true;
 		}
 		return false;
+	}
+
+
+	/**
+	 * Searches for the first match.
+	 *
+	 * @param      <type>  $_args  The arguments
+	 */
+	public static function search($_args, $_cost = null)
+	{
+		if(!is_array($_args))
+		{
+			return false;
+		}
+
+		$result = [];
+
+		foreach (self::$data as $key => $data)
+		{
+			foreach ($_args as $field => $value)
+			{
+				if(array_key_exists($field, $data))
+				{
+					if($data[$field] === $value)
+					{
+						array_push($result, $data);
+					}
+				}
+			}
+		}
+		if($_cost)
+		{
+			$result = array_column($result, $_cost);
+		}
+		return $result;
 	}
 }
 ?>
