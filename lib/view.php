@@ -34,9 +34,10 @@ class view
 		$this->include               = $this->data->include;
 
 		// default data property
-		$this->data->macro['forms']       = 'includes/macro/forms.html';
+		$this->data->macro['forms']  = 'includes/macro/forms.html';
 		// default display value
-		$this->data->display['mvc']       = "includes/mvc/display.html";
+		$this->data->display['mvc']  = "includes/mvc/display-mvc.html";
+		$this->data->display['back'] = "includes/mvc/display-back.html";
 
 
 		$myurl = router::get_protocol().'://'.router::get_domain().$_SERVER['REQUEST_URI'];
