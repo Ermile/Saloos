@@ -33,12 +33,11 @@
  </div>
  <pre class="result">
 <?php
-	$sqlFiles = \lib\utility\dbTables::create();
+	// $sqlFiles = \lib\utility\dbTables::create();
 	if(DEBUG)
 	{
 		print_r($result);
-		echo $sqlFiles;
-
+		// echo $sqlFiles;
 	}
 ?>
  </pre>
