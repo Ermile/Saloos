@@ -17,16 +17,17 @@ class sms
 		$api_settings = [];
 		// declare variables
 		$tmp_obj     = \lib\main::$controller;
-		$settings    = $tmp_obj->option('sms', null);
+		$settings    = \lib\option::sms('kavenegar');
+
 		$api_settings['global_settings'] = $settings;
 		$api_settings['request'] = $_request;
 		// if sms service is disable, go out
-		if(!$settings['status'] || !isset($settings['meta']))
+		if(!isset($settings['status']) || (isset($settings['status']) && !$settings['status']))
 		{
 			return false;
 		}
 		// set restriction
-		if(isset($settings['meta']['iran']) && $settings['meta']['iran'] &&
+		if(isset($settings['iran']) && $settings['iran'] &&
 			substr($_options['mobile'], 0, 2) !== '98')
 		{
 			self::error(T_("We can't give service to this number"));
@@ -35,21 +36,29 @@ class sms
 		}
 
 		// get sms service name and if not exist show related msg
-		$sms_service = $settings['value'];
-		if(!method_exists(__CLASS__, $sms_service))
+		if(isset($settings['value']))
+		{
+			$sms_service = $settings['value'];
+			if(!method_exists(__CLASS__, $sms_service))
+			{
+				self::error(T_('This sms service is unavailable'), 'error');
+				return false;
+			}
+		}
+		else
 		{
 			self::error(T_('This sms service is unavailable'), 'error');
 			return false;
 		}
 
-		if(isset($settings['meta']['debug']) && $settings['meta']['debug'])
+		if(isset($settings['debug']) && $settings['debug'])
 		{
 			$api_settings['debug'] = true;
 		}
 
-		if(isset($settings['meta']['apikey']) && $settings['meta']['apikey'])
+		if(isset($settings['apikey']) && $settings['apikey'])
 		{
-			$api_settings['api_key'] = $settings['meta']['apikey'];
+			$api_settings['api_key'] = $settings['apikey'];
 		}
 
 		// call related service with special parameters
@@ -178,9 +187,9 @@ class sms
 		$api_settings 	= $_options['settings'];
 		$settings    	= $api_settings['global_settings'];
 		$options 		= $_options['args'];
-		if(isset($settings['meta']['line1']) && $settings['meta']['line1'])
+		if(isset($settings['line1']) && $settings['line1'])
 		{
-			$sms_line = $settings['meta']['line1'];
+			$sms_line = $settings['line1'];
 		}
 
 		switch ($api_settings['request']) {

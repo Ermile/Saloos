@@ -29,7 +29,7 @@ class define
 		 */
 		if (!defined('DEBUG'))
 		{
-			if(\lib\utility\option::get('config', 'meta', 'debug'))
+			if(\lib\option::config('debug'))
 			{
 				define('DEBUG', true);
 			}
@@ -91,7 +91,7 @@ class define
 		 * developer must set get parameter like site.com/dev=anyvalue
 		 * for disable this attribute turn off it from config.php in project root
 		 */
-		if(\lib\utility\option::get('config', 'meta', 'coming') || defined('CommingSoon'))
+		if(\lib\option::config('coming') || defined('CommingSoon'))
 		{
 			// if user set dev in get, show the site
 			if(isset($_GET['dev']))
@@ -189,7 +189,7 @@ class define
 		// if default language is not set, then set it only one time
 		if(!self::$language_default)
 		{
-			self::$language_default = \lib\utility\option::get('config', 'meta', 'defaultLang');
+			self::$language_default = \lib\option::config('default_language');
 			if(!self::$language_default)
 			{
 				self::$language_default = 'en';
@@ -222,7 +222,7 @@ class define
 		// if default language is not set, then set it only one time
 		if(!self::$language_default)
 		{
-			self::$language_default = \lib\utility\option::get('config', 'meta', 'defaultLang');
+			self::$language_default = \lib\option::config('default_language');
 			if(!self::$language_default)
 			{
 				self::$language_default = 'en';

@@ -103,8 +103,8 @@ class router
 		if(!defined('MainTld'))
 		{
 			// if enabling multi domain and set default tld define main tld
-			if(\lib\utility\option::get('config', 'meta', 'multiDomain') &&
-				$defaultTld = \lib\utility\option::get('config', 'meta', 'defaultTld'))
+			if(\lib\option::config('multi_domain') &&
+				$defaultTld = \lib\option::config('default_tld'))
 			{
 				define('MainTld', '.'. $defaultTld);
 			}
@@ -142,8 +142,8 @@ class router
 		if(!defined('AccountService'))
 		{
 			// if user want main account and set main account name
-			if( \lib\utility\option::get('config', 'meta', 'useMainAccount') &&
-				\lib\utility\option::get('config', 'meta', 'mainAccount') === constant('MainService')
+			if( \lib\option::config('use_main_account') &&
+				\lib\option::config('main_account') === constant('MainService')
 			)
 			{
 				define('AccountService', constant('MainService'));
@@ -322,12 +322,12 @@ class router
 		// create new url for protocol checker
 		$newUrl      = "";
 		$currentPath = $_SERVER['REQUEST_URI'];
-		$mainSite    = \lib\utility\option::get('config', 'meta', 'redirectURL');
+		$mainSite    = \lib\option::config('redirect_url');
 		// if redirect to main site is enable and all thing is okay
 		// then redirect to the target url
 		if(
-			\lib\utility\option::get('config', 'meta', 'multiDomain') &&
-			\lib\utility\option::get('config', 'meta', 'redirectToMain') &&
+			\lib\option::config('multi_domain') &&
+			\lib\option::config('redirect_to_main') &&
 			$mainSite &&
 			Tld !== 'dev' &&
 			parse_url($mainSite, PHP_URL_HOST) != \lib\router::get_root_domain()
@@ -355,7 +355,8 @@ class router
 		else
 		{
 			// if want to force using https then redirect to https of current url
-			if(\lib\utility\option::get('config', 'meta', 'https'))
+
+			if(\lib\option::config('https'))
 			{
 				if(Protocol === 'http')
 				{

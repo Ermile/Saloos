@@ -753,5 +753,44 @@ trait twigAddons
 			return $attachment;
 		});
 	}
+
+
+	/**
+	 * return tha attachment record of post
+	 *
+	 * @return     \     ( description_of_the_return_value )
+	 */
+	public function twig_function_permission()
+	{
+		return new \Twig_SimpleFunction('permission', function()
+		{
+
+			$caller  = null;
+			$action  = null;
+			$user_id = null;
+
+			if(isset($this->data->login['id']))
+			{
+				$user_id = $this->data->login['id'];
+			}
+
+			$args = func_get_args();
+
+			if(isset($args[0]))
+			{
+				$caller = $args[0];
+			}
+			if(isset($args[1]))
+			{
+				$action = $args[1];
+			}
+			if(isset($args[2]))
+			{
+				$user_id = $args[2];
+			}
+			\lib\permission::$user_id = $user_id;
+			return \lib\permission::access($caller, $action);
+		});
+	}
 }
 ?>
