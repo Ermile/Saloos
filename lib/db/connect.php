@@ -80,7 +80,6 @@ trait connect
 				case 1045:
 					echo "<p>"."We can't connect to database service!"." "
 								  ."Please contact administrator!!"."</p>";
-					var_dump(debug_backtrace());
 					exit();
 					break;
 
