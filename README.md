@@ -40,6 +40,7 @@ Requirements
  * The mod_rewrite Apache module
 
 
+
 Installation
 ------------
  * Boost Saloos with [Saloos Addons]!
