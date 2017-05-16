@@ -48,6 +48,7 @@ class dbconnection
 			{
 				echo( "<p>".T_("we can't find database service!")." "
 							  .T_("please contact administrator!")."</p>" );
+				die('old dbConnection');
 				\lib\main::$controller->_processor(array('force_stop' => true));
 			}
 			self::$connection = @new \mysqli(self::$db_host, self::$db_user, self::$db_pass, self::$db_name);
@@ -78,7 +79,7 @@ class dbconnection
 					}
 					else
 					{
-						\lib\main::$controller->_processor(['force_stop' => true, 'force_json' => false]);	
+						\lib\main::$controller->_processor(['force_stop' => true, 'force_json' => false]);
 					}
 				}
 				// on normal pages
