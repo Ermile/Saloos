@@ -63,6 +63,7 @@ class dbconnection
 			{
 				echo( "<p>".T_("We can't connect to database service!")." "
 							  .T_("Please contact administrator!")."</p>" );
+				die('old dbConnection');
 				\lib\main::$controller->_processor(['force_stop' => true]);
 			}
 			else if(self::$connection->connect_errno == 1049 )
