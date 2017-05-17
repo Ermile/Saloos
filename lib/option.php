@@ -24,6 +24,12 @@ class option
 	{
 		if(empty(self::$config))
 		{
+			// load default option
+			if(file_exists('../../saloos/lib/default_option.php'))
+			{
+				require_once('../../saloos/lib/default_option.php');
+			}
+
 			if(file_exists('../option.me.php'))
 			{
 				require_once('../option.me.php');
@@ -31,10 +37,6 @@ class option
 			elseif(file_exists('../option.php'))
 			{
 				require_once('../option.php');
-			}
-			elseif(file_exists('../../saloos/lib/default_option.php'))
-			{
-				require_once('../../saloos/lib/default_option.php');
 			}
 		}
 	}
