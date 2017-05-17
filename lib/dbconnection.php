@@ -78,7 +78,7 @@ class dbconnection
 					}
 					else
 					{
-						\lib\main::$controller->_processor(['force_stop' => true, 'force_json' => false]);	
+						\lib\main::$controller->_processor(['force_stop' => true, 'force_json' => false]);
 					}
 				}
 				// on normal pages

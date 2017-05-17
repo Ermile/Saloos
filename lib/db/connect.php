@@ -79,7 +79,7 @@ trait connect
 			{
 				case 1045:
 					echo "<p>"."We can't connect to database service!"." "
-								  ."Please contact administrator!"."</p>";
+								  ."Please contact administrator!!"."</p>";
 					exit();
 					break;
 
