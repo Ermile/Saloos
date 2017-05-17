@@ -40,11 +40,14 @@ class permission
 	 */
 	public static function load_user_data()
 	{
-		$user_data = \lib\db\users::get(self::$user_id);
-		if(isset($user_data['user_permission']))
+		if(self::$user_id && is_numeric(self::$user_id))
 		{
-			self::$user_permission = $user_data['user_permission'];
-			$_SESSION['user']['permission'] = self::$user_permission;
+			$user_data = \lib\db\users::get(self::$user_id);
+			if(isset($user_data['user_permission']))
+			{
+				self::$user_permission = $user_data['user_permission'];
+				$_SESSION['user']['permission'] = self::$user_permission;
+			}
 		}
 	}
 
@@ -58,7 +61,7 @@ class permission
 	public static function access($_caller, $_action = null)
 	{
 		self::_construct();
-
+		// var_dump(debug_backtrace());exit();
 		$permission_check = self::check($_caller);
 
 		if($_action === 'notify')
