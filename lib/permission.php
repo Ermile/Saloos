@@ -27,6 +27,11 @@ class permission
 		{
 			self::$user_permission = $_SESSION['user']['permission'];
 		}
+
+		if(!self::$user_permission)
+		{
+			self::load_user_data();
+		}
 	}
 
 
@@ -53,6 +58,7 @@ class permission
 	public static function access($_caller, $_action = null)
 	{
 		self::_construct();
+
 		$permission_check = self::check($_caller);
 
 		if($_action === 'notify')
