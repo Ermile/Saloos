@@ -2,7 +2,7 @@
 namespace lib\utility;
 
 /** Option: handle options of project from db **/
-class option_old
+class option
 {
 	/**
 	 * this library get options from db only one times!
