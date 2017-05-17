@@ -22,6 +22,11 @@ class permission
 				require_once('../permission.php');
 			}
 		}
+
+		if(isset($_SESSION['user']['permission']))
+		{
+			self::$user_permission = $_SESSION['user']['permission'];
+		}
 	}
 
 
@@ -48,7 +53,6 @@ class permission
 	public static function access($_caller, $_action = null)
 	{
 		self::_construct();
-
 		$permission_check = self::check($_caller);
 
 		if($_action === 'notify')
