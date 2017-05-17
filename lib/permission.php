@@ -23,6 +23,11 @@ class permission
 			}
 		}
 
+		if(!self::$user_id && isset($_SESSION['user']['id']) && is_numeric($_SESSION['user']['id']))
+		{
+			self::$user_id = $_SESSION['user']['id'];
+		}
+
 		if(isset($_SESSION['user']['permission']))
 		{
 			self::$user_permission = $_SESSION['user']['permission'];
