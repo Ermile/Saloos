@@ -760,9 +760,9 @@ trait twigAddons
 	 *
 	 * @return     \     ( description_of_the_return_value )
 	 */
-	public function twig_function_permission()
+	public function twig_function_perm()
 	{
-		return new \Twig_SimpleFunction('permission', function()
+		return new \Twig_SimpleFunction('perm', function()
 		{
 
 			$caller  = null;

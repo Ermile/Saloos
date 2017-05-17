@@ -120,7 +120,7 @@ class view
 		$this->add_twig_function('similar_post');
 		$this->add_twig_function('attachment');
 		$this->add_twig_function('post_search');
-		$this->add_twig_function('permission');
+		$this->add_twig_function('perm');
 
 		require_once core.'Twig/lib/Twig/Autoloader.php';
 		\Twig_Autoloader::register();
