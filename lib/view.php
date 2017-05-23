@@ -79,7 +79,7 @@ class view
 		{
 			$this->data->display['main']    = "content/main/layout-xhr.html";
 			$this->data->display['home']    = "content/home/display-xhr.html";
-			$this->data->display['cp']      = "content_cp/home/layout-xhr.html";
+			$this->data->display['back']    = "includes/mvc/display-back-xhr.html";
 			$this->data->display['account'] = "content_account/home/layout-xhr.html";
 			$this->data->loadMode           = 'ajax';
 
