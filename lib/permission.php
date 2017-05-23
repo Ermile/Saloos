@@ -28,15 +28,8 @@ class permission
 			self::$user_id = $_SESSION['user']['id'];
 		}
 
-		if(isset($_SESSION['user']['permission']))
-		{
-			self::$user_permission = $_SESSION['user']['permission'];
-		}
-
-		if(!self::$user_permission)
-		{
-			self::load_user_data();
-		}
+		// set permission as static value if exist, but dont need
+		self::load_user_data();
 	}
 
 
@@ -45,12 +38,23 @@ class permission
 	 */
 	public static function load_user_data()
 	{
-		if(self::$user_id && is_numeric(self::$user_id))
+		// if permission is set before it, return true
+		if(self::$user_permission)
+		{
+			return true;
+		}
+		// if permission is exist in session use it
+		if(isset($_SESSION['user']['permission']))
+		{
+			self::$user_permission = $_SESSION['user']['permission'];
+		}
+		// else if we have user_id get it from user detail
+		else if(self::$user_id && is_numeric(self::$user_id))
 		{
 			$user_data = \lib\db\users::get(self::$user_id);
 			if(isset($user_data['user_permission']))
 			{
-				self::$user_permission = $user_data['user_permission'];
+				self::$user_permission = trim($user_data['user_permission']);
 				$_SESSION['user']['permission'] = self::$user_permission;
 			}
 		}
@@ -66,7 +70,6 @@ class permission
 	public static function access($_caller, $_action = null)
 	{
 		self::_construct();
-		// var_dump(debug_backtrace());exit();
 		$permission_check = self::check($_caller);
 
 		if($_action === 'notify')
@@ -134,7 +137,7 @@ class permission
 			}
 			// and verify users !
 		}
-
+		// admin use -f!
 		if(self::$user_permission === 'admin')
 		{
 			return true;
