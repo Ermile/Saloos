@@ -140,14 +140,19 @@ class permission
 			return true;
 		}
 
-		$explode = explode(',', self::$user_permission);
-
-		if(isset(self::$caller['key']))
+		// if permission is not null and exist, implode it
+		if(self::$user_permission)
 		{
-			if(in_array(self::$caller['key'], $explode))
+			$explode = explode(',', self::$user_permission);
+
+			if(isset(self::$caller['key']))
 			{
-				return true;
+				if(in_array(self::$caller['key'], $explode))
+				{
+					return true;
+				}
 			}
+
 		}
 		return false;
 	}
