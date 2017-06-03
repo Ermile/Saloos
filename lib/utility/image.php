@@ -51,7 +51,7 @@ class image
 		self::$loaded = false;
 		if(file::exists($filepath))
 		{
-			list(self::$width, self::$height, $type) = getimagesize($filepath);
+			list(self::$width, self::$height, $type) = @getimagesize($filepath);
 			// unset(self::$img);
 			self::$img = null;
 			if($type==IMAGETYPE_JPEG)

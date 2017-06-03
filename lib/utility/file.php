@@ -541,5 +541,18 @@ class file
 		fclose($tmp_file);
 		return $new_path;
 	}
+
+
+
+	/**
+	 * set permission to file
+	 *
+	 * @param      <type>   $_url   The url
+	 * @param      integer  $_perm  The permission
+	 */
+	public function perm($_path, $_perm = 0644)
+	{
+		return @chmod($_path, $_perm);
+	}
 }
 ?>

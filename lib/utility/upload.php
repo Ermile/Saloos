@@ -187,10 +187,12 @@ class upload
 			exit();
 		}
 
-		@chmod(self::_FILES(self::$fieldName)['tmp_name'], 0644);
-
 		if(move_uploaded_file(self::_FILES(self::$fieldName)['tmp_name'], $_url))
 		{
+			$real_file_path = root. 'public_html/'. $_url;
+
+			@chmod($real_file_path, 0644);
+
 			\lib\storage::set_upload(['url' => $_url]);
 			return true;
 		}

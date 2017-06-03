@@ -30,13 +30,14 @@ class option
 				require_once('../../saloos/lib/default_option.php');
 			}
 
+			if(file_exists('../option.php'))
+			{
+				require_once('../option.php');
+			}
+
 			if(file_exists('../option.me.php'))
 			{
 				require_once('../option.me.php');
-			}
-			elseif(file_exists('../option.php'))
-			{
-				require_once('../option.php');
 			}
 		}
 	}
