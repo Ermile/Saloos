@@ -67,9 +67,17 @@ class permission
 	 *
 	 * @return     <type>  ( description_of_the_return_value )
 	 */
-	public static function access($_caller, $_action = null)
+	public static function access($_caller, $_action = null, $_user_id = null)
 	{
+		// set the user id if user id send to this function and self::user_id not set
+		if($_user_id && is_numeric($_user_id) && !self::$user_id)
+		{
+			self::$user_id = $_user_id;
+		}
+		// load permission list and check session if self::$user_id not set
 		self::_construct();
+
+		// check permission
 		$permission_check = self::check($_caller);
 
 		if($_action === 'notify')
@@ -110,11 +118,12 @@ class permission
 	 */
 	private static function check($_caller)
 	{
+		// the user not found!
 		if(!self::$user_id)
 		{
 			return false;
 		}
-
+		// no permissin need in this project
 		if(empty(self::$perm_list))
 		{
 			return true;
@@ -143,8 +152,8 @@ class permission
 			return true;
 		}
 
-		// if permission is not null and exist, implode it
-		if(self::$user_permission)
+		// if permission is not null and exist, explode it
+		if(self::$user_permission && is_string(self::$user_permission))
 		{
 			$explode = explode(',', self::$user_permission);
 
@@ -155,7 +164,6 @@ class permission
 					return true;
 				}
 			}
-
 		}
 		return false;
 	}
@@ -179,7 +187,7 @@ class permission
 	/**
 	 * return the perm list
 	 */
-	public function list($_group = null)
+	public static function list($_group = null)
 	{
 		return self::$perm_list;
 	}
