@@ -221,7 +221,13 @@ class utility
 	{
 		if(!self::$HEADER)
 		{
-			self::$HEADER = utility\safe::safe(apache_request_headers());
+			$my_header = null;
+			// get apache headers
+			if(function_exists('apache_request_headers'))
+			{
+				$my_header = apache_request_headers();
+			}
+			self::$HEADER = utility\safe::safe($my_header);
 		}
 		if($_name)
 		{
