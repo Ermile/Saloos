@@ -156,7 +156,12 @@ class view
 		if(\saloos::is_Ajax())
 		{
 			$this->data->global->debug = \lib\debug::compile();
-			$req = apache_request_headers();
+			// check apache request header and use if exist
+			if(function_exists('apache_request_headers'))
+			{
+				$req = apache_request_headers();
+			}
+
 			$xhr_render                 = $template->render($this->data->_toArray());
 			// $this->data->display['mvc'] = $this->data->display['xhr'];
 			$md5                        = md5(json_encode($this->data->global).$xhr_render);
