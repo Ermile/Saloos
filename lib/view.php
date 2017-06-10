@@ -34,10 +34,11 @@ class view
 		$this->include               = $this->data->include;
 
 		// default data property
-		$this->data->macro['forms']  = 'includes/macro/forms.html';
+		$this->data->macro['forms']   = 'includes/macro/forms.html';
 		// default display value
-		$this->data->display['mvc']  = "includes/mvc/display-mvc.html";
-		$this->data->display['back'] = "includes/mvc/display-back.html";
+		$this->data->display['mvc']   = "includes/mvc/display-mvc.html";
+		$this->data->display['back']  = "includes/mvc/display-back.html";
+		$this->data->display['enter'] = "includes/mvc/display-enter.html";
 
 
 		$myurl = router::get_protocol().'://'.router::get_domain().$_SERVER['REQUEST_URI'];
@@ -77,9 +78,11 @@ class view
 		$this->data->loadMode = 'normal';
 		if(\saloos::is_Ajax())
 		{
+			$this->data->display['back']    = "includes/mvc/display-back-xhr.html";
+			$this->data->display['enter']   = "includes/mvc/display-enter-xhr.html";
+
 			$this->data->display['main']    = "content/main/layout-xhr.html";
 			$this->data->display['home']    = "content/home/display-xhr.html";
-			$this->data->display['back']    = "includes/mvc/display-back-xhr.html";
 			$this->data->display['account'] = "content_account/home/layout-xhr.html";
 			$this->data->loadMode           = 'ajax';
 
