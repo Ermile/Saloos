@@ -3,10 +3,10 @@
 @ In the name Of Allah
 * The base configurations of the SARSHOMAR.
 */
-self::$language =
+self::$language                               =
 [
-	'default' => 'en',
-	'list'    => ['fa','en',],
+'default'                                     => 'en',
+'list'                                        => ['fa','en',],
 ];
 
 self::$config['default_language']             = null;
@@ -38,6 +38,22 @@ self::$config['domain_name']                  = null;
 self::$config['main_site']                    = null;
 self::$config['account_status']               = false;
 
+/**
+ * get enter option
+ */
+// the block type is ['ip', 'session']
+// block the user if need on this way
+self::$enter['block_type']                    = null;
+// every wrong pass or code wate for ? [second]
+self::$enter['wait']                          = 10;
+// send resend code after ? [second]
+self::$enter['resend_after']                  = 60 * 1;
+// life time code for ? [second]
+self::$enter['life_time_code']                = 60 * 5;
+// you can use from this option by your rating ['telegram','call', 'sms1', 'sms2', 'email']
+self::$enter['resend_rate']                   = [];
+// you can use from this option by your rating ['telegram','call', 'sms1', 'sms2', 'email']
+self::$enter['send_rate']                     = [];
 
 /**
 * the social network
