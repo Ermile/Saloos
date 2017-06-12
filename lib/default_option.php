@@ -50,10 +50,12 @@ self::$enter['wait']                          = 10;
 self::$enter['resend_after']                  = 60 * 1;
 // life time code for ? [second]
 self::$enter['life_time_code']                = 60 * 5;
-// you can use from this option by your rating ['telegram','call', 'sms1', 'sms2', 'email']
+// you can use from this option by your rating ['telegram','call', 'sms', 'email']
 self::$enter['resend_rate']                   = [];
-// you can use from this option by your rating ['telegram','call', 'sms1', 'sms2', 'email']
+// you can use from this option by your rating ['telegram','call', 'sms', 'email']
 self::$enter['send_rate']                     = [];
+// you can use from this option by your rating ['kavenegar',...]
+self::$enter['sms_rate']                     = [];
 
 /**
 * the social network
