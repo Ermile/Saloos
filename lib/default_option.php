@@ -39,8 +39,8 @@ self::$config['main_site']                    = null;
 self::$config['account_status']               = false;
 
 /**
- * get enter option
- */
+* get enter option
+*/
 // the block type is ['ip', 'session']
 // block the user if need on this way
 self::$enter['block_type']                    = null;
@@ -55,7 +55,12 @@ self::$enter['resend_rate']                   = [];
 // you can use from this option by your rating ['telegram','call', 'sms', 'email']
 self::$enter['send_rate']                     = [];
 // you can use from this option by your rating ['kavenegar',...]
-self::$enter['sms_rate']                     = [];
+self::$enter['sms_rate']                      = [];
+// after signup user redirect to different page
+self::$enter['signup_redirect']               = null;
+// after login redirect to what?
+// default self::$config['redirect_url']
+self::$enter['redirect']                      = null;
 
 /**
 * the social network
