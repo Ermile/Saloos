@@ -27,6 +27,12 @@ class router
 
 		self::$real_url_array  = self::$url_array = preg_split("[\/]", preg_replace("/^\/|\/$/", '', $url[1]), -1 , PREG_SPLIT_NO_EMPTY);
 
+		// if find 2slash together block!
+		if(strpos($_SERVER['REQUEST_URI'], '//') !== false)
+		{
+			\lib\error::page('What are you doing!');
+		}
+
 		// HTTP_HOST is not secure and attacker can change it
 		$domain           = $_SERVER['HTTP_HOST'];
 		self::$domain     = preg_split("[\.]", $domain);
