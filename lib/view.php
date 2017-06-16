@@ -37,7 +37,7 @@ class view
 		$this->data->macro['forms']   = 'includes/macro/forms.html';
 		// default display value
 		$this->data->display['mvc']   = "includes/mvc/display-mvc.html";
-		$this->data->display['back']  = "includes/mvc/display-back.html";
+		$this->data->display['dash']  = "includes/mvc/display-dash.html";
 		$this->data->display['enter'] = "includes/mvc/display-enter.html";
 
 
@@ -78,7 +78,7 @@ class view
 		$this->data->loadMode = 'normal';
 		if(\saloos::is_Ajax())
 		{
-			$this->data->display['back']    = "includes/mvc/display-back-xhr.html";
+			$this->data->display['dash']    = "includes/mvc/display-dash-xhr.html";
 			$this->data->display['enter']   = "includes/mvc/display-enter-xhr.html";
 
 			$this->data->display['main']    = "content/main/layout-xhr.html";
