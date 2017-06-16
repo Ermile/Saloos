@@ -351,25 +351,33 @@ class utility
 		foreach ($tokens as $unit => $text)
 		{
 			if ($time_diff < $unit)
+			{
 				continue;
+			}
+			$finalDate = null;
 			// if time diff less than user request change it to humansizing
 			if($time_diff < $type || $_max === 'ultimate')
 			{
 				$numberOfUnits = floor($time_diff / $unit);
-				return $numberOfUnits.' '.$text.(($numberOfUnits>1)? T_('s '):' ').T_('ago');
+				$finalDate = $numberOfUnits.' '.$text.(($numberOfUnits>1)? T_('s '):' ').T_('ago');
 			}
 			// else show it dependig on current language
 			else
 			{
 				if($_lang == 'fa')
 				{
-					return \lib\utility\jdate::date($_format, $_time);
+					$finalDate = \lib\utility\jdate::date($_format, $_time);
 				}
 				else
 				{
-					return date($_format, $_time);
+					$finalDate = date($_format, $_time);
 				}
 			}
+			if($_lang == 'fa')
+			{
+				$finalDate = \lib\utility\human::number($finalDate, $_lang);
+			}
+			return $finalDate;
 		}
 	}
 
