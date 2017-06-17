@@ -30,7 +30,12 @@ class router
 		// if find 2slash together block!
 		if(strpos($_SERVER['REQUEST_URI'], '//') !== false)
 		{
-			\lib\error::page('What are you doing!');
+			// route url like this
+			// http://saloos.dev/enter?referer=http://saloos.dev/cp
+			if(strpos($_SERVER['REQUEST_URI'], '?') === false || strpos($_SERVER['REQUEST_URI'], '?') > strpos($_SERVER['REQUEST_URI'], '//'))
+			{
+				\lib\error::page('What are you doing!');
+			}
 		}
 
 		// HTTP_HOST is not secure and attacker can change it
