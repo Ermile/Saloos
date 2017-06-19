@@ -61,6 +61,11 @@ self::$enter['signup_redirect']               = null;
 // after login redirect to what?
 // default self::$config['redirect_url']
 self::$enter['redirect']                      = null;
+// check if call mode is enable to call to user
+self::$enter['call']                          = false;
+// get template of call for every language
+self::$enter['call_template']['fa']           = null;
+self::$enter['call_template']['en']           = null;
 
 /**
 * the social network
