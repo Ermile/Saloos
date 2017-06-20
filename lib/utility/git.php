@@ -4,6 +4,76 @@ namespace lib\utility;
 /** Git management **/
 class git
 {
+	private static $baseLocation = null;
+	/**
+	 * clone git repository from specefic location
+	 * @param  [type] $_location [description]
+	 * @return [type]            [description]
+	 */
+	public static function pull($_location, $_boolResult = false)
+	{
+		if(!self::$baseLocation)
+		{
+			// if have not baseLocation get the value of this
+			self::$baseLocation = getcwd();
+		}
+		else
+		{
+			// else change folder to baseLocation
+			chdir(self::$baseLocation);
+		}
+		$result     = [];
+		$resultBool = null;
+		$output     = null;
+		// if folder of location exist prepare commands
+		if(\lib\utility\file::exists($_location))
+		{
+			// change location to address of requested
+			chdir($_location);
+			// $command  = 'git pull '.$rep.' 2>&1';
+			$command  = 'git pull origin master 2>&1';
+
+
+			// Print the exec
+			exec($command, $result);
+			if(!$result)
+			{
+				$output     = T_('Not Work!');
+				$resultBool = false;
+			}
+			else
+			{
+				$resultBool = true;
+			}
+			foreach ($result as $line)
+			{
+				$output .= $line . "\n";
+			}
+		}
+		else
+		{
+			$output = T_('This location is not exist!');
+
+		}
+
+		if($_boolResult)
+		{
+			return $resultBool;
+		}
+		else
+		{
+			// start show result
+			$html = "<pre>";
+			$html .= 'Repository address <b>'. getcwd(). '</b><br/>';
+			$html .= 'Remote address     <b>'. $_location. '</b><hr/>';
+			$html .= $output;
+			$html .= "</pre>";
+
+			return $html;
+		}
+	}
+
+
 
 	public static function createPackage($_saloos = true)
 	{
