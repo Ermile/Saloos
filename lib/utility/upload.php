@@ -287,60 +287,61 @@ class upload
 			// @example : http://domain.com/file.jpg
 			// @example : /var/www/html/file.jpg
 			// leave null to get file from $_FILES
-			'file_path'     => null,
+			'file_path'           => null,
 			// the user inserted the attachment
-			'user_id'       => false,
+			'user_id'             => false,
 			// folder size of file
 			// every folder have 1000 files
-			'folder_size'   => 1000,
+			'folder_size'         => 1000,
 			// the upload name in <form> in html
-			'upload_name'   => 'upfile',
+			'upload_name'         => 'upfile',
 			// file move to this location
 			// if use from $_FILE this option is useless
 			// the apache move the file to public_html of site
 			// when you are set a file_path to download and move
 			// we need to move() the file and the move() function need to real location
-			'move_to'       => root. 'public_html/',
+			'move_to'             => root. 'public_html/',
 			// folder prefix
 			// this option set after 'move_to' option
 			// in upload mode [apache upload the file] this option afte folder public_html of site
-			'folder_prefix' => 'files/',
+			'folder_prefix'       => 'files/',
 			// crop file [image file]
 			// creat the thump image file
-			'crop'          => true,
+			'crop'                => true,
 			// resize file
 			// no thing ye...
-			'resize'        => true,
+			'resize'              => true,
 			// copy file, we not delete the masert file
 			// this option is useless because we get the file in tmp folder
 			// we must to delete it
-			'copy'          => false,
-			'move'          => true,
+			'copy'                => false,
+			'move'                => true,
 			// the protocol of resive file
 			// for example http, https, ftp,	sftp, null: local
 			// we get the protocol from firt of 'file_path'
 			// this method autmatic was set
-			'protocol'      => null,
+			'protocol'            => null,
 			// the user name of ftp or sftp protocol
-			'username'      => null,
+			'username'            => null,
 			// the password of ftp or sftp protocol
-			'password'      => null,
+			'password'            => null,
 			// the file meta in post talbe
 			// default meta of post is mime, type, size, ext, url, thumb, normal
 			// you can set this index to replace the index or inser new index to
 			// merge this array and your array
-			'meta'          => [],
+			'meta'                => [],
 			// the parent id of post record
-			'parent'        => null,
+			'parent'              => null,
 			// the post status
-			'post_status'   => 'draft',
+			'post_status'         => 'draft',
 			// save file in temp directory
 			// whitout save in database
-			'save_as_tmp'   => false,
+			'save_as_tmp'         => false,
 			// the tmp_path
-			'tmp_path'      => implode(DIRECTORY_SEPARATOR, ['files','tmp']). DIRECTORY_SEPARATOR,
+			'tmp_path'            => implode(DIRECTORY_SEPARATOR, ['files','tmp']). DIRECTORY_SEPARATOR,
 			// use max size remaining
-			'user_size_remaining'  => self::MAX_SIZE,
+			'user_size_remaining' => self::MAX_SIZE,
+			'debug'               => true,
 
 		];
 
@@ -456,7 +457,11 @@ class upload
 		if($duplicate)
 		{
 			// in duplicate mode debug
-			return \lib\debug::true(T_("File successful uploaded"));
+			if($_options['debug'])
+			{
+				\lib\debug::true(T_("File successful uploaded"));
+			}
+			return;
 		}
 
 		// 4. transfer file to project folder with new name
@@ -560,7 +565,11 @@ class upload
 			$url = null;
 		}
 		\lib\storage::set_upload(["id" => \lib\db::insert_id(), 'url' => $url, 'size' => self::$fileSize]);
-		return \lib\debug::true("File successful uploaded");
+		if($_options['debug'])
+		{
+			\lib\debug::true("File successful uploaded");
+		}
+		return;
 	}
 
 
