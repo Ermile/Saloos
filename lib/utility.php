@@ -234,7 +234,7 @@ class utility
 		        {
 		            if (substr($key,0,5)=="HTTP_")
 		            {
-		                $key = str_replace(" ","-", ucwords(strtolower(str_replace("_"," ",substr($key,5)))));
+		                $key = str_replace(" ","-", strtolower(str_replace("_"," ",substr($key,5))));
 		                $out[$key]=$value;
 		            }
 		            else
