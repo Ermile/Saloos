@@ -227,6 +227,24 @@ class utility
 			{
 				$my_header = apache_request_headers();
 			}
+			else
+			{
+				$out = null;
+				foreach($_SERVER as $key => $value)
+		        {
+		            if (substr($key,0,5)=="HTTP_")
+		            {
+		                $key = str_replace(" ","-", ucwords(strtolower(str_replace("_"," ",substr($key,5)))));
+		                $out[$key]=$value;
+		            }
+		            else
+		            {
+		                $out[$key]=$value;
+					}
+		    	}
+		    	$my_header = $out;
+			}
+
 			self::$HEADER = utility\safe::safe($my_header);
 		}
 		if($_name)
