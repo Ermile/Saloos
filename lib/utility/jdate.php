@@ -605,6 +605,26 @@ class jdate
 
 
     /**
+     * change date to gregorian
+     *
+     * @param      <type>  $_date  The date
+     */
+    public static function to_gregorian($_date, $_format = "Y-m-d")
+    {
+        if(!$_format)
+        {
+            $_format = "Y-m-d";
+        }
+
+        $year  = (new \DateTime($_date))->format("Y");
+        $month = (new \DateTime($_date))->format("m");
+        $day   = (new \DateTime($_date))->format("d");
+        list($year, $month, $day) = self::toGregorian($year, $month, $day);
+        return date($_format, strtotime("$year-$month-$day"));
+    }
+
+
+    /**
      * convert jalali date
      *
      * @param      <type>  $year   The year
@@ -612,7 +632,8 @@ class jdate
      * @example     jalali month (1395,6) => 2016-08-12, 2016-09-11
      * @return     <type>
      */
-    public static function jalali_month($_year, $_month){
+    public static function jalali_month($_year, $_month)
+    {
 
         $j_days_in_month = [
                              '01'  => 31,
@@ -650,15 +671,16 @@ class jdate
      * @example     jalali year (1395) => 2016-03-12, 2017-03-12
      * @return     <type>  ( description_of_the_return_value )
      */
-    public static function jalali_year($_year){
+    public static function jalali_year($_year)
+    {
         $start_day   = 1;
         $end_day     = 30;
 
         $start_month = 1;
         $end_month   = 12;
 
-        $start_date = (int)self::mktime(0, 0, 0, $start_month, $start_day, $_year, true);
-        $end_date   = (int)self::mktime(0, 0, 0, $end_month, $end_day, $_year, true);
+        $start_date = (int) self::mktime(0, 0, 0, $start_month, $start_day, $_year, true);
+        $end_date   = (int) self::mktime(0, 0, 0, $end_month, $end_day, $_year, true);
 
         $start_date = date("Y-m-d",$start_date);
         $end_date   = date("Y-m-d",$end_date);
@@ -666,14 +688,48 @@ class jdate
     }
 
 
+    /**
+     * Determines if jalali.
+     * check if year of date > 1300 and < 1600 the date is jalali
+     *
+     * @param      <type>   $_date  The date
+     *
+     * @return     boolean  True if jalali, False otherwise.
+     */
     public static function is_jalali($_date)
     {
-        return true;
+        $year = (new \DateTime($_date))->format("Y");
+
+        $date_is_jalali = false;
+
+        if($year && intval($year) > 1300 && intval($year) < 1600)
+        {
+            $date_is_jalali = true;
+        }
+        return $date_is_jalali;
     }
 
 
+    /**
+     * Determines if gregorian.
+     *
+     * @param      <type>   $_date  The date
+     *
+     * @return     boolean  True if gregorian, False otherwise.
+     */
     public static function is_gregorian($_date)
     {
-        return true;
+        $year = (new \DateTime($_date))->format("Y");
+
+        $date_is_gregorian = false;
+
+        if($year && intval($year) > 1601 && intval($year) < 4000)
+        {
+            $date_is_gregorian = true;
+        }
+        return $date_is_gregorian;
+
     }
+
 }
+?>
