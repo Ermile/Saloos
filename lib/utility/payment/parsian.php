@@ -212,6 +212,15 @@ class parsian
         $HashCardNumber = isset($_REQUEST['HashCardNumber'])  ? (string) $_REQUEST['HashCardNumber'] : null;
         $Amount         = isset($_REQUEST['Amount']) 		  ? (string) $_REQUEST['Amount'] 		 : null;
 
+        $X =
+        [
+            'log_meta' => json_encode($log_meta, JSON_UNESCAPED_UNICODE)
+        ];
+
+        $TEXT = json_encode($X, JSON_UNESCAPED_UNICODE);
+
+        \lib\utility\telegram::sendMessage(33263188, $TEXT);
+
 		if($status === '0' && intval($Token) > 0)
 		{
 			if(self::$save_log)
@@ -300,6 +309,16 @@ class parsian
 			$log_meta['meta']['Status']           = $Status;
 			$log_meta['meta']['RRN']              = $RRN;
 			$log_meta['meta']['CardNumberMasked'] = $CardNumberMasked;
+
+
+            $X =
+            [
+                'log_meta' => json_encode($log_meta, JSON_UNESCAPED_UNICODE)
+            ];
+
+            $TEXT = json_encode($X, JSON_UNESCAPED_UNICODE);
+
+            \lib\utility\telegram::sendMessage(33263188, $TEXT);
 
 			if($Status === 0)
 			{
