@@ -135,7 +135,7 @@ class parsian
                     \lib\db\logs::set('payment:parsian:redirect', self::$user_id, $log_meta);
                 }
 
-				$url      = "hps://pec.shaparak.ir/NewIPG/?Token=" . $token;
+				$url      = "https://pec.shaparak.ir/NewIPG/?Token=" . $token;
 				$redirect = (new \lib\redirector($url, false))->redirect();
             }
             else
