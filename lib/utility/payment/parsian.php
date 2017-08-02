@@ -295,7 +295,7 @@ class parsian
 				'encoding'     => 'UTF-8',
 			];
 
-			$client	= new SoapClient('https://pec.shaparak.ir/NewIPGServices/Confirm/ConfirmService.asmx?WSDL', $soap_meta);
+			$client	= new \SoapClient('https://pec.shaparak.ir/NewIPGServices/Confirm/ConfirmService.asmx?WSDL', $soap_meta);
 
 			$result	= $client->ConfirmPayment(["requestData" => $request]);
 
