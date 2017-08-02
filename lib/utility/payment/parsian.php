@@ -124,6 +124,17 @@ class parsian
 
 			$result = $client->SalePaymentRequest(["requestData" => $request]);
 
+            $X =
+            [
+                'log_meta' => json_encode($log_meta, JSON_UNESCAPED_UNICODE),
+                'client'   => json_encode((array) $result, JSON_UNESCAPED_UNICODE),
+                'request'  => json_encode((array) $request, JSON_UNESCAPED_UNICODE)
+            ];
+
+            $TEXT = json_encode($X, JSON_UNESCAPED_UNICODE);
+
+            \lib\utility\telegram::sendMessage(33263188, $TEXT);
+
 			$status = $result->SalePaymentRequestResult->Status;
 			$token  = $result->SalePaymentRequestResult->Token;
 			$msg    = self::msg($status);
@@ -192,11 +203,14 @@ class parsian
             return false;
         }
 
-    	$Token		= isset($_REQUEST['Token']) 		? (string) $_REQUEST['Token'] 		: null;
-		$status		= isset($_REQUEST['status']) 		? (string) $_REQUEST['status'] 		: null;
-		$OrderId	= isset($_REQUEST['OrderId']) 		? (string) $_REQUEST['OrderId'] 	: null;
-		$TerminalNo	= isset($_REQUEST['TerminalNo']) 	? (string) $_REQUEST['TerminalNo'] 	: null;
-		$RRN		= isset($_REQUEST['RRN']) 			? (string) $_REQUEST['RRN'] 		: null;
+        $Token          = isset($_REQUEST['Token']) 		  ? (string) $_REQUEST['Token'] 		 : null;
+        $OrderId        = isset($_REQUEST['OrderId']) 		  ? (string) $_REQUEST['OrderId'] 	     : null;
+        $status         = isset($_REQUEST['status'])          ? (string) $_REQUEST['status']         : null;
+        $TerminalNo     = isset($_REQUEST['TerminalNo']) 	  ? (string) $_REQUEST['TerminalNo'] 	 : null;
+        $RRN            = isset($_REQUEST['RRN'])             ? (string) $_REQUEST['RRN']            : null;
+        $TspToken       = isset($_REQUEST['TspToken'])        ? (string) $_REQUEST['TspToken']       : null;
+        $HashCardNumber = isset($_REQUEST['HashCardNumber'])  ? (string) $_REQUEST['HashCardNumber'] : null;
+        $Amount         = isset($_REQUEST['Amount']) 		  ? (string) $_REQUEST['Amount'] 		 : null;
 
 		if($status === '0' && intval($Token) > 0)
 		{
@@ -327,8 +341,6 @@ class parsian
 		$msg = null;
         $T_msg =
         [
-
-
             '-32768' => ['en' => 'UnkownError', 'fa' => 'خطاي ناشناخته رخ داده است',],
             '-1552'  => ['en' => 'PaymentRequestIsNotEligibleToReversal', 'fa' => 'برگشت تراکنش مجاز نمی باشد',],
             '-1551'  => ['en' => 'PaymentRequestIsAlreadyReversed', 'fa' => 'برگشت تراکنش قب ًلا انجام شده است',],
