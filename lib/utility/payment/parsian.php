@@ -231,6 +231,7 @@ class parsian
 		}
 		else
 		{
+            debug::error(self::msg($status));
 			return false;
 		}
     }
