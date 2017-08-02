@@ -34,7 +34,7 @@ class parsian
 			'LoginAccount' => null,
 			'Amount'       => null,
 			'OrderId'      => null,
-			'CallbackUrl'  => null,
+			'CallBackUrl'  => null,
         ];
 
         $_args = array_merge($default_args, $_args);
@@ -79,13 +79,13 @@ class parsian
             return false;
         }
 
-        if(!$_args['CallbackUrl'])
+        if(!$_args['CallBackUrl'])
         {
             if(self::$save_log)
             {
-                \lib\db\logs::set('payment:parsian:callbackurl:not:set', self::$user_id, $log_meta);
+                \lib\db\logs::set('payment:parsian:CallBackUrl:not:set', self::$user_id, $log_meta);
             }
-            debug::error(T_("The CallbackUrl is required"), 'CallbackUrl', 'arguments');
+            debug::error(T_("The CallBackUrl is required"), 'CallBackUrl', 'arguments');
             return false;
         }
 
@@ -109,7 +109,7 @@ class parsian
 		$LoginAccount = $request['LoginAccount'] = $_args['LoginAccount'];
 		$Amount       = $request['Amount']       = $_args['Amount'];
 		$OrderId      = $request['OrderId']      = $_args['OrderId'];
-		$CallbackUrl  = $request['CallbackUrl']  = $_args['CallbackUrl'];
+		$CallBackUrl  = $request['CallBackUrl']  = $_args['CallBackUrl'];
 
         try
         {
