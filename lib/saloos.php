@@ -7,6 +7,13 @@ class saloos
 {
 	// @var saloos core current version
 	const version = '9.6.8';
+	/**
+	 * Saloos is not developed after this version...
+	 * if this framework is interesting for you!
+	 * you can follow Dash in github
+	 * https://github.com/Ermile/dash
+	 */
+
 
 	// @var saloos core current commit number
 	// now get it automatically from git commands
