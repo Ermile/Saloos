@@ -1,9 +1,21 @@
+# Project discontinued
+
+We're continue developing this project as [Dash].
+
+
+
+
 #[Saloos]
 > [Saloos] is a cirsium vulgare for php programmers! :)
 
 Visit [Saloos on Github]
 
 Also you can see [Saloos Official Website]
+
+# توقف توسعه
+
+توسعه پروژه سالوس متوقف شده و تحت عنوان [دش] می‌توانید آن را دنبال کنید:).
+
 
 #[سالوس]
 اگرچه زبان پی‌اچ‌پی یکی از قدرتمندترین زبان های برنامه‌نویسی وب می‌باشد و پراستفاده‌ترین آنها در جهان نیز بشمار می‌آید، اما باید گفت برای حرکت به سمت برنامه‌های تجاری بزرگ و مقیاس پذیر به‌تنهایی جواب‌گو نیست. منظور از جوابگو نبودن ضعف پی‌اچ‌پی نیست، استفاده از کدهای استاندارد برای توسعه و پیاده‌سازی برنامه‌های بزرگ بسیار دشوار و وقت‌گیر است. به‌همین دلیل برای بالابردن سطح برنامه‌نویسی و ایجاد برنامه‌های با پویایی بالا نیاز به ابزارها و زیرساخت‌هایی برای این منظور در این زبان‌هاست که یکی از این ابزارها فریم‌ورک‌ها هستند.
@@ -74,6 +86,8 @@ Licence! What does it mean?
 
 [Ermile]: <http://ermile.com>
 [ارمایل]: <http://ermile.ir>
+[Dash]: <https://github.com/Ermile/dash>
+[دش]: <https://github.com/Ermile/dash>
 [Saloos on Github]: <https://github.com/Ermile/Saloos>
 [Saloos Official Website]: <http://saloos.ir>
 [Saloos]: <http://saloos.ir>
